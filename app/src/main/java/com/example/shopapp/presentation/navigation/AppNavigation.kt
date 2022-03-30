@@ -10,10 +10,13 @@ import androidx.compose.runtime.remember
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.shopapp.presentation.screen.DetailedScreen
 import com.example.shopapp.presentation.screen.MainPage
+import com.google.accompanist.pager.ExperimentalPagerApi
 
 
 @Composable
+@ExperimentalPagerApi
 fun AppNavigation() {
     val bottomItems by remember {
         mutableStateOf(listOf ("Home", "Search", "Cart", "History", "Profile"))
@@ -35,7 +38,7 @@ fun AppNavigation() {
                 composable("Home") {
                     Box(modifier = androidx.compose.ui.Modifier.padding(innerPadding))
                     {
-                        MainPage()
+                        DetailedScreen()
                     }
                 }
             }
