@@ -13,5 +13,5 @@ interface FavoritesApi {
     suspend fun addFavorite(@Body favorite: FavoriteDto): Response<FavoriteDto>
 
     @DELETE("/delete/{id}")
-    suspend fun delete(@Path("id")id : Int)
+    suspend fun deleteFavorite(@Path("id")id : Int)
 }
