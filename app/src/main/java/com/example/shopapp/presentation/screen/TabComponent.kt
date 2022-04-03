@@ -47,7 +47,7 @@ fun Characteristic()
 @ExperimentalPagerApi
 @Composable
 fun TabScreen() {
-    val pagerState = rememberPagerState(pageCount = 3)
+    val pagerState = rememberPagerState(pageCount = 2)
     Column {
         Tabs(pagerState = pagerState)
         TabsContent(pagerState = pagerState)
@@ -65,14 +65,14 @@ fun Tabs(pagerState: PagerState) {
         divider = {
             TabRowDefaults.Divider(
                 thickness = 2.dp,
-                color = Color.Green
+                color = Color.White
             )
         },
         indicator = { tabPositions ->
             TabRowDefaults.Indicator(
                 Modifier.pagerTabIndicatorOffset(pagerState, tabPositions),
                 height = 2.dp,
-                color = Color.White
+                color = Color.Green
             )
         }
     ) {

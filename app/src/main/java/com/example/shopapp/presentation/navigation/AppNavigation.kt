@@ -18,6 +18,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.shopapp.domain.MainViewModel
 import com.example.shopapp.presentation.screen.CartScreen
 import com.example.shopapp.presentation.screen.MainPage
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -26,7 +27,7 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 @Composable
 @ExperimentalPagerApi
 @ExperimentalMaterialApi
-fun AppNavigation() {
+fun AppNavigation(mainPageViewModel: MainViewModel) {
     val navController = rememberNavController()
     Scaffold(
         bottomBar = {
@@ -45,7 +46,8 @@ fun AppNavigation() {
                     BottomNavItem(
                         name = "Cart",
                         route = "cart",
-                        icon = Icons.Default.ShoppingCart
+                        icon = Icons.Default.ShoppingCart,
+                        badgeCount = 10
                     ),
                     BottomNavItem(
                         name = "Favorite",
@@ -70,14 +72,14 @@ fun AppNavigation() {
             composable("home") {
                 Box(modifier = Modifier.padding(innerPadding))
                 {
-                    MainPage()
+                    MainPage(mainPageViewModel)
                 }
             }
             composable("search") {
 
             }
             composable("cart") {
-                CartScreen()
+                CartScreen(null)
             }
             composable("favorite") {
 
