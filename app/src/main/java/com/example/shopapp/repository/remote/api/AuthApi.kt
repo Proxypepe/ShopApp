@@ -8,6 +8,6 @@ import retrofit2.http.POST
 
 
 interface AuthApi {
-    @POST("./auth")
+    @POST("/auth")
     suspend fun checkAuth(@Body user: UserBody): Response<UserResponseDto>
 }

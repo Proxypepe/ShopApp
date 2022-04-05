@@ -6,7 +6,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -20,7 +20,10 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.shopapp.domain.MainViewModel
 import com.example.shopapp.presentation.screen.CartScreen
+import com.example.shopapp.presentation.screen.DetailedScreen
 import com.example.shopapp.presentation.screen.MainPage
+import com.example.shopapp.presentation.screen.Profile
+import com.example.shopapp.repository.remote.models.ProductDto
 import com.google.accompanist.pager.ExperimentalPagerApi
 
 
@@ -29,6 +32,9 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 @ExperimentalMaterialApi
 fun AppNavigation(mainPageViewModel: MainViewModel) {
     val navController = rememberNavController()
+
+    val badgeCount = mainPageViewModel.cart?.collectAsState(initial = listOf())?.value?.size
+
     Scaffold(
         bottomBar = {
             BottomNavigationBar(
@@ -47,7 +53,7 @@ fun AppNavigation(mainPageViewModel: MainViewModel) {
                         name = "Cart",
                         route = "cart",
                         icon = Icons.Default.ShoppingCart,
-                        badgeCount = 10
+                        badgeCount = badgeCount ?: 0
                     ),
                     BottomNavItem(
                         name = "Favorite",
@@ -58,9 +64,7 @@ fun AppNavigation(mainPageViewModel: MainViewModel) {
                         name = "Profile",
                         route = "profile",
                         icon = Icons.Default.Person
-                    ),
-
-                    ),
+                    ),),
                 navController = navController,
                 onItemClick = {
                     navController.navigate(it.route)
@@ -72,20 +76,33 @@ fun AppNavigation(mainPageViewModel: MainViewModel) {
             composable("home") {
                 Box(modifier = Modifier.padding(innerPadding))
                 {
-                    MainPage(mainPageViewModel)
+                    MainPage(mainPageViewModel, navController)
                 }
             }
             composable("search") {
 
             }
             composable("cart") {
-                CartScreen(null)
+                Box(modifier = Modifier.padding(innerPadding))
+                {
+                    CartScreen(mainPageViewModel)
+                }
             }
             composable("favorite") {
 
             }
             composable("profile") {
+                Profile()
+            }
 
+            composable("detailed") {
+                navController.previousBackStackEntry?.arguments?.getParcelable<ProductDto>("PRODUCT")
+                    ?.let {
+                        Box(modifier = Modifier.padding(innerPadding))
+                        {
+                            DetailedScreen(mainPageViewModel = mainPageViewModel, product = it, navController = navController)
+                        }
+                    }
             }
         }
     }

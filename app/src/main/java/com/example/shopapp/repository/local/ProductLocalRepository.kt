@@ -9,4 +9,5 @@ class ProductLocalRepository(private val productDao: ProductDao){
     suspend fun insertProduct(product: ProductEntity) = productDao.insertProduct(product)
 
     suspend fun deleteProduct(product: ProductEntity) = productDao.deleteProduct(product)
+    suspend fun deleteProductById(id: Int) = productDao.deleteProductById(id)
 }

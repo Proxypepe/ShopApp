@@ -16,13 +16,15 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 @ExperimentalMaterialApi
 class MainActivity : ComponentActivity() {
     private val mainViewModel: MainViewModel by viewModels {
-        MainViewModelFactory((application as ShoppingAppApplication).productRepository)
+        MainViewModelFactory((application as ShoppingAppApplication).productRepository,
+            (application as ShoppingAppApplication).localRepository)
     }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        mainViewModel.getRecommendedProduct()
+        mainViewModel.getRecommendedProduct()
+        mainViewModel.getCart()
         setContent {
             ShopAppTheme {
                 AppNavigation(

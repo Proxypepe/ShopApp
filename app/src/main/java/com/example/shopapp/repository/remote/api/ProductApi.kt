@@ -8,7 +8,7 @@ import retrofit2.http.Query
 
 interface ProductApi {
 
-    @GET("./detail/{id}")
+    @GET("/detail/{id}")
     suspend fun getDetailById(@Path("id")id: Int): Response<ProductDto>
 
     @GET("./range")

@@ -2,7 +2,6 @@ package com.example.shopapp.presentation.screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -13,23 +12,29 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.shopapp.R
+import com.example.shopapp.domain.MainViewModel
+import com.example.shopapp.repository.remote.models.ProductDto
 import com.google.accompanist.pager.ExperimentalPagerApi
 
 
 @ExperimentalPagerApi
 @Composable
-fun DetailedScreen() {
+fun DetailedScreen(mainPageViewModel: MainViewModel, product: ProductDto, navController: NavController?) {
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text(
-                    text = "Title",
+                    text = product.name, maxLines = 2, overflow = TextOverflow.Clip
                 )},
-                navigationIcon = { IconButton(onClick = {}) {
+                navigationIcon = { IconButton(onClick = {
+                    //FIXME prev route adapt for search
+                    navController?.popBackStack("home", inclusive = true)
+                }) {
                     Icon(
                         imageVector = Icons.Default.ArrowBack,
                         contentDescription = "Back"
@@ -58,10 +63,11 @@ fun DetailedScreen() {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            LazyColumn(
-                modifier = Modifier.fillMaxWidth().fillMaxHeight(0.93f)
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight(0.93f)
             ) {
-                item {
                     Box(modifier = Modifier
                         .padding(start = 45.dp, end = 45.dp)
                         .fillMaxWidth(),
@@ -85,26 +91,21 @@ fun DetailedScreen() {
                         }
                     }
                     Spacer(modifier = Modifier.padding(10.dp))
-                    TabScreen()
-                }
+                    TabScreen(product)
             }
-            Button(onClick = {/*TODO*/},
-            modifier = Modifier.fillMaxWidth(0.9f).height(35.dp)){
+            Button(onClick = {
+                mainPageViewModel.addToCart(product)
+            },
+            modifier = Modifier
+                .fillMaxWidth(0.9f)
+                .height(35.dp)){
                 Column(
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text("В корзину  цена", fontSize = 14.sp)
+                    Text("В корзину ${product.price}", fontSize = 14.sp)
                 }
             }
         }
     }
-}
-
-
-@Preview
-@Composable
-@ExperimentalPagerApi
-fun DetailedScreenPreview() {
-    DetailedScreen()
 }

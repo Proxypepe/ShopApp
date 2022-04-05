@@ -1,9 +1,14 @@
 package com.example.shopapp.repository.remote.models
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+
+@Parcelize
 data class ProductDto(
     val prod_id: Int = 0,
     val name: String,
-    val description: String,
+    val description: String?,
     val price: String,
     val stock: Int,
     val category: String,
@@ -32,4 +37,4 @@ data class ProductDto(
     val comments: List<CommentDto> = emptyList(),
     val rating: List<RatingDto> = emptyList(),
     val favoriteBy: List<FavoriteDto> = emptyList(),
-)
+) : Parcelable

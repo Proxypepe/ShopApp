@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull
 @Entity(tableName = "products")
 data class ProductEntity (
     @PrimaryKey(autoGenerate = true)
-    val id_: Int,
+    val id_: Int = 0,
     @NotNull @NonNull
     val prod_id: Int,
     @NotNull @NonNull
@@ -42,4 +42,33 @@ data class ProductEntity (
     val specials: String?,
     val lads: String?,
     val link: String?,
+)
+
+val  initialProduct = ProductEntity(
+prod_id = 0,
+name = "",
+description = "",
+price = "",
+stock = 0,
+category = "",
+brand = "",
+shell_type = "",
+top_deck = "",
+top_material = "",
+back_deck = "",
+neck_material = "",
+overlay = "",
+strings = "",
+neck_attachment = "",
+mensura = "",
+neck_width = "",
+color = "",
+tailpiece = "",
+produced = "",
+cutout = "",
+varnish = "",
+form = "",
+specials = "",
+lads = "",
+link = "",
 )

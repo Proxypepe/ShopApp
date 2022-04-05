@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.outlined.KeyboardArrowUp
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -15,33 +16,38 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.shopapp.R
+import com.example.shopapp.domain.MainViewModel
 import com.example.shopapp.repository.local.entity.ProductEntity
 
 
 @Composable
-fun CartScreen(products: List<ProductEntity>?) {
+fun CartScreen(mainPageViewModel: MainViewModel) {
+    val products= mainPageViewModel.cart?.collectAsState(initial = listOf())
     LazyColumn {
         item {
             Text(text = "Корзина")
-            if(products == null)
-            {
+        }
+        if (products == null || products.value.isEmpty()) {
+            item {
                 EmptyCart()
             }
-            else {
-                ShowCart(products)
+        } else {
+            items(products.value) { product ->
+                CartCard(mainPageViewModel, product)
+            }
+            item {
                 OfferBox()
             }
+        }
+        item {
             Spacer(modifier = Modifier.height(10.dp))
             Text(text = "Рекомендуем")
             Spacer(modifier = Modifier.height(5.dp))
             LazyRow {
-                items(4) {
-                    RecommendCard(1)
-                }
+
             }
             Box(
                 modifier = Modifier.fillMaxWidth(),
@@ -77,17 +83,9 @@ fun EmptyCart(){
     }
 }
 
-@Composable
-fun ShowCart(products: List<ProductEntity>) {
-    LazyColumn {
-        items(products) { product ->
-            CartCard(product.name, product.price, product.link)
-        }
-    }
-}
 
 @Composable
-fun CartCard(name: String, price: String, link: String?) {
+fun CartCard(mainPageViewModel: MainViewModel, product: ProductEntity) {
     var amount by remember { mutableStateOf(1) }
     Card(modifier = Modifier.fillMaxWidth()) {
         Column {
@@ -98,7 +96,7 @@ fun CartCard(name: String, price: String, link: String?) {
                     )
                     Spacer(modifier = Modifier.width(10.dp))
                     Column {
-                        Text(text = price)
+                        Text(text = product.price)
                         Spacer(modifier = Modifier.height(5.dp))
                         Row(
                             horizontalArrangement= Arrangement.Center,
@@ -116,7 +114,7 @@ fun CartCard(name: String, price: String, link: String?) {
                         Spacer(modifier = Modifier.height(5.dp))
                         Text(
                             modifier = Modifier.fillMaxWidth(),
-                            text = name,
+                            text = product.name,
                             maxLines = 2,
                             overflow = TextOverflow.Clip)
                     }
@@ -133,7 +131,24 @@ fun CartCard(name: String, price: String, link: String?) {
             ) {
                 IconButton(
                     onClick = { /*TODO*/ },
-                    modifier = Modifier.width(90.dp)) {
+                    modifier = Modifier.width(130.dp)) {
+                    Row(
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically,
+                    ){
+                        Icon(imageVector = Icons.Default.Favorite,
+                            contentDescription = "favorite"
+                        )
+                        Spacer(modifier = Modifier.width(7.dp))
+                        Text(text = "В избранное")
+                    }
+                }
+                Spacer(modifier = Modifier.width(7.dp))
+                IconButton(
+                    onClick = {
+                        mainPageViewModel.deleteProductById(product.prod_id)
+                              },
+                    modifier = Modifier.width(100.dp)) {
                     Row(
                         horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically,
@@ -145,21 +160,22 @@ fun CartCard(name: String, price: String, link: String?) {
                         Text(text = "Удалить")
                     }
                 }
-                Spacer(modifier = Modifier.fillMaxWidth(0.6f))
+                Spacer(modifier = Modifier.fillMaxWidth(0.45f))
                 Text(text = amount.toString(), fontSize = 14.sp)
                 Spacer(modifier = Modifier.width(5.dp))
-                IconButton(onClick = { amount++ }) {
+                IconButton(onClick = { amount++ },
+                    modifier = Modifier.width(30.dp)) {
                     Icon(imageVector = Icons.Outlined.KeyboardArrowUp,
                         contentDescription = "add")
                 }
                 Spacer(modifier = Modifier.width(3.dp))
-                IconButton(onClick = { amount-- }) {
+                IconButton(onClick = { amount-- },
+                    modifier = Modifier.width(30.dp)) {
                     Icon(imageVector = Icons.Outlined.KeyboardArrowUp,
                         contentDescription = "reduce")
                 }
             }
         }
-
     }
 }
 
@@ -213,22 +229,4 @@ fun OfferBox() {
             }
         }
     }
-}
-
-@Preview
-@Composable
-fun CartScreenPreview() {
-    CartScreen(null)
-}
-
-@Preview
-@Composable
-fun CartCardPreview() {
-    CartCard("Some name", "Some price", null)
-}
-
-@Preview
-@Composable
-fun OfferBoxPreview() {
-    OfferBox()
 }

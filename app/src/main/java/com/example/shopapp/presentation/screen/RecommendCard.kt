@@ -1,6 +1,9 @@
 package com.example.shopapp.presentation.screen
 
+import android.os.Bundle
+import android.util.Log
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -12,17 +15,27 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.os.bundleOf
+import androidx.navigation.NavController
+import androidx.navigation.NavOptionsBuilder
 import com.example.shopapp.R
+import com.example.shopapp.repository.remote.models.ProductDto
 
-// model {name}, nav
+
+
 @Composable
-fun RecommendCard(id: Int){
+fun RecommendCard(product: ProductDto, navController: NavController){
     Card(
-        modifier = Modifier.size(140.dp, 200.dp).padding(end=10.dp),
-        elevation = 5.dp
+        modifier = Modifier
+            .size(140.dp, 200.dp).padding(end=10.dp)
+            .clickable {
+                Log.d("Click!", "$product")
+                navController.navigate("detailed", bundleOf("PRODUCT" to product))
+            }
+        ,
+        elevation = 5.dp,
     ){
         Column(
             modifier = Modifier
@@ -33,19 +46,18 @@ fun RecommendCard(id: Int){
                 contentDescription = ""
             )
             Text(
-                text="Cost", fontWeight = FontWeight.Bold
+                text = product.price, fontWeight = FontWeight.Bold
             )
             Text(
-                text="Name $id", maxLines = 2, overflow = TextOverflow.Ellipsis,
+                text = product.name, maxLines = 2, overflow = TextOverflow.Ellipsis,
                 fontSize = 12.sp
             )
         }
     }
 }
 
+fun NavController?.navigate(route: String, params: Bundle?, builder: NavOptionsBuilder.() -> Unit = {}) {
+    this?.currentBackStackEntry?.arguments?.putAll(params)
 
-@Preview(showBackground = true)
-@Composable
-fun RecommendCardPreview(){
-    RecommendCard(10)
+    this?.navigate(route, builder)
 }
