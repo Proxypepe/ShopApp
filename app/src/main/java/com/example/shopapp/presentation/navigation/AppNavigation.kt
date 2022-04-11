@@ -18,11 +18,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.shopapp.domain.FavoriteViewModel
 import com.example.shopapp.domain.MainViewModel
-import com.example.shopapp.presentation.screen.CartScreen
-import com.example.shopapp.presentation.screen.DetailedScreen
-import com.example.shopapp.presentation.screen.MainPage
-import com.example.shopapp.presentation.screen.Profile
+import com.example.shopapp.presentation.screen.*
 import com.example.shopapp.repository.remote.models.ProductDto
 import com.google.accompanist.pager.ExperimentalPagerApi
 
@@ -30,7 +28,7 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 @Composable
 @ExperimentalPagerApi
 @ExperimentalMaterialApi
-fun AppNavigation(mainPageViewModel: MainViewModel) {
+fun AppNavigation(mainPageViewModel: MainViewModel, favoriteViewModel: FavoriteViewModel) {
     val navController = rememberNavController()
 
     val badgeCount = mainPageViewModel.cart?.collectAsState(initial = listOf())?.value?.size
@@ -85,11 +83,14 @@ fun AppNavigation(mainPageViewModel: MainViewModel) {
             composable("cart") {
                 Box(modifier = Modifier.padding(innerPadding))
                 {
-                    CartScreen(mainPageViewModel)
+                    CartScreen(mainPageViewModel, navController)
                 }
             }
             composable("favorite") {
-
+                Box(modifier = Modifier.padding(innerPadding))
+                {
+                FavoriteScreen(navController)
+                }
             }
             composable("profile") {
                 Profile()

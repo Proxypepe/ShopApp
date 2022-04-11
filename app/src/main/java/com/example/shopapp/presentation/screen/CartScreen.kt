@@ -18,14 +18,17 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.shopapp.R
 import com.example.shopapp.domain.MainViewModel
 import com.example.shopapp.repository.local.entity.ProductEntity
 
 
 @Composable
-fun CartScreen(mainPageViewModel: MainViewModel) {
+fun CartScreen(mainPageViewModel: MainViewModel, navController: NavController) {
     val products= mainPageViewModel.cart?.collectAsState(initial = listOf())
+    val recommendedProducts = mainPageViewModel.recommendedProducts?.collectAsState(initial = emptyList())?.value
+
     LazyColumn {
         item {
             Text(text = "Корзина")
@@ -46,9 +49,17 @@ fun CartScreen(mainPageViewModel: MainViewModel) {
             Spacer(modifier = Modifier.height(10.dp))
             Text(text = "Рекомендуем")
             Spacer(modifier = Modifier.height(5.dp))
-            LazyRow {
-
+        }
+        recommendedProducts?.let {
+            item {
+                LazyRow {
+                    items(it) { product ->
+                        RecommendCard(product, navController)
+                    }
+                }
             }
+        }
+         item {
             Box(
                 modifier = Modifier.fillMaxWidth(),
                 contentAlignment = Alignment.Center

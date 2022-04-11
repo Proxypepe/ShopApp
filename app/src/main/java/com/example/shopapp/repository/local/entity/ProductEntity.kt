@@ -7,8 +7,7 @@ import org.jetbrains.annotations.NotNull
 
 @Entity(tableName = "products")
 data class ProductEntity (
-    @PrimaryKey(autoGenerate = true)
-    val id_: Int = 0,
+    @PrimaryKey
     @NotNull @NonNull
     val prod_id: Int,
     @NotNull @NonNull

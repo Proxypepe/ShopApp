@@ -48,7 +48,9 @@ fun DetailedScreen(mainPageViewModel: MainViewModel, product: ProductDto, navCon
                             tint = Color.White
                         )
                     }
-                    IconButton(onClick = {/*TODO*/}) {
+                    IconButton(onClick = {
+                        navController?.navigate("cart")
+                    }) {
                         Icon(
                             imageVector = Icons.Default.ShoppingCart,
                             contentDescription = "ShoppingCart",

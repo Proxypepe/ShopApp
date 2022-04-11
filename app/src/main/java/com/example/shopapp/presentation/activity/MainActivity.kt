@@ -5,6 +5,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.material.ExperimentalMaterialApi
+import com.example.shopapp.domain.FavoriteViewModel
+import com.example.shopapp.domain.FavoriteViewModelFactory
 import com.example.shopapp.domain.MainViewModel
 import com.example.shopapp.domain.MainViewModelFactory
 import com.example.shopapp.presentation.navigation.AppNavigation
@@ -20,6 +22,9 @@ class MainActivity : ComponentActivity() {
             (application as ShoppingAppApplication).localRepository)
     }
 
+    private val favoriteViewModel: FavoriteViewModel by viewModels {
+        FavoriteViewModelFactory((application as ShoppingAppApplication).favoriteRepository)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,7 +33,8 @@ class MainActivity : ComponentActivity() {
         setContent {
             ShopAppTheme {
                 AppNavigation(
-                    mainPageViewModel = mainViewModel
+                    mainPageViewModel = mainViewModel,
+                    favoriteViewModel = favoriteViewModel,
                 )
             }
         }
