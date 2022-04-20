@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.ui.ExperimentalComposeUiApi
 import com.example.shopapp.domain.*
 import com.example.shopapp.presentation.navigation.AppNavigation
 import com.example.shopapp.repository.ShoppingAppApplication
@@ -13,6 +14,7 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 
 @ExperimentalPagerApi
 @ExperimentalMaterialApi
+@ExperimentalComposeUiApi
 class MainActivity : ComponentActivity() {
 
     private val cartViewModel: CartViewModel by viewModels {
@@ -27,6 +29,10 @@ class MainActivity : ComponentActivity() {
     private val favoriteViewModel: FavoriteViewModel by viewModels {
         FavoriteViewModelFactory((application as ShoppingAppApplication).favoriteRepository,
             (application as ShoppingAppApplication).favoriteLocalRepository)
+    }
+
+    private val searchViewModel: SearchViewModel by viewModels {
+        SearchViewModelFactory((application as ShoppingAppApplication).productRepository)
     }
 
     private fun initInfoLists() {
@@ -47,7 +53,8 @@ class MainActivity : ComponentActivity() {
                 AppNavigation(
                     mainPageViewModel = mainViewModel,
                     favoriteViewModel = favoriteViewModel,
-                    cartViewModel = cartViewModel
+                    cartViewModel = cartViewModel,
+                    searchViewModel = searchViewModel
                 )
             }
         }

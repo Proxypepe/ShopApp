@@ -6,7 +6,10 @@ import retrofit2.Response
 
 class ProductRepository(private val productApi: ProductApi) {
 
+    suspend fun getAllProducts(): Response<List<ProductDto>> = productApi.getAllProducts()
+
     suspend fun getDetailById(id: Int): Response<ProductDto> = productApi.getDetailById(id)
+
     suspend fun getRangeProduct(offset: Int, limit: Int): Response<List<ProductDto>>
     = productApi.getRangeProduct(offset, limit)
 

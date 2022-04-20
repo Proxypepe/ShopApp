@@ -8,6 +8,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
@@ -21,6 +22,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.shopapp.domain.CartViewModel
 import com.example.shopapp.domain.FavoriteViewModel
 import com.example.shopapp.domain.MainViewModel
+import com.example.shopapp.domain.SearchViewModel
 import com.example.shopapp.presentation.screen.*
 import com.example.shopapp.repository.remote.models.ProductDto
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -29,7 +31,10 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 @Composable
 @ExperimentalPagerApi
 @ExperimentalMaterialApi
-fun AppNavigation(mainPageViewModel: MainViewModel, favoriteViewModel: FavoriteViewModel, cartViewModel: CartViewModel) {
+@ExperimentalComposeUiApi
+fun AppNavigation(mainPageViewModel: MainViewModel, favoriteViewModel: FavoriteViewModel,
+                  cartViewModel: CartViewModel, searchViewModel: SearchViewModel
+) {
     val navController = rememberNavController()
 
     val badgeCount = cartViewModel.cart?.collectAsState(initial = listOf())?.value?.size
@@ -79,7 +84,10 @@ fun AppNavigation(mainPageViewModel: MainViewModel, favoriteViewModel: FavoriteV
                 }
             }
             composable("search") {
-
+                Box(modifier = Modifier.padding(innerPadding))
+                {
+                    SearchScreen(searchViewModel, navController)
+                }
             }
             composable("cart") {
                 Box(modifier = Modifier.padding(innerPadding))
@@ -90,11 +98,14 @@ fun AppNavigation(mainPageViewModel: MainViewModel, favoriteViewModel: FavoriteV
             composable("favorite") {
                 Box(modifier = Modifier.padding(innerPadding))
                 {
-                FavoriteScreen(favoriteViewModel, navController)
+                    FavoriteScreen(favoriteViewModel, navController)
                 }
             }
             composable("profile") {
-                Profile()
+                Box(modifier = Modifier.padding(innerPadding))
+                {
+                    Profile()
+                }
             }
 
             composable("detailed") {

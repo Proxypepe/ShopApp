@@ -51,7 +51,7 @@ fun BrandCard(){
 fun MainPage(mainPageViewModel: MainViewModel?, navController: NavController) {
 
     val products = mainPageViewModel?.recommendedProducts?.collectAsState(initial = emptyList())?.value
-    //TODO use livedata or same
+
     val loading = mainPageViewModel?.loading?.collectAsState(false)?.value
 
     Box(

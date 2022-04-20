@@ -8,6 +8,9 @@ import retrofit2.http.Query
 
 interface ProductApi {
 
+    @GET("./all")
+    suspend fun getAllProducts(): Response<List<ProductDto>>
+
     @GET("/detail/{id}")
     suspend fun getDetailById(@Path("id")id: Int): Response<ProductDto>
 

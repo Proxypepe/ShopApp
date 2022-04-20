@@ -29,7 +29,7 @@ import com.example.shopapp.repository.local.entity.ProductEntity
 @Composable
 fun CartScreen(cartViewModel: CartViewModel, mainPageViewModel: MainViewModel, favoriteViewModel: FavoriteViewModel, navController: NavController) {
     val products = cartViewModel.cart?.collectAsState(initial = listOf())
-    val recommendedProducts = mainPageViewModel.recommendedProducts?.collectAsState(initial = emptyList())?.value
+    val recommendedProducts = mainPageViewModel.recommendedProducts.collectAsState(initial = emptyList()).value
 
     LazyColumn {
         item {
@@ -52,7 +52,7 @@ fun CartScreen(cartViewModel: CartViewModel, mainPageViewModel: MainViewModel, f
             Text(text = "Рекомендуем")
             Spacer(modifier = Modifier.height(5.dp))
         }
-        recommendedProducts?.let {
+        recommendedProducts.let {
             item {
                 LazyRow {
                     items(it) { product ->
