@@ -12,8 +12,7 @@ data class ProductEntity (
     val prod_id: Int,
     @NotNull @NonNull
     val name: String,
-    @NotNull @NonNull
-    val description: String,
+    val description: String?,
     @NotNull @NonNull
     val price: String,
     @NotNull @NonNull
@@ -41,33 +40,4 @@ data class ProductEntity (
     val specials: String?,
     val lads: String?,
     val link: String?,
-)
-
-val  initialProduct = ProductEntity(
-prod_id = 0,
-name = "",
-description = "",
-price = "",
-stock = 0,
-category = "",
-brand = "",
-shell_type = "",
-top_deck = "",
-top_material = "",
-back_deck = "",
-neck_material = "",
-overlay = "",
-strings = "",
-neck_attachment = "",
-mensura = "",
-neck_width = "",
-color = "",
-tailpiece = "",
-produced = "",
-cutout = "",
-varnish = "",
-form = "",
-specials = "",
-lads = "",
-link = "",
 )

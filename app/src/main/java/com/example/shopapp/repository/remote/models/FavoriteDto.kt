@@ -5,6 +5,7 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class FavoriteDto(
     val id: Long = 0,
-    val user: UserDto,
+    val user: UserDto?,
     val product: ProductDto
 ) : Parcelable
+

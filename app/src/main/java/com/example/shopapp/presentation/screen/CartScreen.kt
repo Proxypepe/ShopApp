@@ -20,13 +20,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.shopapp.R
+import com.example.shopapp.domain.CartViewModel
+import com.example.shopapp.domain.FavoriteViewModel
 import com.example.shopapp.domain.MainViewModel
 import com.example.shopapp.repository.local.entity.ProductEntity
 
 
 @Composable
-fun CartScreen(mainPageViewModel: MainViewModel, navController: NavController) {
-    val products= mainPageViewModel.cart?.collectAsState(initial = listOf())
+fun CartScreen(cartViewModel: CartViewModel, mainPageViewModel: MainViewModel, favoriteViewModel: FavoriteViewModel, navController: NavController) {
+    val products = cartViewModel.cart?.collectAsState(initial = listOf())
     val recommendedProducts = mainPageViewModel.recommendedProducts?.collectAsState(initial = emptyList())?.value
 
     LazyColumn {
@@ -39,7 +41,7 @@ fun CartScreen(mainPageViewModel: MainViewModel, navController: NavController) {
             }
         } else {
             items(products.value) { product ->
-                CartCard(mainPageViewModel, product)
+                CartCard(cartViewModel, favoriteViewModel, product)
             }
             item {
                 OfferBox()
@@ -96,7 +98,7 @@ fun EmptyCart(){
 
 
 @Composable
-fun CartCard(mainPageViewModel: MainViewModel, product: ProductEntity) {
+fun CartCard(cartViewModel: CartViewModel, favoriteViewModel: FavoriteViewModel, product: ProductEntity) {
     var amount by remember { mutableStateOf(1) }
     Card(modifier = Modifier.fillMaxWidth()) {
         Column {
@@ -141,7 +143,9 @@ fun CartCard(mainPageViewModel: MainViewModel, product: ProductEntity) {
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 IconButton(
-                    onClick = { /*TODO*/ },
+                    onClick = {
+                        favoriteViewModel.addFavorite(product)
+                              },
                     modifier = Modifier.width(130.dp)) {
                     Row(
                         horizontalArrangement = Arrangement.Center,
@@ -157,7 +161,7 @@ fun CartCard(mainPageViewModel: MainViewModel, product: ProductEntity) {
                 Spacer(modifier = Modifier.width(7.dp))
                 IconButton(
                     onClick = {
-                        mainPageViewModel.deleteProductById(product.prod_id)
+                        cartViewModel.deleteProductById(product.prod_id)
                               },
                     modifier = Modifier.width(100.dp)) {
                     Row(

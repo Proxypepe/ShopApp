@@ -6,6 +6,8 @@ import retrofit2.Response
 
 class FavoriteRepository(private val favoritesApi: FavoritesApi) {
 
+    suspend fun getFavorites():Response<List<FavoriteDto>> = favoritesApi.getFavorites()
+
     suspend fun addFavorite(favorite: FavoriteDto): Response<FavoriteDto>
         = favoritesApi.addFavorite(favorite)
     suspend fun deleteFavoriteById(id: Int) = favoritesApi.deleteFavorite(id)

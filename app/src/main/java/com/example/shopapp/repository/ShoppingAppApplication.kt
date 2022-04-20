@@ -1,6 +1,7 @@
 package com.example.shopapp.repository
 
 import android.app.Application
+import com.example.shopapp.repository.local.FavoriteLocalRepository
 import com.example.shopapp.repository.local.ProductLocalRepository
 import com.example.shopapp.repository.local.ProductRoomDatabase
 import com.example.shopapp.repository.remote.RetrofitFactory
@@ -11,6 +12,7 @@ class ShoppingAppApplication : Application(){
 
     private val database by lazy { ProductRoomDatabase.getDatabase(this) }
     val localRepository by lazy { ProductLocalRepository(database.productDao()) }
+    val favoriteLocalRepository by lazy { FavoriteLocalRepository(database.favoriteDao()) }
 
     private val authApi by lazy { RetrofitFactory().getInstance<AuthApi>("http://10.0.2.2:8000/")}
     val authRepository by lazy { AuthRepository(authApi) }

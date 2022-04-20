@@ -4,12 +4,15 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.example.shopapp.repository.local.dao.FavoriteDao
 import com.example.shopapp.repository.local.dao.ProductDao
+import com.example.shopapp.repository.local.entity.FavoriteEntity
 import com.example.shopapp.repository.local.entity.ProductEntity
 
-@Database(entities = [ProductEntity::class], version = 1)
+@Database(entities = [ProductEntity::class, FavoriteEntity::class], version = 2)
 abstract class ProductRoomDatabase : RoomDatabase() {
     abstract fun productDao(): ProductDao
+    abstract fun favoriteDao(): FavoriteDao
 
     companion object {
 
