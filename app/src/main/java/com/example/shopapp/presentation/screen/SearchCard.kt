@@ -21,7 +21,7 @@ fun SearchCard(product: ProductDto, navController: NavController) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(5.dp)
+            .padding(10.dp)
             .clickable {
                 navController.navigate("detailed", bundleOf("PRODUCT" to product))
             },
@@ -36,13 +36,25 @@ fun SearchCard(product: ProductDto, navController: NavController) {
             Column {
                 Text(text = product.price)
                 Spacer(modifier = Modifier.height(5.dp))
-                Spacer(modifier = Modifier.height(5.dp))
                 Text(
                     modifier = Modifier.fillMaxWidth(),
                     text = product.name,
                     maxLines = 2,
-                    overflow = TextOverflow.Clip)
+                    overflow = TextOverflow.Clip
+                )
+                Spacer(modifier = Modifier.height(5.dp))
+                Tags(product)
+
             }
         }
     }
 }
+
+@Composable
+fun Tags(product: ProductDto) {
+    Column {
+        Text(text = product.category)
+        Text(text = product.brand)
+    }
+}
+

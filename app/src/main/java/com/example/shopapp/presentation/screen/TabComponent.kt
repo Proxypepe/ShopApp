@@ -24,8 +24,7 @@ fun Description(text: String) {
 }
 
 @Composable
-fun Characteristic(product: ProductDto)
-{
+fun Characteristic(product: ProductDto) {
     LazyColumn(modifier = Modifier.padding(20.dp).fillMaxSize()) {
         item {
             Row {
