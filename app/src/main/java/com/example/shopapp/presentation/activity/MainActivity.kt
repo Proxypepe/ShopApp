@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.ui.ExperimentalComposeUiApi
 import com.example.shopapp.domain.*
@@ -15,6 +16,7 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 @ExperimentalPagerApi
 @ExperimentalMaterialApi
 @ExperimentalComposeUiApi
+@ExperimentalAnimationApi
 class MainActivity : ComponentActivity() {
 
     private val cartViewModel: CartViewModel by viewModels {

@@ -23,13 +23,13 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.example.shopapp.domain.SearchViewModel
 
 
 @ExperimentalComposeUiApi
 @Composable
-fun SearchScreen(searchViewModel: SearchViewModel, navController: NavController) {
+fun SearchScreen(searchViewModel: SearchViewModel, navController: NavHostController) {
 
     val query = searchViewModel.query.value
     val allProducts = searchViewModel.filtered.collectAsState(initial = emptyList()).value

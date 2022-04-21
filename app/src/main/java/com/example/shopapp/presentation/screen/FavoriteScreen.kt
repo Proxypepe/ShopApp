@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.os.bundleOf
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.shopapp.R
 import com.example.shopapp.domain.FavoriteViewModel
@@ -29,7 +30,7 @@ import com.example.shopapp.repository.local.entity.ProductEntity
 import com.example.shopapp.repository.remote.models.ProductDto
 
 @Composable
-fun FavoriteScreen(favoriteViewModel: FavoriteViewModel, navController: NavController) {
+fun FavoriteScreen(favoriteViewModel: FavoriteViewModel, navController: NavHostController) {
     val favorites = favoriteViewModel.favorites?.collectAsState(initial = emptyList())?.value
     if (favorites == null || favorites.isEmpty()){
         EmptyFavorites(navController)
@@ -79,7 +80,7 @@ fun FavoriteCart(product: ProductEntity) {
 }
 
 @Composable
-fun EmptyFavorites(navController: NavController) {
+fun EmptyFavorites(navController: NavHostController) {
     Box(
         modifier = Modifier.fillMaxWidth(),
         contentAlignment = Alignment.Center

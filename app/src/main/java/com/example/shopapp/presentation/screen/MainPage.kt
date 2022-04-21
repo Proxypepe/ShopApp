@@ -1,6 +1,5 @@
 package com.example.shopapp.presentation.screen
 
-import com.example.shopapp.R
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -14,12 +13,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.example.shopapp.R
 import com.example.shopapp.domain.MainViewModel
 
 
@@ -48,7 +47,7 @@ fun BrandCard(){
 
 
 @Composable
-fun MainPage(mainPageViewModel: MainViewModel?, navController: NavController) {
+fun MainPage(mainPageViewModel: MainViewModel?, navController: NavHostController) {
 
     val products = mainPageViewModel?.recommendedProducts?.collectAsState(initial = emptyList())?.value
 

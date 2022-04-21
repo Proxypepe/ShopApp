@@ -18,7 +18,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.example.shopapp.R
 import com.example.shopapp.domain.CartViewModel
 import com.example.shopapp.domain.FavoriteViewModel
@@ -27,7 +27,7 @@ import com.example.shopapp.repository.local.entity.ProductEntity
 
 
 @Composable
-fun CartScreen(cartViewModel: CartViewModel, mainPageViewModel: MainViewModel, favoriteViewModel: FavoriteViewModel, navController: NavController) {
+fun CartScreen(cartViewModel: CartViewModel, mainPageViewModel: MainViewModel, favoriteViewModel: FavoriteViewModel, navController: NavHostController) {
     val products = cartViewModel.cart?.collectAsState(initial = listOf())
     val recommendedProducts = mainPageViewModel.recommendedProducts.collectAsState(initial = emptyList()).value
 

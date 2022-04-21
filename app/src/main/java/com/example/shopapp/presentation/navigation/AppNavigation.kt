@@ -1,5 +1,8 @@
 package com.example.shopapp.presentation.navigation
 
+import androidx.compose.animation.*
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -14,17 +17,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
 import com.example.shopapp.domain.CartViewModel
 import com.example.shopapp.domain.FavoriteViewModel
 import com.example.shopapp.domain.MainViewModel
 import com.example.shopapp.domain.SearchViewModel
 import com.example.shopapp.presentation.screen.*
 import com.example.shopapp.repository.remote.models.ProductDto
+import com.google.accompanist.navigation.animation.AnimatedNavHost
+import com.google.accompanist.navigation.animation.rememberAnimatedNavController
+import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.pager.ExperimentalPagerApi
 
 
@@ -32,10 +35,11 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 @ExperimentalPagerApi
 @ExperimentalMaterialApi
 @ExperimentalComposeUiApi
+@ExperimentalAnimationApi
 fun AppNavigation(mainPageViewModel: MainViewModel, favoriteViewModel: FavoriteViewModel,
                   cartViewModel: CartViewModel, searchViewModel: SearchViewModel
 ) {
-    val navController = rememberNavController()
+    val navController = rememberAnimatedNavController()
 
     val badgeCount = cartViewModel.cart?.collectAsState(initial = listOf())?.value?.size
 
@@ -76,39 +80,56 @@ fun AppNavigation(mainPageViewModel: MainViewModel, favoriteViewModel: FavoriteV
             )
         } // bottomBar
     ) { innerPadding ->
-        NavHost(navController = navController, startDestination = "home") {
-            composable("home") {
+        AnimatedNavHost(navController = navController, startDestination = NavigationRouter.Home.route,
+            popEnterTransition = { slideInHorizontally(
+                initialOffsetX = {-300},
+                animationSpec = tween(
+                    durationMillis = 500,
+                    easing = FastOutSlowInEasing
+                    )
+                ) + fadeIn(animationSpec = tween(300))
+            },
+            exitTransition = { slideOutHorizontally(
+                targetOffsetX = { -300},
+                animationSpec = tween(
+                    durationMillis = 500,
+                    easing = FastOutSlowInEasing
+                    )
+                ) + fadeOut(animationSpec = tween(300))
+            }) {
+            composable(NavigationRouter.Home.route,
+                )
+            {
                 Box(modifier = Modifier.padding(innerPadding))
                 {
                     MainPage(mainPageViewModel, navController)
                 }
             }
-            composable("search") {
+            composable(NavigationRouter.Search.route) {
                 Box(modifier = Modifier.padding(innerPadding))
                 {
                     SearchScreen(searchViewModel, navController)
                 }
             }
-            composable("cart") {
+            composable(NavigationRouter.Cart.route) {
                 Box(modifier = Modifier.padding(innerPadding))
                 {
                     CartScreen(cartViewModel, mainPageViewModel, favoriteViewModel, navController)
                 }
             }
-            composable("favorite") {
+            composable(NavigationRouter.Favorite.route) {
                 Box(modifier = Modifier.padding(innerPadding))
                 {
                     FavoriteScreen(favoriteViewModel, navController)
                 }
             }
-            composable("profile") {
+            composable(NavigationRouter.Profile.route) {
                 Box(modifier = Modifier.padding(innerPadding))
                 {
                     Profile()
                 }
             }
-
-            composable("detailed") {
+            composable(NavigationRouter.Detailed.route) {
                 navController.previousBackStackEntry?.arguments?.getParcelable<ProductDto>("PRODUCT")
                     ?.let {
                         Box(modifier = Modifier.padding(innerPadding))
@@ -126,7 +147,7 @@ fun AppNavigation(mainPageViewModel: MainViewModel, favoriteViewModel: FavoriteV
 @Composable
 fun BottomNavigationBar(
     items: List<BottomNavItem>,
-    navController: NavController,
+    navController: NavHostController,
     modifier: Modifier = Modifier,
     onItemClick: (BottomNavItem) -> Unit
 ) {
@@ -145,9 +166,10 @@ fun BottomNavigationBar(
                 icon = {
                     Column(horizontalAlignment = CenterHorizontally) {
                         if (item.badgeCount > 0) {
-                            BadgeBox(
-                                badgeContent = {
+                            BadgedBox(
+                                badge = { Badge {
                                     Text(text = item.badgeCount.toString())
+                                    }
                                 }
                             ) {
                                 Icon(imageVector = item.icon,

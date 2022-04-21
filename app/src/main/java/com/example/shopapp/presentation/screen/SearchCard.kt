@@ -12,12 +12,13 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.core.os.bundleOf
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.example.shopapp.R
 import com.example.shopapp.repository.remote.models.ProductDto
 
 
 @Composable
-fun SearchCard(product: ProductDto, navController: NavController) {
+fun SearchCard(product: ProductDto, navController: NavHostController) {
     Card(
         modifier = Modifier
             .fillMaxWidth()

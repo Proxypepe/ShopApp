@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.os.bundleOf
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import androidx.navigation.NavOptionsBuilder
 import com.example.shopapp.R
 import com.example.shopapp.repository.remote.models.ProductDto
@@ -26,7 +27,7 @@ import com.example.shopapp.repository.remote.models.ProductDto
 
 
 @Composable
-fun RecommendCard(product: ProductDto, navController: NavController){
+fun RecommendCard(product: ProductDto, navController: NavHostController){
     Card(
         modifier = Modifier
             .size(140.dp, 200.dp).padding(end=10.dp)
@@ -56,7 +57,7 @@ fun RecommendCard(product: ProductDto, navController: NavController){
     }
 }
 
-fun NavController?.navigate(route: String, params: Bundle?, builder: NavOptionsBuilder.() -> Unit = {}) {
+fun NavHostController?.navigate(route: String, params: Bundle?, builder: NavOptionsBuilder.() -> Unit = {}) {
     this?.currentBackStackEntry?.arguments?.putAll(params)
 
     this?.navigate(route, builder)
