@@ -4,6 +4,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.example.shopapp.domain.filters.SearchBarState
 import com.example.shopapp.repository.remote.models.ProductDto
 import com.example.shopapp.repository.remote.repository.ProductRepository
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,10 +15,12 @@ class SearchViewModel(
     private val productRepository: ProductRepository
 ): ViewModel() {
     private var allProducts: List<ProductDto> = emptyList()
+    private var filteredSet: Set<ProductDto> = emptySet()
+
     val filtered = MutableStateFlow(allProducts)
     var loading: MutableStateFlow<Boolean> = MutableStateFlow(false)
-
     val query = mutableStateOf("")
+    val searchBarState = SearchBarState()
 
     init {
         initProducts()
@@ -29,15 +32,23 @@ class SearchViewModel(
             println(allProducts)
             filtered.value = allProducts
         } else {
-            filtered.value = allProducts.filter {
-                it.name.contains(query)
-            }
+            filtered.value = querySearch(query)
         }
     }
 
+    fun filterCategory(category: String) {
+        val newSet =  allProducts.filter {
+                it.category == "Басс гитара"
+            }.toSet()
+        filteredSet = filteredSet union newSet
+    }
 
     fun onQueryChanged(query: String){
         this.query.value = query
+    }
+
+    private fun querySearch(query: String) = allProducts.filter {
+        it.name.contains(query)
     }
 
     private fun initProducts() = viewModelScope.launch {

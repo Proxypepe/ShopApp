@@ -19,6 +19,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.example.shopapp.R
 import com.example.shopapp.domain.MainViewModel
+import com.example.shopapp.presentation.screen.components.TabScreen
 import com.example.shopapp.repository.remote.models.ProductDto
 import com.google.accompanist.pager.ExperimentalPagerApi
 

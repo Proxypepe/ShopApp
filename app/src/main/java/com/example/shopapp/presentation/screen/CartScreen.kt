@@ -23,6 +23,7 @@ import com.example.shopapp.R
 import com.example.shopapp.domain.CartViewModel
 import com.example.shopapp.domain.FavoriteViewModel
 import com.example.shopapp.domain.MainViewModel
+import com.example.shopapp.presentation.screen.components.RecommendCard
 import com.example.shopapp.repository.local.entity.ProductEntity
 
 

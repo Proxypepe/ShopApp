@@ -1,4 +1,5 @@
-package com.example.shopapp.presentation.screen
+package com.example.shopapp.presentation.screen.components
+
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -11,9 +12,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.core.os.bundleOf
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.example.shopapp.R
+import com.example.shopapp.presentation.screen.components.navigate
 import com.example.shopapp.repository.remote.models.ProductDto
 
 

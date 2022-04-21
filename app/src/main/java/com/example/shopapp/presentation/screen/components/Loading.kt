@@ -1,4 +1,5 @@
-package com.example.shopapp.presentation.screen
+package com.example.shopapp.presentation.screen.components
+
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row

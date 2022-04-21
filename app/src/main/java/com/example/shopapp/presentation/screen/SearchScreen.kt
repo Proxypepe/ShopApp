@@ -1,7 +1,9 @@
 package com.example.shopapp.presentation.screen
 
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -25,6 +27,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.shopapp.domain.SearchViewModel
+import com.example.shopapp.domain.filters.SearchBarState
+import com.example.shopapp.presentation.screen.components.SearchCard
 
 
 @ExperimentalComposeUiApi
@@ -108,6 +112,7 @@ fun FilterButtons(searchViewModel: SearchViewModel) {
                     ) {
                         Text(text = "Категория")
                     }
+                    Spacer(modifier = Modifier.width(5.dp))
                     OutlinedButton(
                         onClick = {
                             expanded = !(expanded && category == 2)
@@ -158,14 +163,24 @@ fun FilterButtons(searchViewModel: SearchViewModel) {
                 }
             }
             AnimatedVisibility(expanded) {
+                var height = 0.dp
+                when(category) {
+                    1 -> height = 200.dp
+                    2 -> height = 200.dp
+                    3 -> height = 200.dp
+                    4 -> height = 200.dp
+                    5 -> height = 200.dp
+                }
                 Box(
-                    modifier = Modifier.fillMaxWidth().height(150.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(height),
                 ){
                     when(category) {
-                        1 -> CategorySelector()
-                        2 -> BrandSelector()
-                        3 -> ColorSelector()
-                        4 -> ManufacturingSelector()
+                        1 -> CategorySelector(searchViewModel)
+                        2 -> BrandSelector(searchViewModel)
+                        3 -> ColorSelector(searchViewModel)
+                        4 -> ManufacturerSelector(searchViewModel)
                         5 -> MaterialSelector()
                     }
                 }
@@ -176,68 +191,169 @@ fun FilterButtons(searchViewModel: SearchViewModel) {
 
 
 @Composable
-fun CategorySelector() {
-    val acoustic = remember { mutableStateOf(false) }
-    val bass = remember { mutableStateOf(false) }
-    val classic = remember { mutableStateOf(false) }
-
+fun CategorySelector(searchViewModel: SearchViewModel) {
+    val categories = listOf(
+        searchViewModel.searchBarState.acoustic,
+        searchViewModel.searchBarState.classic,
+        searchViewModel.searchBarState.bass,
+        searchViewModel.searchBarState.electro
+    )
     Column(modifier = Modifier
         .padding(10.dp)
         .fillMaxWidth()) {
-        Row (
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Checkbox(
-                checked = acoustic.value,
-                onCheckedChange = { acoustic.value = it }
+        categories.forEach { category ->
+            CustomCheckBox(
+                name = category.category,
+                checked = category.selected,
+                onCheckedChange = {
+                    Log.d("Acoustic section", "$it and ${category.selected}")
+                    category.selected.value = it },
+                onTextClicked = {category.selected.value = !category.selected.value }
             )
-            Spacer(modifier = Modifier.width(5.dp))
-            Text(text = "Акустическая гитара")
-        }
-        Spacer(modifier = Modifier.height(5.dp))
-        Row (
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Checkbox(
-                checked = bass.value,
-                onCheckedChange = { bass.value = it }
-            )
-            Spacer(modifier = Modifier.width(5.dp))
-            Text(text = "Классическая гитара")
-        }
-        Spacer(modifier = Modifier.height(5.dp))
-        Row (
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Checkbox(
-                checked = classic.value,
-                onCheckedChange = { classic.value = it }
-            )
-            Spacer(modifier = Modifier.width(5.dp))
-            Text(text = "Басс гитара")
         }
     }
 }
 
 @Composable
-fun BrandSelector() {
-    Text(text = "Hello")
+fun BrandSelector(searchViewModel: SearchViewModel) {
+    val brands = listOf(
+        searchViewModel.searchBarState.prima,
+        searchViewModel.searchBarState.yamaha,
+        searchViewModel.searchBarState.crafter,
+        searchViewModel.searchBarState.enyaGuitars,
+        searchViewModel.searchBarState.framus,
+        searchViewModel.searchBarState.ovation,
+        searchViewModel.searchBarState.cort,
+        searchViewModel.searchBarState.fender,
+        searchViewModel.searchBarState.lAG,
+        searchViewModel.searchBarState.ortega,
+        searchViewModel.searchBarState.kremona,
+        searchViewModel.searchBarState.GEWA,
+        searchViewModel.searchBarState.django,
+        searchViewModel.searchBarState.alhambra,
+        searchViewModel.searchBarState.tokai,
+        searchViewModel.searchBarState.vintage,
+        searchViewModel.searchBarState.inspector,
+        searchViewModel.searchBarState.DBZ,
+        searchViewModel.searchBarState.squier,
+        searchViewModel.searchBarState.ibanez,
+        searchViewModel.searchBarState.FGN,
+        searchViewModel.searchBarState.PRS,
+        searchViewModel.searchBarState.mayones,
+        searchViewModel.searchBarState.angelico,
+        searchViewModel.searchBarState.fernandes,
+
+    )
+    LazyColumn(modifier = Modifier
+        .padding(10.dp)
+        .fillMaxWidth()) {
+        items(brands) { brand ->
+            CustomCheckBox(
+                name = brand.brand,
+                checked = brand.selected,
+                onCheckedChange = {
+                    Log.d("Acoustic section", "$it and ${brand.selected}")
+                    brand.selected.value = it },
+                onTextClicked = {brand.selected.value = !brand.selected.value }
+            )
+        }
+    }
 }
 
 @Composable
-fun ColorSelector() {
-
+fun ColorSelector(searchViewModel: SearchViewModel) {
+    val colors = listOf(
+        searchViewModel.searchBarState.natural,
+        searchViewModel.searchBarState.black,
+        searchViewModel.searchBarState.burst,
+        searchViewModel.searchBarState.brown,
+        searchViewModel.searchBarState.white,
+        searchViewModel.searchBarState.silver,
+        searchViewModel.searchBarState.red,
+        searchViewModel.searchBarState.blackE,
+        searchViewModel.searchBarState.grey,
+        searchViewModel.searchBarState.blue,
+        searchViewModel.searchBarState.darkBlue,
+        searchViewModel.searchBarState.orange,
+        searchViewModel.searchBarState.pink,
+        searchViewModel.searchBarState.nacre,
+        searchViewModel.searchBarState.yellow,
+        searchViewModel.searchBarState.green,
+    )
+    LazyColumn(modifier = Modifier
+        .padding(10.dp)
+        .fillMaxWidth()) {
+        items(colors) { color ->
+            CustomCheckBox(
+                name = color.color,
+                checked = color.selected,
+                onCheckedChange = {
+                    Log.d("Acoustic section", "$it and ${color.selected}")
+                    color.selected.value = it },
+                onTextClicked = {color.selected.value = !color.selected.value }
+            )
+        }
+    }
 }
 
 @Composable
-fun ManufacturingSelector() {
-
+fun ManufacturerSelector(searchViewModel: SearchViewModel) {
+    val manufacturers = listOf(
+        searchViewModel.searchBarState.china,
+        searchViewModel.searchBarState.indonesia,
+        searchViewModel.searchBarState.bulgaria,
+        searchViewModel.searchBarState.romania,
+        searchViewModel.searchBarState.spain,
+        searchViewModel.searchBarState.russia,
+        searchViewModel.searchBarState.korea,
+        searchViewModel.searchBarState.japan,
+        searchViewModel.searchBarState.mexico,
+        searchViewModel.searchBarState.poland,
+        searchViewModel.searchBarState.USA,
+    )
+    LazyColumn(modifier = Modifier
+        .padding(10.dp)
+        .fillMaxWidth()) {
+        items(manufacturers) { manufacturer ->
+            CustomCheckBox(
+                name = manufacturer.country,
+                checked = manufacturer.selected,
+                onCheckedChange = {
+                    Log.d("Acoustic section", "$it and ${manufacturer.selected}")
+                    manufacturer.selected.value = it },
+                onTextClicked = {manufacturer.selected.value = !manufacturer.selected.value }
+            )
+        }
+    }
 }
 
 @Composable
 fun MaterialSelector() {
 
+}
+
+@Composable
+fun CustomCheckBox(
+    name: String,
+    checked: MutableState<Boolean>,
+    onCheckedChange: ((Boolean) -> Unit),
+    onTextClicked: (() -> Unit)
+) {
+    // FIXME: RENAME FUNCTION
+    Row (
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Checkbox(
+            checked = checked.value,
+            onCheckedChange = { onCheckedChange(it) }
+        )
+        Spacer(modifier = Modifier.width(5.dp))
+        Text(
+            text = name,
+            modifier = Modifier.clickable {
+                onTextClicked()
+            }
+        )
+    }
 }

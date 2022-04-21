@@ -20,6 +20,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.shopapp.R
 import com.example.shopapp.domain.MainViewModel
+import com.example.shopapp.presentation.screen.components.LoadProgress
+import com.example.shopapp.presentation.screen.components.RecommendCard
 
 
 @Composable
