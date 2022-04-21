@@ -1,6 +1,5 @@
 package com.example.shopapp.presentation.screen
 
-import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -27,8 +26,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.shopapp.domain.SearchViewModel
+import com.example.shopapp.domain.filters.CategoryButtonState
 import com.example.shopapp.domain.filters.FilterCategory
-import com.example.shopapp.domain.filters.SearchBarState
 import com.example.shopapp.presentation.screen.components.SearchCard
 
 
@@ -95,86 +94,72 @@ fun SearchScreen(searchViewModel: SearchViewModel, navController: NavHostControl
 @Composable
 fun FilterButtons(searchViewModel: SearchViewModel) {
     var expanded by remember { mutableStateOf(false) }
-    var category by remember { mutableStateOf(0)}
-
+    var categoryRoute by remember { mutableStateOf("")}
     Box {
         Column {
-            LazyRow {
+            LazyRow(modifier = Modifier.padding(5.dp))  {
                 item {
-                    Spacer(modifier = Modifier.width(5.dp))
-                    OutlinedButton(
+                    CategoryButton(
+                        buttonState = CategoryButtonState.Category,
                         onClick = {
-                            expanded = !(expanded && category == 1)
-                            category = 1
-                        },
-                        modifier = Modifier
-                            .size(120.dp, 35.dp),
-                        shape = CircleShape,
-                    ) {
-                        Text(text = "Категория")
-                    }
-                    Spacer(modifier = Modifier.width(5.dp))
-                    OutlinedButton(
+                            expanded = !(expanded && categoryRoute == CategoryButtonState.Category.route)
+                            categoryRoute = CategoryButtonState.Category.route
+                        })
+                    CategoryButton(
+                        buttonState = CategoryButtonState.Brand,
                         onClick = {
-                            expanded = !(expanded && category == 2)
-                            category = 2
-                        },
-                        modifier = Modifier
-                            .size(100.dp, 35.dp),
-                        shape = CircleShape,
-                    ) {
-                        Text(text = "Бренд")
-                    }
-                    Spacer(modifier = Modifier.width(5.dp))
-                    OutlinedButton(
+                            expanded = !(expanded && categoryRoute == CategoryButtonState.Brand.route)
+                            categoryRoute = CategoryButtonState.Brand.route
+                        })
+                    CategoryButton(
+                        buttonState = CategoryButtonState.Color,
                         onClick = {
-                            expanded = !(expanded && category == 3)
-                            category = 3
-                        },
-                        modifier = Modifier
-                            .size(100.dp, 35.dp),
-                        shape = CircleShape,
-                    ) {
-                        Text(text = "Цвет")
-                    }
-                    Spacer(modifier = Modifier.width(5.dp))
-                    OutlinedButton(
+                            expanded = !(expanded && categoryRoute == CategoryButtonState.Color.route)
+                            categoryRoute = CategoryButtonState.Color.route
+                        })
+                    CategoryButton(
+                        buttonState = CategoryButtonState.Manufacturer,
                         onClick = {
-                            expanded = !(expanded && category == 4)
-                            category = 4
-                        },
-                        modifier = Modifier
-                            .size(150.dp, 35.dp),
-                        shape = CircleShape,
-                    ) {
-                        Text(text = "Производитель")
-                    }
-                    Spacer(modifier = Modifier.width(5.dp))
-                    OutlinedButton(
+                            expanded = !(expanded && categoryRoute == CategoryButtonState.Manufacturer.route)
+                            categoryRoute = CategoryButtonState.Manufacturer.route
+                        })
+                    CategoryButton(
+                        buttonState = CategoryButtonState.Material,
                         onClick = {
-                            expanded = !(expanded && category == 5)
-                            category = 5
-                        },
-                        modifier = Modifier
-                            .size(120.dp, 35.dp),
-                        shape = CircleShape,
-                    ) {
-                        Text(text = "Материал")
-                    }
+                            expanded = !(expanded && categoryRoute == CategoryButtonState.Material.route)
+                            categoryRoute = CategoryButtonState.Material.route
+                        })
                 }
             }
             AnimatedVisibility(expanded) {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(200.dp),
+                        .height(250.dp),
                 ){
-                    when(category) {
-                        1 -> Selector(searchViewModel, searchViewModel.searchBarState.categories)
-                        2 -> Selector(searchViewModel, searchViewModel.searchBarState.brands)
-                        3 -> Selector(searchViewModel, searchViewModel.searchBarState.colors)
-                        4 -> Selector(searchViewModel, searchViewModel.searchBarState.manufacturer)
-                        5 -> Selector(searchViewModel, searchViewModel.searchBarState.material)
+                    Column{
+                        Box(modifier = Modifier
+                            .fillMaxWidth()
+                            .height(200.dp)) {
+                            when(categoryRoute) {
+                                CategoryButtonState.Category.route -> Selector(searchViewModel.searchBarState.categories)
+                                CategoryButtonState.Brand.route -> Selector(searchViewModel.searchBarState.brands)
+                                CategoryButtonState.Color.route -> Selector(searchViewModel.searchBarState.colors)
+                                CategoryButtonState.Manufacturer.route -> Selector(searchViewModel.searchBarState.manufacturer)
+                                CategoryButtonState.Material.route -> Selector(searchViewModel.searchBarState.material)
+                            }
+                        }
+                        Box(modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(end = 10.dp),
+                            contentAlignment = Alignment.CenterEnd
+                        ) {
+                            Button(onClick = {
+                                searchViewModel.filter()
+                            }) {
+                                Text(text = "Применить фильтр")
+                            }
+                        }
                     }
                 }
             }
@@ -183,16 +168,33 @@ fun FilterButtons(searchViewModel: SearchViewModel) {
 }
 
 @Composable
-fun Selector(searchViewModel: SearchViewModel, categories: List<FilterCategory>) {
+fun CategoryButton(
+    buttonState: CategoryButtonState,
+    onClick: () -> Unit,
+) {
+    OutlinedButton(
+        onClick = {
+            onClick()
+        },
+        modifier = Modifier
+            .size(buttonState.width, buttonState.height),
+        shape = CircleShape,
+    ) {
+        Text(text = buttonState.name)
+    }
+}
+
+
+@Composable
+fun Selector(categories: List<FilterCategory>) {
+    // TODO split select area
     LazyColumn(modifier = Modifier
-        .padding(10.dp)
         .fillMaxWidth()) {
         items(categories) { category ->
             CustomCheckBox(
                 name = category.name,
                 checked = category.selected,
                 onCheckedChange = {
-                    Log.d("Acoustic section", "$it and ${category.selected}")
                     category.selected.value = it },
                 onTextClicked = {category.selected.value = !category.selected.value }
             )
