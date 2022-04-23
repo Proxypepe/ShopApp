@@ -72,7 +72,8 @@ fun AppNavigation(mainPageViewModel: MainViewModel, favoriteViewModel: FavoriteV
                         name = "Profile",
                         route = "profile",
                         icon = Icons.Default.Person
-                    ),),
+                    ),
+                ),
                 navController = navController,
                 onItemClick = {
                     navController.navigate(it.route)

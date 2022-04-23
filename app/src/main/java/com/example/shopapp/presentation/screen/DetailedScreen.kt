@@ -15,10 +15,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.example.shopapp.R
 import com.example.shopapp.domain.MainViewModel
+import com.example.shopapp.presentation.navigation.NavigationRouter
 import com.example.shopapp.presentation.screen.components.TabScreen
 import com.example.shopapp.repository.remote.models.ProductDto
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -35,7 +35,7 @@ fun DetailedScreen(mainPageViewModel: MainViewModel, product: ProductDto, navCon
                 )},
                 navigationIcon = { IconButton(onClick = {
                     //FIXME prev route adapt for search
-                    navController.popBackStack("home", inclusive = true)
+                    navController.popBackStack(NavigationRouter.Home.route, inclusive = true)
                 }) {
                     Icon(
                         imageVector = Icons.Default.ArrowBack,
@@ -51,7 +51,7 @@ fun DetailedScreen(mainPageViewModel: MainViewModel, product: ProductDto, navCon
                         )
                     }
                     IconButton(onClick = {
-                        navController.navigate("cart")
+                        navController.navigate(NavigationRouter.Cart.route)
                     }) {
                         Icon(
                             imageVector = Icons.Default.ShoppingCart,

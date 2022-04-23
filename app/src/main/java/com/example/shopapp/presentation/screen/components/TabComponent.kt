@@ -25,179 +25,48 @@ fun Description(text: String) {
 }
 
 @Composable
-fun Characteristic(product: ProductDto) {
-    LazyColumn(modifier = Modifier.padding(20.dp).fillMaxSize()) {
-        item {
-            Row {
-                Text(text = "Бранд:",
-                    modifier = Modifier.fillMaxWidth(0.6f))
-                Spacer(modifier = Modifier.width(5.dp))
-                Text(text = product.brand)
+fun CharacteristicList(product: ProductDto) {
+    Box(
+        modifier = Modifier.padding(10.dp).fillMaxSize()
+    ) {
+        LazyColumn(modifier = Modifier.padding(5.dp).fillMaxSize()) {
+            item {
+                Characteristic("Бранд:", product.brand)
+                Characteristic("Тип корпуса:", product.shell_type)
+                Characteristic("Верхняя дека:", product.top_deck)
+                Characteristic("Материал топа:", product.top_material)
+                Characteristic("Задняя дека:", product.back_deck)
+                Characteristic("Материал грифа:", product.neck_material)
+                Characteristic("Накладка:", product.overlay)
+                Characteristic("Количество струн:", product.strings)
+                Characteristic("Крепление грифа:", product.neck_attachment)
+                Characteristic("Мензура:", product.mensura)
+                Characteristic("Ширина грифа:", product.neck_width)
+                Characteristic("Цвет:", product.color)
+                Characteristic("Струнодержатель:", product.tailpiece)
+                Characteristic("Произведено:", product.produced)
+                Characteristic("Вырез:", product.cutout)
+                Characteristic("Лак:", product.varnish)
+                Characteristic("Форма:", product.form)
+                Characteristic("Особенности:", product.specials)
+                Characteristic("Количество ладов:", product.lads)
             }
         }
-        if(product.shell_type != null)
-            item {
-                 Row {
-                     Text(text = "Тип корпуса:",
-                         modifier = Modifier.fillMaxWidth(0.6f))
-                Spacer(modifier = Modifier.width(5.dp))
-                     Text(text = product.shell_type)
-                 }
-            }
-        if(product.top_deck != null)
-            item {
-                 Row {
-                     Text(text = "Верхняя дека:",
-                         modifier = Modifier.fillMaxWidth(0.6f))
-                Spacer(modifier = Modifier.width(5.dp))
-                     Text(text = product.top_deck)
-                 }
-            }
-        if(product.top_material != null)
-            item {
-                 Row {
-                     Text(text = "Материал топа:",
-                         modifier = Modifier.fillMaxWidth(0.6f))
-                Spacer(modifier = Modifier.width(5.dp))
-                     Text(text = product.top_material)
-                 }
-            }
-        if(product.back_deck != null)
-            item {
-                 Row {
-                     Text(text = "Задняя дека:",
-                         modifier = Modifier.fillMaxWidth(0.6f))
-                     Spacer(modifier = Modifier.width(5.dp))
-                     Text(text = product.back_deck)
-                 }
-            }
-        if(product.neck_material != null)
-            item {
-                 Row {
-                     Text(text = "Материал грифа:",
-                         modifier = Modifier.fillMaxWidth(0.6f))
-                Spacer(modifier = Modifier.width(5.dp))
-                     Text(text = product.neck_material)
-                 }
-            }
-        if(product.overlay != null)
-            item {
-                 Row {
-                     Text(text = "Накладка:",
-                         modifier = Modifier.fillMaxWidth(0.6f))
-                Spacer(modifier = Modifier.width(5.dp))
-                     Text(text = product.overlay)
-                 }
-            }
-        if(product.strings != null)
-            item {
-                 Row {
-                     Text(text = "Количество струн:",
-                         modifier = Modifier.fillMaxWidth(0.6f))
-                Spacer(modifier = Modifier.width(5.dp))
-                     Text(text = product.strings)
-                 }
-            }
-        if(product.neck_attachment != null)
-            item {
-                 Row {
-                     Text(text = "Крепление грифа:",
-                         modifier = Modifier.fillMaxWidth(0.6f))
-                Spacer(modifier = Modifier.width(5.dp))
-                     Text(text = product.neck_attachment)
-                 }
-            }
-        if(product.mensura != null)
-            item {
-                 Row {
-                     Text(text = "Мензура:",
-                         modifier = Modifier.fillMaxWidth(0.6f))
-                Spacer(modifier = Modifier.width(5.dp))
-                     Text(text = product.mensura)
-                 }
-            }
-        if(product.neck_width != null)
-            item {
-                 Row {
-                     Text(text = "Ширина грифа:",
-                         modifier = Modifier.fillMaxWidth(0.6f))
-                Spacer(modifier = Modifier.width(5.dp))
-                     Text(text = product.neck_width)
-                 }
-            }
-        if(product.color != null)
-            item {
-                 Row {
-                     Text(text = "Цвет:",
-                         modifier = Modifier.fillMaxWidth(0.6f))
-                Spacer(modifier = Modifier.width(5.dp))
-                     Text(text = product.color)
-                 }
-            }
-        if(product.tailpiece != null)
-            item {
-                 Row {
-                     Text(text = "Струнодержатель:",
-                         modifier = Modifier.fillMaxWidth(0.6f))
-                Spacer(modifier = Modifier.width(5.dp))
-                     Text(text = product.tailpiece)
-                 }
-            }
-        if(product.produced != null)
-            item {
-                Row {
-                    Text(text = "Произведено:",
-                        modifier = Modifier.fillMaxWidth(0.6f))
-                    Spacer(modifier = Modifier.width(5.dp))
-                    Text(text = product.produced)
-                }
-            }
-        if(product.cutout != null)
-            item {
-                Row {
-                    Text(text = "Вырез",
-                        modifier = Modifier.fillMaxWidth(0.6f))
-                    Spacer(modifier = Modifier.width(5.dp))
-                    Text(text = product.cutout)
-                }
-            }
-        if(product.varnish != null)
-            item {
-                 Row {
-                     Text(text = "Лак",
-                         modifier = Modifier.fillMaxWidth(0.6f))
-                Spacer(modifier = Modifier.width(5.dp))
-                     Text(text = product.varnish)
-                 }
-            }
-        if(product.form != null)
-            item {
-                 Row {
-                     Text(text = "Форма",
-                         modifier = Modifier.fillMaxWidth(0.6f))
-                Spacer(modifier = Modifier.width(5.dp))
-                     Text(text = product.form)
-                 }
-            }
-        if(product.specials != null)
-            item {
-                 Row {
-                     Text(text = "Особенности",
-                         modifier = Modifier.fillMaxWidth(0.6f))
-                Spacer(modifier = Modifier.width(5.dp))
-                     Text(text = product.specials)
-                 }
-            }
-        if(product.lads != null)
-            item {
-                Row {
-                    Text(text = "Количество ладов",
-                        modifier = Modifier.fillMaxWidth(0.6f))
-                    Spacer(modifier = Modifier.fillMaxWidth(0.6f))
-                    Text(text = product.lads)
-                }
-            }
     }
+}
+
+
+@Composable
+fun Characteristic(name: String, value: String?) {
+    if (value != null)
+        Row {
+            Text(text = name,
+                modifier = Modifier
+                    .fillMaxWidth(0.5f))
+            Spacer(modifier = Modifier
+                .fillMaxWidth(0.3f))
+            Text(text = value)
+        }
 }
 
 
@@ -259,7 +128,7 @@ fun TabsContent(pagerState: PagerState, product: ProductDto) {
     HorizontalPager(state = pagerState, modifier = Modifier.padding(20.dp).fillMaxWidth().height(290.dp)) { page ->
         when(page) {
             0 -> Description("Hello")
-            1 -> Characteristic(product)
+            1 -> CharacteristicList(product)
         }
     }
 }

@@ -22,6 +22,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.NavOptionsBuilder
 import com.example.shopapp.R
+import com.example.shopapp.presentation.navigation.NavigationRouter
 import com.example.shopapp.repository.remote.models.ProductDto
 
 
@@ -32,8 +33,7 @@ fun RecommendCard(product: ProductDto, navController: NavHostController){
         modifier = Modifier
             .size(140.dp, 200.dp).padding(end=10.dp)
             .clickable {
-                Log.d("Click!", "$product")
-                navController.navigate("detailed", bundleOf("PRODUCT" to product))
+                navController.navigate(NavigationRouter.Detailed.route, bundleOf("PRODUCT" to product))
             }
         ,
         elevation = 5.dp,

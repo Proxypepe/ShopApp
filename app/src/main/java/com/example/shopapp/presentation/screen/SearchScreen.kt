@@ -28,7 +28,6 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.shopapp.domain.SearchViewModel
 import com.example.shopapp.domain.filters.FilterCategory
-import com.example.shopapp.domain.filters.SearchBarState
 import com.example.shopapp.presentation.screen.components.SearchCard
 
 

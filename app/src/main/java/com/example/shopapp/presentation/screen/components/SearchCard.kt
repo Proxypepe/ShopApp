@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.os.bundleOf
 import androidx.navigation.NavHostController
 import com.example.shopapp.R
+import com.example.shopapp.presentation.navigation.NavigationRouter
 import com.example.shopapp.presentation.screen.components.navigate
 import com.example.shopapp.repository.remote.models.ProductDto
 
@@ -25,7 +26,7 @@ fun SearchCard(product: ProductDto, navController: NavHostController) {
             .fillMaxWidth()
             .padding(10.dp)
             .clickable {
-                navController.navigate("detailed", bundleOf("PRODUCT" to product))
+                navController.navigate(NavigationRouter.Detailed.route, bundleOf("PRODUCT" to product))
             },
     ) {
         Row(modifier = Modifier

@@ -73,7 +73,7 @@ fun MainPage(mainPageViewModel: MainViewModel?, navController: NavHostController
                         text = "Some Text"
                     )
                 }
-                Spacer(modifier=Modifier.padding(top=5.dp))
+                Spacer(modifier = Modifier.padding(top=5.dp))
                 Box(
                     modifier = Modifier.fillMaxWidth(),
                     contentAlignment = Alignment.Center
@@ -85,8 +85,8 @@ fun MainPage(mainPageViewModel: MainViewModel?, navController: NavHostController
                 }
                 Spacer(modifier = Modifier.padding(top=10.dp))
                 val values: List<Int> = listOf(1, 2, 3, 4)
-                Text(text="Ваши рекомендации", fontWeight = FontWeight.Bold)
-                Text(text="Основано на вашем поиске",
+                Text(text = "Ваши рекомендации", fontWeight = FontWeight.Bold)
+                Text(text = "Основано на вашем поиске",
                     fontSize = 12.sp)
 
                 Spacer(modifier = Modifier.padding(top=10.dp))
