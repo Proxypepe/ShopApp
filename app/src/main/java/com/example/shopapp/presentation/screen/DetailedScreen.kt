@@ -5,9 +5,10 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.filled.ShoppingCart
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -17,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.shopapp.R
+import com.example.shopapp.domain.FavoriteViewModel
 import com.example.shopapp.domain.MainViewModel
 import com.example.shopapp.presentation.navigation.NavigationRouter
 import com.example.shopapp.presentation.screen.components.TabScreen
@@ -26,7 +28,14 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 
 @ExperimentalPagerApi
 @Composable
-fun DetailedScreen(mainPageViewModel: MainViewModel, product: ProductDto, navController: NavHostController) {
+fun DetailedScreen(mainViewModel: MainViewModel, favoriteViewModel: FavoriteViewModel,
+                   product: ProductDto, navController: NavHostController) {
+    val color = if (favoriteViewModel.contains(product))
+        Color.Red
+            else
+        Color.White
+    var favoriteTint by remember { mutableStateOf(color) }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -48,6 +57,20 @@ fun DetailedScreen(mainPageViewModel: MainViewModel, product: ProductDto, navCon
                             imageVector = Icons.Default.Share,
                             contentDescription = "Share",
                             tint = Color.White
+                        )
+                    }
+                    IconButton(onClick = {
+                        // #TODO: fix me
+                        favoriteViewModel.onFavoritesChange(product)
+                        favoriteTint = if (favoriteViewModel.contains(product))
+                            Color.Red
+                        else
+                            Color.White
+                    }) {
+                        Icon(
+                            imageVector = Icons.Default.Favorite,
+                            contentDescription = "favorite",
+                            tint = favoriteTint
                         )
                     }
                     IconButton(onClick = {
@@ -98,7 +121,7 @@ fun DetailedScreen(mainPageViewModel: MainViewModel, product: ProductDto, navCon
                     TabScreen(product)
             }
             Button(onClick = {
-                mainPageViewModel.addToCart(product)
+                mainViewModel.addToCart(product)
             },
             modifier = Modifier
                 .fillMaxWidth(0.9f)

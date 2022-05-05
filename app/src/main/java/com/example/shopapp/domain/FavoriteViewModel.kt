@@ -1,6 +1,8 @@
 package com.example.shopapp.domain
 
 import android.util.Log
+import androidx.compose.runtime.MutableState
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -44,12 +46,6 @@ class FavoriteViewModel(private val favoriteRepository: FavoriteRepository,
 //        }
     }
 
-    fun addFavorite(product: ProductEntity) {
-//        val favoriteEntity = TypeConvertor.toFavoriteEntityFromProductDto(productDto)
-        val favoriteEntity = FavoriteEntity(product_id = product.prod_id, product = product)
-        _insertFavorite(favoriteEntity)
-    }
-
     fun divideFavorites(): Pair<MutableList<FavoriteEntity?>, MutableList<FavoriteEntity?>> {
         val maxSize = _favorites.value.size
         val middle = maxSize / 2
@@ -66,9 +62,37 @@ class FavoriteViewModel(private val favoriteRepository: FavoriteRepository,
         )
     }
 
-    fun deleteFavorite(productDto: ProductDto) {
-        val favoriteEntity = TypeConvertor.toFavoriteEntityFromProductDto(productDto)
+    fun onFavoritesChange(product: ProductDto) {
+        if (!contains(product))
+            addFavorite(product)
+        else
+            deleteFavorite(product)
+    }
+
+    fun addFavorite(product: ProductEntity) {
+//        val favoriteEntity = TypeConvertor.toFavoriteEntityFromProductDto(productDto)
+        val favoriteEntity = FavoriteEntity(product_id = product.prod_id, product = product)
+        _insertFavorite(favoriteEntity)
+    }
+
+    fun addFavorite(product: ProductDto) {
+        val favoriteEntity = TypeConvertor.toFavoriteEntityFromProductDto(product)
+        _insertFavorite(favoriteEntity)
+    }
+
+    fun deleteFavorite(product: ProductDto) {
+        val favoriteEntity = TypeConvertor.toFavoriteEntityFromProductDto(product)
         _deleteFavorite(favoriteEntity)
+    }
+
+    fun deleteFavorite(product: ProductEntity) {
+        val favoriteEntity = FavoriteEntity(product_id = product.prod_id, product = product)
+        _deleteFavorite(favoriteEntity)
+    }
+
+    fun contains(product: ProductDto): Boolean {
+        val entity = TypeConvertor.toFavoriteEntityFromProductDto(product)
+        return favorites.value.contains(entity)
     }
 
     private fun _insertFavorite(favoriteEntity: FavoriteEntity) = viewModelScope.launch {
@@ -78,7 +102,6 @@ class FavoriteViewModel(private val favoriteRepository: FavoriteRepository,
     private fun _deleteFavorite(favoriteEntity: FavoriteEntity) = viewModelScope.launch {
         favoriteLocalRepository.deleteFavorite(favoriteEntity)
     }
-
 }
 
 

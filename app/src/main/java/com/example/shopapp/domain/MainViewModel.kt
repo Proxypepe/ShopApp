@@ -37,6 +37,7 @@ class MainViewModel(private val productRepository: ProductRepository,
             product.body()?.let { detailedInfo.value = it }
         }
     }
+
     fun addToCart(productDto: ProductDto) {
         cartViewModel.addToCart(productDto)
     }
