@@ -70,7 +70,6 @@ class FavoriteViewModel(private val favoriteRepository: FavoriteRepository,
     }
 
     fun addFavorite(product: ProductEntity) {
-//        val favoriteEntity = TypeConvertor.toFavoriteEntityFromProductDto(productDto)
         val favoriteEntity = FavoriteEntity(product_id = product.prod_id, product = product)
         _insertFavorite(favoriteEntity)
     }

@@ -135,7 +135,8 @@ fun AppNavigation(mainPageViewModel: MainViewModel, favoriteViewModel: FavoriteV
                     ?.let {
                         Box(modifier = Modifier.padding(innerPadding))
                         {
-                            DetailedScreen(mainPageViewModel, favoriteViewModel, it, navController)
+                            DetailedScreen(mainPageViewModel, favoriteViewModel, cartViewModel,
+                                it, navController)
                         }
                     }
             }

@@ -10,12 +10,23 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import java.net.SocketTimeoutException
 
-class MainViewModel(private val productRepository: ProductRepository,
-                    private val cartViewModel: CartViewModel): ViewModel() {
+class MainViewModel(private val productRepository: ProductRepository): ViewModel() {
     var recommendedProducts: MutableStateFlow<List<ProductDto>> = MutableStateFlow(emptyList())
-    var detailedInfo: MutableStateFlow<ProductDto> = MutableStateFlow(TypeConvertor.initialProductDto) // MutableStateFlow
+    var detailedInfo: MutableStateFlow<ProductDto> = MutableStateFlow(TypeConvertor.initialProductDto)
     var loading: MutableStateFlow<Boolean> = MutableStateFlow(false)
 
+
+    fun calculateRating(productDto: ProductDto): Float {
+        var sum = 0f
+        for (rate in productDto.rating) {
+            sum += rate.rating
+        }
+        val length = productDto.rating.size
+        return if (length != 0)
+            (sum / length)
+        else
+            0f
+    }
 
     fun getRecommendedProduct() = viewModelScope.launch {
         loading.value = true
@@ -37,24 +48,15 @@ class MainViewModel(private val productRepository: ProductRepository,
             product.body()?.let { detailedInfo.value = it }
         }
     }
-
-    fun addToCart(productDto: ProductDto) {
-        cartViewModel.addToCart(productDto)
-    }
-
-    fun deleteProductById(id: Int) {
-        cartViewModel.deleteProductById(id)
-    }
 }
 
 
 
-class MainViewModelFactory(private val productRepository: ProductRepository,
-                           private val cartViewModel: CartViewModel) : ViewModelProvider.Factory {
+class MainViewModelFactory(private val productRepository: ProductRepository) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return MainViewModel(productRepository, cartViewModel) as T
+            return MainViewModel(productRepository) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

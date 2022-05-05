@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.shopapp.R
+import com.example.shopapp.domain.CartViewModel
 import com.example.shopapp.domain.FavoriteViewModel
 import com.example.shopapp.domain.MainViewModel
 import com.example.shopapp.presentation.navigation.NavigationRouter
@@ -29,12 +30,15 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 @ExperimentalPagerApi
 @Composable
 fun DetailedScreen(mainViewModel: MainViewModel, favoriteViewModel: FavoriteViewModel,
+                   cartViewModel: CartViewModel,
                    product: ProductDto, navController: NavHostController) {
     val color = if (favoriteViewModel.contains(product))
         Color.Red
             else
         Color.White
-    var favoriteTint by remember { mutableStateOf(color) }
+    val favoriteTint  = remember {
+        mutableStateOf(color)
+    }
 
     Scaffold(
         topBar = {
@@ -62,7 +66,7 @@ fun DetailedScreen(mainViewModel: MainViewModel, favoriteViewModel: FavoriteView
                     IconButton(onClick = {
                         // #TODO: fix me
                         favoriteViewModel.onFavoritesChange(product)
-                        favoriteTint = if (favoriteViewModel.contains(product))
+                        favoriteTint.value = if (favoriteViewModel.contains(product))
                             Color.Red
                         else
                             Color.White
@@ -70,7 +74,7 @@ fun DetailedScreen(mainViewModel: MainViewModel, favoriteViewModel: FavoriteView
                         Icon(
                             imageVector = Icons.Default.Favorite,
                             contentDescription = "favorite",
-                            tint = favoriteTint
+                            tint = favoriteTint.value
                         )
                     }
                     IconButton(onClick = {
@@ -109,10 +113,10 @@ fun DetailedScreen(mainViewModel: MainViewModel, favoriteViewModel: FavoriteView
                             Row(
                                 verticalAlignment = Alignment.CenterVertically
                             ){
-                                Text(text="Рейтинг: ")
-                                Spacer(modifier = Modifier.fillMaxWidth(0.5f))
+                                Text(text = "Рейтинг: ${mainViewModel.calculateRating(product)}" )
+                                Spacer(modifier = Modifier.fillMaxWidth(0.4f))
                                 OutlinedButton(onClick = { /*TODO*/ }) {
-                                    Text(text="Отзывы - 5")
+                                    Text(text="Отзывы - ${product.comments.size}")
                                 }
                             }
                         }
@@ -121,7 +125,7 @@ fun DetailedScreen(mainViewModel: MainViewModel, favoriteViewModel: FavoriteView
                     TabScreen(product)
             }
             Button(onClick = {
-                mainViewModel.addToCart(product)
+                cartViewModel.addToCart(product)
             },
             modifier = Modifier
                 .fillMaxWidth(0.9f)

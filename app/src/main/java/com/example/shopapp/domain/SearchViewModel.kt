@@ -44,7 +44,6 @@ class SearchViewModel(
         products = products union filterByAttribute("brand")
         products = products union filterByAttribute("produced")
         products = products union filterByAttribute("neck_material")
-        Log.d("after ", "$products")
         if (products.isEmpty())
             filtered.value = allProducts
         else

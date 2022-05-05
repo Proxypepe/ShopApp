@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
@@ -17,6 +18,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.TextStyle
@@ -25,6 +28,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.shopapp.divideList
 import com.example.shopapp.domain.SearchViewModel
 import com.example.shopapp.domain.filters.CategoryButtonState
 import com.example.shopapp.domain.filters.FilterCategory
@@ -40,56 +44,69 @@ fun SearchScreen(searchViewModel: SearchViewModel, navController: NavHostControl
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
 
-    Column {
+    Column(
+        modifier = Modifier.background(MaterialTheme.colors.background)
+    ) {
         Surface(
             modifier = Modifier
-                .fillMaxWidth(),
-            color = MaterialTheme.colors.primary,
-            elevation = 8.dp,
+                .fillMaxWidth()
+                .background(MaterialTheme.colors.primary),
         ) {
-            Row(modifier = Modifier.fillMaxWidth()) {
-                TextField(
-                    value = query,
-                    onValueChange = {
-                        searchViewModel.onQueryChanged(it)
-                    },
-                    label = {
-                        Text(text = "Search")
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(8.dp)
-                        .background(MaterialTheme.colors.surface),
-                    leadingIcon = {
-                        Icon(
-                            Icons.Filled.Search,
-                            contentDescription = "Search"
-                        )
-                    },
-                    textStyle = TextStyle(
-                        color = MaterialTheme.colors.onSurface,
-                        fontSize = 15.sp),
-                    keyboardActions = KeyboardActions(
-                        onDone = {
-                            searchViewModel.newSearch(query)
-                            keyboardController?.hide()
-                            focusManager.clearFocus()}),
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Text,
-                        imeAction = ImeAction.Done,
-                    ),
-                )
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colors.primary)
+                    .clip(RoundedCornerShape(5.dp)),
+
+                ) {
+                    TextField(
+                        shape = RoundedCornerShape(10.dp),
+                        value = query,
+                        onValueChange = {
+                            searchViewModel.onQueryChanged(it)
+                        },
+                        label = {
+                            Text(text = "Search")
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(8.dp)
+                            .background(MaterialTheme.colors.surface),
+                        leadingIcon = {
+                            Icon(
+                                Icons.Filled.Search,
+                                contentDescription = "Search"
+                            )
+                        },
+                        textStyle = TextStyle(
+                            color = MaterialTheme.colors.onSurface,
+                            fontSize = 15.sp
+                        ),
+                        keyboardActions = KeyboardActions(
+                            onDone = {
+                                searchViewModel.newSearch(query)
+                                keyboardController?.hide()
+                                focusManager.clearFocus()
+                            }),
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Text,
+                            imeAction = ImeAction.Done,
+                        ),
+
+                    )
             }
         }
+
         Spacer(modifier = Modifier.height(5.dp))
         FilterButtons(searchViewModel)
         LazyColumn {
             items(allProducts) { product ->
-                    SearchCard(product = product, navController = navController)
+                SearchCard(product = product, navController = navController)
             }
         }
     }
 }
+
 
 @Composable
 fun FilterButtons(searchViewModel: SearchViewModel) {
@@ -187,20 +204,51 @@ fun CategoryButton(
 
 @Composable
 fun Selector(categories: List<FilterCategory>) {
-    // TODO split select area
     LazyColumn(modifier = Modifier
         .fillMaxWidth()) {
-        items(categories) { category ->
-            CustomCheckBox(
-                name = category.name,
-                checked = category.selected,
-                onCheckedChange = {
-                    category.selected.value = it },
-                onTextClicked = {category.selected.value = !category.selected.value }
-            )
+        item {
+            val pair = divideList(categories)
+            val first = pair.first
+            val second = pair.second
+            for (i in 0 until first.size)
+                SelectorBlock(first[i], second[i])
         }
     }
 }
+
+@Composable
+fun SelectorBlock(leftCategory: FilterCategory?, rightCategory: FilterCategory?) {
+    Row(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Box(modifier = Modifier.fillMaxWidth(0.5f)) {
+            if (leftCategory != null) {
+                SelectorCard(leftCategory)
+            }
+        }
+        Box(modifier = Modifier.fillMaxWidth()) {
+            if (rightCategory != null) {
+                SelectorCard(rightCategory)
+            }
+        }
+    }
+}
+
+@Composable
+fun SelectorCard(category: FilterCategory) {
+    Box ( modifier = Modifier.fillMaxWidth(),
+        contentAlignment = Alignment.CenterStart
+    ) {
+        CustomCheckBox(
+            name = category.name,
+            checked = category.selected,
+            onCheckedChange = {
+                category.selected.value = it },
+            onTextClicked = {category.selected.value = !category.selected.value }
+        )
+    }
+}
+
 
 @Composable
 fun CustomCheckBox(

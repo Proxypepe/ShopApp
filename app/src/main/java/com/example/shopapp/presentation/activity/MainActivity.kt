@@ -24,8 +24,7 @@ class MainActivity : ComponentActivity() {
     }
 
     private val mainViewModel: MainViewModel by viewModels {
-        MainViewModelFactory((application as ShoppingAppApplication).productRepository,
-            cartViewModel)
+        MainViewModelFactory((application as ShoppingAppApplication).productRepository)
     }
 
     private val favoriteViewModel: FavoriteViewModel by viewModels {
