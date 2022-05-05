@@ -8,10 +8,10 @@ data class SearchBarState (
         FilterCategory("Басс-гитара"),
     ),
     val brands: List<FilterCategory> = listOf(
-        FilterCategory("Prima"),
+        FilterCategory("PRIMA"),
         FilterCategory("Yamaha"),
         FilterCategory("Crafter"),
-        FilterCategory("EnyaGuitars"),
+        FilterCategory("Enya Guitars"),
         FilterCategory("Framus"),
         FilterCategory("Ovation"),
         FilterCategory("Cort"),
