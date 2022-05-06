@@ -19,11 +19,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.example.shopapp.domain.CartViewModel
-import com.example.shopapp.domain.FavoriteViewModel
-import com.example.shopapp.domain.MainViewModel
-import com.example.shopapp.domain.SearchViewModel
+import com.example.shopapp.domain.*
 import com.example.shopapp.presentation.screen.*
+import com.example.shopapp.presentation.screen.login.SighInScreen
+import com.example.shopapp.presentation.screen.login.SighUpScreen
 import com.example.shopapp.repository.remote.models.ProductDto
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
@@ -37,7 +36,8 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 @ExperimentalComposeUiApi
 @ExperimentalAnimationApi
 fun AppNavigation(mainPageViewModel: MainViewModel, favoriteViewModel: FavoriteViewModel,
-                  cartViewModel: CartViewModel, searchViewModel: SearchViewModel
+                  cartViewModel: CartViewModel, searchViewModel: SearchViewModel,
+                  loginViewModel: LoginViewModel
 ) {
     val navController = rememberAnimatedNavController()
 
@@ -127,18 +127,32 @@ fun AppNavigation(mainPageViewModel: MainViewModel, favoriteViewModel: FavoriteV
             composable(NavigationRouter.Profile.route) {
                 Box(modifier = Modifier.padding(innerPadding))
                 {
-                    Profile()
+                    Profile(navController)
                 }
             }
+            composable(NavigationRouter.SignIn.route) {
+                Box(modifier = Modifier.padding(innerPadding))
+                {
+                    SighInScreen(loginViewModel, navController)
+                }
+            }
+
+            composable(NavigationRouter.SignUp.route) {
+                Box(modifier = Modifier.padding(innerPadding))
+                {
+                    SighUpScreen(loginViewModel, navController)
+                }
+            }
+
             composable(NavigationRouter.Detailed.route) {
-                navController.previousBackStackEntry?.arguments?.getParcelable<ProductDto>("PRODUCT")
-                    ?.let {
-                        Box(modifier = Modifier.padding(innerPadding))
-                        {
-                            DetailedScreen(mainPageViewModel, favoriteViewModel, cartViewModel,
-                                it, navController)
-                        }
+                navController.previousBackStackEntry?.arguments?.
+                getParcelable<ProductDto>("PRODUCT")?.let {
+                    Box(modifier = Modifier.padding(innerPadding))
+                    {
+                        DetailedScreen(mainPageViewModel, favoriteViewModel,
+                            cartViewModel, it, navController)
                     }
+                }
             }
         }
     }

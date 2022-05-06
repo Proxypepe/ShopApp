@@ -7,4 +7,6 @@ sealed class NavigationRouter(val route: String ) {
     object Favorite: NavigationRouter("favorite")
     object Profile: NavigationRouter("profile")
     object Detailed: NavigationRouter("detailed")
+    object SignUp: NavigationRouter("signup")
+    object SignIn: NavigationRouter("signin")
 }

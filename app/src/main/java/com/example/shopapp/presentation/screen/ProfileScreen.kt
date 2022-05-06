@@ -1,5 +1,6 @@
 package com.example.shopapp.presentation.screen
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.Divider
@@ -9,11 +10,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import com.example.shopapp.presentation.navigation.NavigationRouter
 
 @Composable
-fun Profile() {
+fun Profile(navController: NavHostController) {
     Column {
-        LogIn()
+        LogInSection(navController)
         Spacer(modifier = Modifier.height(70.dp))
         StaticMenu()
     }
@@ -21,7 +24,7 @@ fun Profile() {
 
 
 @Composable
-fun LogIn() {
+fun LogInSection(navController: NavHostController) {
     Box(modifier = Modifier
         .padding(start = 25.dp, top = 7.dp, end = 25.dp)
         .fillMaxWidth()
@@ -31,7 +34,9 @@ fun LogIn() {
             Spacer(modifier = Modifier.height(10.dp))
             Text(text = "Чтобы получить ...")
             Spacer(modifier = Modifier.height(40.dp))
-            Button(onClick = {/*TODO*/},
+            Button(onClick = {
+                navController.navigate(NavigationRouter.SignIn.route)
+            },
                 modifier = Modifier.fillMaxWidth()){
                 Text(text = "Войти или зарегистрироваться")
             }
@@ -55,24 +60,4 @@ fun StaticMenu() {
             Divider(color = Color.Gray, thickness = 1.dp)
         }
     }
-}
-
-
-
-@Preview
-@Composable
-fun LogInPreview() {
-    LogIn()
-}
-
-@Preview
-@Composable
-fun ProfilePreview() {
-    Profile()
-}
-
-@Preview
-@Composable
-fun StaticMenuPreview() {
-    StaticMenu()
 }

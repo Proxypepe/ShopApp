@@ -36,6 +36,11 @@ class MainActivity : ComponentActivity() {
         SearchViewModelFactory((application as ShoppingAppApplication).productRepository)
     }
 
+    private val loginViewModel: LoginViewModel by viewModels {
+        LoginViewModelFactory()
+    }
+
+
     private fun initInfoLists() {
         mainViewModel.getRecommendedProduct()
         cartViewModel.getCart()
@@ -55,7 +60,8 @@ class MainActivity : ComponentActivity() {
                     mainPageViewModel = mainViewModel,
                     favoriteViewModel = favoriteViewModel,
                     cartViewModel = cartViewModel,
-                    searchViewModel = searchViewModel
+                    searchViewModel = searchViewModel,
+                    loginViewModel = loginViewModel
                 )
             }
         }

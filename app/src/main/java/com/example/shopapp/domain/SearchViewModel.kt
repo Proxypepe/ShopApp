@@ -29,12 +29,9 @@ class SearchViewModel(
 
     fun newSearch(query: String) {
         if (query.isEmpty())
-        {
-            println(allProducts)
             filtered.value = allProducts
-        } else {
+        else
             filtered.value = querySearch(query)
-        }
     }
 
     fun filter() {
