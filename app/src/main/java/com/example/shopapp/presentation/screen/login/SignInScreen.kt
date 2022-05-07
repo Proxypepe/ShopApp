@@ -9,14 +9,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.shopapp.domain.LoginViewModel
 import com.example.shopapp.presentation.navigation.NavigationRouter
 import com.example.shopapp.presentation.screen.login.components.LoginTextField
+import com.example.shopapp.ui.theme.AppTheme
 import com.example.shopapp.ui.theme.FontSize
 
 
@@ -36,14 +35,13 @@ fun SighInScreen(loginViewModel: LoginViewModel, navController: NavHostControlle
                 Text(
                     text = "Вход",
                     modifier = Modifier.fillMaxWidth(),
-                    fontSize = 25.sp,
-                    fontWeight = FontWeight.Bold
+                    style = AppTheme.typography.h1
                 )
                 Spacer(modifier = Modifier.padding(5.dp))
                 Text(
-                    text ="Текст.",
+                    text = "Текст.",
                     modifier = Modifier.fillMaxWidth(),
-                    color = Color.Gray
+                    color = AppTheme.textColors.subtitle1Text
                 )
 
                 Spacer(modifier = Modifier.padding(25.dp))

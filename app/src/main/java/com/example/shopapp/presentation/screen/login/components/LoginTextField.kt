@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import com.example.shopapp.ui.theme.AppTheme
 import com.example.shopapp.ui.theme.FontSize
 
 
@@ -33,7 +34,8 @@ fun LoginTextField(
         label =  {
             Text(
                 text = label,
-                fontSize = FontSize.Little.size
+                color = AppTheme.textColors.secondaryTextColor,
+                style = AppTheme.typography.subtitle2,
             )
         },
         colors = TextFieldDefaults.textFieldColors(
@@ -43,6 +45,7 @@ fun LoginTextField(
                 placeholder
             )
         },
-        shape = RoundedCornerShape(8.dp)
+        shape = RoundedCornerShape(8.dp),
+        maxLines = 1,
     )
 }
