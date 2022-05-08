@@ -1,4 +1,4 @@
-package com.example.shopapp.presentation.screen.components
+package com.example.shopapp.presentation.screen.detailed.components
 
 
 import androidx.compose.foundation.layout.*

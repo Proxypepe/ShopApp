@@ -1,4 +1,4 @@
-package com.example.shopapp.presentation.screen.components
+package com.example.shopapp.presentation.screen.search.components
 
 
 import androidx.compose.foundation.Image

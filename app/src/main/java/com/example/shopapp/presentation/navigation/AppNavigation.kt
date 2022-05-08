@@ -9,7 +9,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -18,16 +20,20 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import androidx.navigation.Navigation
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.shopapp.domain.*
-import com.example.shopapp.presentation.screen.*
+import com.example.shopapp.presentation.screen.cart.CartScreen
+import com.example.shopapp.presentation.screen.detailed.DetailedScreen
+import com.example.shopapp.presentation.screen.favorites.FavoriteScreen
 import com.example.shopapp.presentation.screen.login.SighInScreen
 import com.example.shopapp.presentation.screen.login.SighUpScreen
+import com.example.shopapp.presentation.screen.main.MainPage
+import com.example.shopapp.presentation.screen.profile.Profile
+import com.example.shopapp.presentation.screen.search.SearchScreen
 import com.example.shopapp.repository.remote.models.ProductDto
 import com.google.accompanist.navigation.animation.AnimatedNavHost
-import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.navigation.animation.composable
+import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.pager.ExperimentalPagerApi
 
 

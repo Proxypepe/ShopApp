@@ -1,4 +1,4 @@
-package com.example.shopapp.presentation.screen
+package com.example.shopapp.presentation.screen.detailed
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -22,7 +22,7 @@ import com.example.shopapp.domain.CartViewModel
 import com.example.shopapp.domain.FavoriteViewModel
 import com.example.shopapp.domain.MainViewModel
 import com.example.shopapp.presentation.navigation.NavigationRouter
-import com.example.shopapp.presentation.screen.components.TabScreen
+import com.example.shopapp.presentation.screen.detailed.components.TabScreen
 import com.example.shopapp.repository.remote.models.ProductDto
 import com.google.accompanist.pager.ExperimentalPagerApi
 

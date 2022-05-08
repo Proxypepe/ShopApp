@@ -1,4 +1,4 @@
-package com.example.shopapp.presentation.screen
+package com.example.shopapp.presentation.screen.main
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -22,30 +22,7 @@ import com.example.shopapp.R
 import com.example.shopapp.domain.MainViewModel
 import com.example.shopapp.presentation.screen.components.LoadProgress
 import com.example.shopapp.presentation.screen.components.RecommendCard
-
-
-@Composable
-fun BrandCard(){
-    Card(
-        modifier = Modifier
-            .size(140.dp, 200.dp)
-            .padding(end = 10.dp),
-        elevation = 5.dp
-    ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.fillMaxSize()
-        ){
-            Image(
-                painter = painterResource(R.drawable.ic_android_black_24dp),
-                contentDescription = "",
-            )
-            Text(text="Brand",
-                modifier = Modifier.fillMaxWidth())
-        }
-    }
-}
-
+import com.example.shopapp.presentation.screen.main.components.BrandCard
 
 
 @Composable
@@ -120,19 +97,4 @@ fun MainPage(mainPageViewModel: MainViewModel?, navController: NavHostController
 
         }
     }
-}
-
-
-
-@Preview(showBackground = true)
-@Composable
-fun BrandCardPreview(){
-    BrandCard()
-}
-
-@Preview(showBackground = true)
-@Composable
-fun MainPagePreview() {
-    val navController = rememberNavController()
-    MainPage(null, navController)
 }
