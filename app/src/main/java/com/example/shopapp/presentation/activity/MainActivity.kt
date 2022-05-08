@@ -28,8 +28,10 @@ class MainActivity : ComponentActivity() {
     }
 
     private val favoriteViewModel: FavoriteViewModel by viewModels {
-        FavoriteViewModelFactory((application as ShoppingAppApplication).favoriteRepository,
-            (application as ShoppingAppApplication).favoriteLocalRepository)
+        FavoriteViewModelFactory(
+            (application as ShoppingAppApplication).favoriteRepository,
+            (application as ShoppingAppApplication).favoriteLocalRepository,
+        )
     }
 
     private val searchViewModel: SearchViewModel by viewModels {
@@ -37,7 +39,10 @@ class MainActivity : ComponentActivity() {
     }
 
     private val loginViewModel: LoginViewModel by viewModels {
-        LoginViewModelFactory()
+        LoginViewModelFactory(
+            (application as ShoppingAppApplication).registerRepository,
+            (application as ShoppingAppApplication).authRepository,
+        )
     }
 
 

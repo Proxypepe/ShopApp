@@ -6,6 +6,5 @@ import com.example.shopapp.repository.remote.models.UserDto
 import retrofit2.Response
 
 class RegisterRepository(private val registerApi: RegisterApi) {
-
         suspend fun createUser(user: UserBody): Response<UserDto> = registerApi.createUser(user)
 }

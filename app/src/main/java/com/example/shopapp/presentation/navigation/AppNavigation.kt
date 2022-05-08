@@ -18,6 +18,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import androidx.navigation.Navigation
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.shopapp.domain.*
 import com.example.shopapp.presentation.screen.*
@@ -40,45 +41,53 @@ fun AppNavigation(mainPageViewModel: MainViewModel, favoriteViewModel: FavoriteV
                   loginViewModel: LoginViewModel
 ) {
     val navController = rememberAnimatedNavController()
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
+
 
     val badgeCount = cartViewModel.cart?.collectAsState(initial = listOf())?.value?.size
 
     Scaffold(
         bottomBar = {
-            BottomNavigationBar(
-                items = listOf(
-                    BottomNavItem(
-                        name = "Home",
-                        route = "home",
-                        icon = Icons.Default.Home
+            if (currentRoute == NavigationRouter.SignIn.route ||
+                currentRoute == NavigationRouter.SignUp.route) {
+
+            } else {
+                BottomNavigationBar(
+                    items = listOf(
+                        BottomNavItem(
+                            name = "Home",
+                            route = "home",
+                            icon = Icons.Default.Home
+                        ),
+                        BottomNavItem(
+                            name = "Search",
+                            route = "search",
+                            icon = Icons.Default.Search
+                        ),
+                        BottomNavItem(
+                            name = "Cart",
+                            route = "cart",
+                            icon = Icons.Default.ShoppingCart,
+                            badgeCount = badgeCount ?: 0
+                        ),
+                        BottomNavItem(
+                            name = "Favorite",
+                            route = "favorite",
+                            icon = Icons.Default.Favorite
+                        ),
+                        BottomNavItem(
+                            name = "Profile",
+                            route = "profile",
+                            icon = Icons.Default.Person
+                        ),
                     ),
-                    BottomNavItem(
-                        name = "Search",
-                        route = "search",
-                        icon = Icons.Default.Search
-                    ),
-                    BottomNavItem(
-                        name = "Cart",
-                        route = "cart",
-                        icon = Icons.Default.ShoppingCart,
-                        badgeCount = badgeCount ?: 0
-                    ),
-                    BottomNavItem(
-                        name = "Favorite",
-                        route = "favorite",
-                        icon = Icons.Default.Favorite
-                    ),
-                    BottomNavItem(
-                        name = "Profile",
-                        route = "profile",
-                        icon = Icons.Default.Person
-                    ),
-                ),
-                navController = navController,
-                onItemClick = {
-                    navController.navigate(it.route)
-                }
-            )
+                    navController = navController,
+                    onItemClick = {
+                        navController.navigate(it.route)
+                    }
+                )
+            }
         } // bottomBar
     ) { innerPadding ->
         AnimatedNavHost(navController = navController, startDestination = NavigationRouter.Home.route,

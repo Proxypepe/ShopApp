@@ -42,7 +42,8 @@ fun LoginTextField(
             backgroundColor = Color.White),
         placeholder = {
             Text (
-                placeholder
+                text = placeholder,
+                color = AppTheme.textColors.secondaryTextColor
             )
         },
         shape = RoundedCornerShape(8.dp),

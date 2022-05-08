@@ -13,6 +13,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.shopapp.domain.LoginViewModel
+import com.example.shopapp.domain.common.LoginEvent
 import com.example.shopapp.presentation.navigation.NavigationRouter
 import com.example.shopapp.presentation.screen.login.components.LoginTextField
 import com.example.shopapp.ui.theme.AppTheme
@@ -49,7 +50,7 @@ fun SighInScreen(loginViewModel: LoginViewModel, navController: NavHostControlle
                 LoginTextField(
                     value = email.value,
                     onValueChange = {
-                        loginViewModel.onChangeEmail(it)
+                        loginViewModel.obtainEvent(LoginEvent.EmailChanged(it))
                     },
                     label = "Почта",
                     placeholder = "Введите почту..."
@@ -60,7 +61,7 @@ fun SighInScreen(loginViewModel: LoginViewModel, navController: NavHostControlle
                 LoginTextField(
                     value = password.value,
                     onValueChange = {
-                        loginViewModel.onChangePassword(it)
+                        loginViewModel.obtainEvent(LoginEvent.PasswordChanged(it))
                     },
                     label = "Пароль",
                     placeholder = "Введите пароль...",
@@ -68,8 +69,9 @@ fun SighInScreen(loginViewModel: LoginViewModel, navController: NavHostControlle
                 )
 
                 Spacer(modifier = Modifier.padding(15.dp))
-                Button( onClick = {
 
+                Button( onClick = {
+                    loginViewModel.obtainEvent(LoginEvent.Authentication)
                 },
                     modifier = Modifier
                         .align(Alignment.End)
@@ -80,6 +82,7 @@ fun SighInScreen(loginViewModel: LoginViewModel, navController: NavHostControlle
                 }
 
                 Spacer(modifier = Modifier.fillMaxHeight(0.9f))
+
                 Row(modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Center){

@@ -115,8 +115,10 @@ fun DetailedScreen(mainViewModel: MainViewModel, favoriteViewModel: FavoriteView
                             ){
                                 Text(text = "Рейтинг: ${mainViewModel.calculateRating(product)}" )
                                 Spacer(modifier = Modifier.fillMaxWidth(0.4f))
-                                OutlinedButton(onClick = { /*TODO*/ }) {
-                                    Text(text="Отзывы - ${product.comments.size}")
+                                OutlinedButton(onClick = {
+                                    /*TODO*/
+                                }) {
+                                    Text(text = "Отзывы - ${product.comments.size}")
                                 }
                             }
                         }

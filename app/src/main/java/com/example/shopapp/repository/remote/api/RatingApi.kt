@@ -7,7 +7,7 @@ import retrofit2.http.POST
 
 interface RatingApi {
 
-    @POST("/add")
+    @POST("./add")
     suspend fun createRating(@Body rating: RatingDto): Response<RatingDto>
 
 }

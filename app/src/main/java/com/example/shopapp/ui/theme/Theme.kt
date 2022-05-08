@@ -33,7 +33,7 @@ private val LightColorPalette = lightColors(
 
 private val DarkTextColorPalette by lazy {
     TextColors(
-        primaryTextColor = Color.White,
+        primaryTextColor = Color.Black,
         secondaryTextColor = Color.Gray,
         bodyText = Color.Black,
         subtitle1Text = Color.Gray

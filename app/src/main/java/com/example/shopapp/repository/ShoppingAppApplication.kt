@@ -14,7 +14,7 @@ class ShoppingAppApplication : Application(){
     val localRepository by lazy { ProductLocalRepository(database.productDao()) }
     val favoriteLocalRepository by lazy { FavoriteLocalRepository(database.favoriteDao()) }
 
-    private val authApi by lazy { RetrofitFactory().getInstance<AuthApi>("http://10.0.2.2:8000/")}
+    private val authApi by lazy { RetrofitFactory().getInstance<AuthApi>("http://10.0.2.2:8000/auth/")}
     val authRepository by lazy { AuthRepository(authApi) }
 
     private val registerApi by lazy { RetrofitFactory().getInstance<RegisterApi>("http://10.0.2.2:8000/register/")}

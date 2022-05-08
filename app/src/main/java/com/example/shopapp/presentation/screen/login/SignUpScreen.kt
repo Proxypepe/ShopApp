@@ -13,12 +13,13 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.shopapp.domain.LoginViewModel
+import com.example.shopapp.domain.common.LoginEvent
 import com.example.shopapp.presentation.navigation.NavigationRouter
 import com.example.shopapp.presentation.screen.login.components.LoginTextField
 import com.example.shopapp.ui.theme.AppTheme
 import com.example.shopapp.ui.theme.FontSize
 
-// alert dialog перенести ли данные из одного в другой
+
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun SighUpScreen(loginViewModel: LoginViewModel, navController: NavHostController) {
@@ -54,7 +55,7 @@ fun SighUpScreen(loginViewModel: LoginViewModel, navController: NavHostControlle
                 LoginTextField(
                     value = email.value,
                     onValueChange = {
-                        loginViewModel.onChangeEmail(it)
+                        loginViewModel.obtainEvent(LoginEvent.EmailChanged(it))
                     },
                     label = "Почта",
                     placeholder = "Введите почту..."
@@ -65,7 +66,7 @@ fun SighUpScreen(loginViewModel: LoginViewModel, navController: NavHostControlle
                 LoginTextField(
                     value = password.value,
                     onValueChange = {
-                        loginViewModel.onChangePassword(it)
+                        loginViewModel.obtainEvent(LoginEvent.PasswordChanged(it))
                     },
                     label = "Пароль",
                     placeholder = "Введите пароль...",
@@ -77,7 +78,7 @@ fun SighUpScreen(loginViewModel: LoginViewModel, navController: NavHostControlle
                 LoginTextField(
                     value = confirmPassword.value,
                     onValueChange = {
-                        loginViewModel.onChangeConfirmPassword(it)
+                        loginViewModel.obtainEvent(LoginEvent.ConfirmPasswordChanged(it))
                     },
                     label = "Повторите пароль",
                     placeholder = "Введите пароль повторно...",
@@ -87,7 +88,7 @@ fun SighUpScreen(loginViewModel: LoginViewModel, navController: NavHostControlle
                 Spacer(modifier = Modifier.padding(15.dp))
 
                 Button( onClick = {
-
+                    loginViewModel.obtainEvent(LoginEvent.Registration)
                 },
                     modifier = Modifier.align(Alignment.End)
                 ){

@@ -16,7 +16,7 @@ class CartViewModel(private val localRepository: ProductLocalRepository): ViewMo
     fun getCart() = viewModelScope.launch {
         cart = localRepository.getProducts()
     }
-
+    // Use Mapper
     fun addToCart(productDto: ProductDto) {
         _insert(ProductEntity(
             prod_id = productDto.prod_id,
