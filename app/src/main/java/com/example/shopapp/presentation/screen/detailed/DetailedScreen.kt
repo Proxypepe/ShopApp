@@ -2,91 +2,47 @@ package com.example.shopapp.presentation.screen.detailed
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Share
-import androidx.compose.material.icons.filled.ShoppingCart
-import androidx.compose.runtime.*
+import androidx.compose.material.Button
+import androidx.compose.material.OutlinedButton
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.shopapp.R
 import com.example.shopapp.domain.CartViewModel
+import com.example.shopapp.domain.DetailedViewModel
 import com.example.shopapp.domain.FavoriteViewModel
-import com.example.shopapp.domain.MainViewModel
 import com.example.shopapp.presentation.navigation.NavigationRouter
+import com.example.shopapp.presentation.screen.detailed.components.DetailedTopBar
 import com.example.shopapp.presentation.screen.detailed.components.TabScreen
+import com.example.shopapp.presentation.screen.detailed.components.rataing.CustomRatingBar
 import com.example.shopapp.repository.remote.models.ProductDto
+import com.example.shopapp.ui.theme.AppTheme
 import com.google.accompanist.pager.ExperimentalPagerApi
 
 
 @ExperimentalPagerApi
 @Composable
-fun DetailedScreen(mainViewModel: MainViewModel, favoriteViewModel: FavoriteViewModel,
+fun DetailedScreen(detailedViewModel: DetailedViewModel, favoriteViewModel: FavoriteViewModel,
                    cartViewModel: CartViewModel,
-                   product: ProductDto, navController: NavHostController) {
-    val color = if (favoriteViewModel.contains(product))
-        Color.Red
-            else
-        Color.White
-    val favoriteTint  = remember {
-        mutableStateOf(color)
-    }
+                   product: ProductDto, navController: NavHostController
+){
+    val rating by remember { mutableStateOf(detailedViewModel.calculateRating(product))}
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text(
-                    text = product.name, maxLines = 2, overflow = TextOverflow.Clip
-                )},
-                navigationIcon = { IconButton(onClick = {
-                    //FIXME prev route adapt for search
-                    navController.popBackStack(NavigationRouter.Home.route, inclusive = true)
-                }) {
-                    Icon(
-                        imageVector = Icons.Default.ArrowBack,
-                        contentDescription = "Back"
-                    )
-                }},
-                actions = {
-                    IconButton(onClick = {/*TODO*/}) {
-                        Icon(
-                            imageVector = Icons.Default.Share,
-                            contentDescription = "Share",
-                            tint = Color.White
-                        )
-                    }
-                    IconButton(onClick = {
-                        // #TODO: fix me
-                        favoriteViewModel.onFavoritesChange(product)
-                        favoriteTint.value = if (favoriteViewModel.contains(product))
-                            Color.Red
-                        else
-                            Color.White
-                    }) {
-                        Icon(
-                            imageVector = Icons.Default.Favorite,
-                            contentDescription = "favorite",
-                            tint = favoriteTint.value
-                        )
-                    }
-                    IconButton(onClick = {
-                        navController.navigate(NavigationRouter.Cart.route)
-                    }) {
-                        Icon(
-                            imageVector = Icons.Default.ShoppingCart,
-                            contentDescription = "ShoppingCart",
-                            tint = Color.White
-                        )
-                    }
-                }
+            DetailedTopBar(
+                product = product,
+                isContains = favoriteViewModel::contains,
+                onFavoritesChange = favoriteViewModel::onFavoritesChange,
+                navController = navController
             )
         }
     ) {
@@ -97,26 +53,36 @@ fun DetailedScreen(mainViewModel: MainViewModel, favoriteViewModel: FavoriteView
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .fillMaxHeight(0.93f)
+                    .fillMaxHeight(0.90f)
             ) {
                     Box(modifier = Modifier
-                        .padding(start = 45.dp, end = 45.dp)
+                        .padding(start = 20.dp, end = 20.dp)
                         .fillMaxWidth(),
-                        contentAlignment = Alignment.Center) {
+                        contentAlignment = Alignment.Center
+                    ) {
                         Column {
                             Image(
                                 painter = painterResource(R.drawable.ic_android_black_24dp),
                                 contentDescription = "",
                                 modifier = Modifier.fillMaxWidth()
                             )
-                            Spacer(modifier = Modifier.padding(top=10.dp))
+                            Spacer(modifier = Modifier.height(10.dp))
                             Row(
                                 verticalAlignment = Alignment.CenterVertically
                             ){
-                                Text(text = "Рейтинг: ${mainViewModel.calculateRating(product)}" )
+                                Column{
+                                    Text(text = "Рейтинг: $rating" )
+
+                                    CustomRatingBar(
+                                        value = rating,
+                                        onValueChange = {},
+                                        onRatingChanged = {}
+                                    )
+                                }
                                 Spacer(modifier = Modifier.fillMaxWidth(0.4f))
                                 OutlinedButton(onClick = {
-                                    /*TODO*/
+                                    detailedViewModel.currentProduct = product
+                                    navController.navigate(NavigationRouter.CommentRead.route)
                                 }) {
                                     Text(text = "Отзывы - ${product.comments.size}")
                                 }
@@ -131,12 +97,22 @@ fun DetailedScreen(mainViewModel: MainViewModel, favoriteViewModel: FavoriteView
             },
             modifier = Modifier
                 .fillMaxWidth(0.9f)
-                .height(35.dp)){
+                .height(45.dp)
+            ){
                 Column(
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text("В корзину ${product.price}", fontSize = 14.sp)
+                    Text(
+                        text = "В корзину",
+                        style = AppTheme.typography.body2,
+                        color = AppTheme.textColors.primaryButtonText
+                    )
+                    Text(
+                        text = product.price,
+                        style = AppTheme.typography.body2,
+                        color = AppTheme.textColors.primaryButtonText
+                    )
                 }
             }
         }

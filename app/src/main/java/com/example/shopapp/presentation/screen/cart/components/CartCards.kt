@@ -1,5 +1,6 @@
 package com.example.shopapp.presentation.screen.cart.components
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -14,15 +15,23 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.example.shopapp.R
 import com.example.shopapp.domain.CartViewModel
 import com.example.shopapp.domain.FavoriteViewModel
+import com.example.shopapp.presentation.navigation.NavigationRouter
 import com.example.shopapp.repository.local.entity.ProductEntity
+import com.example.shopapp.repository.remote.models.UserDto
+import com.example.shopapp.ui.theme.AppTheme
+import kotlinx.coroutines.flow.StateFlow
 
 
+@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
-fun EmptyCart(){
+fun EmptyCart(
+    userData: StateFlow<UserDto>?,
+    navController: NavHostController,
+){
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -31,12 +40,29 @@ fun EmptyCart(){
     ) {
         Spacer(modifier = Modifier.height(15.dp))
         Column {
-            Text(text = "Корзина пуста")
+            Text(
+                text = "Корзина пуста",
+                style = AppTheme.typography.body1,
+                color = AppTheme.textColors.primaryTextColor
+            )
             Spacer(modifier = Modifier.height(5.dp))
-            Text(text = "ла ла ла")
+            Text(
+                text = "ла ла ла",
+                style = AppTheme.typography.body1,
+                color = AppTheme.textColors.primaryTextColor
+            )
             Spacer(modifier = Modifier.height(15.dp))
-            Button(onClick = {/*TODO*/}) {
-                Text(text = "Войти")
+            if (userData?.value?.userId == 0L )
+            {
+                Button(onClick = {
+                    navController.navigate(NavigationRouter.SignIn.route)
+                }) {
+                    Text(
+                        text = "Войти",
+                        style = AppTheme.typography.body1,
+                        color = AppTheme.textColors.primaryButtonText
+                    )
+                }
             }
         }
     }
@@ -54,12 +80,15 @@ fun CartCard(cartViewModel: CartViewModel, favoriteViewModel: FavoriteViewModel,
                     )
                     Spacer(modifier = Modifier.width(10.dp))
                     Column {
-                        Text(text = product.price)
+                        Text(
+                            text = product.price,
+                            style = AppTheme.typography.body1,
+                            color = AppTheme.textColors.primaryTextColor
+                        )
                         Spacer(modifier = Modifier.height(5.dp))
                         Row(
                             horizontalArrangement= Arrangement.Center,
                             verticalAlignment = Alignment.CenterVertically,
-
                             ) {
                             Icon(
                                 modifier = Modifier.size(30.dp, 30.dp),
@@ -67,14 +96,21 @@ fun CartCard(cartViewModel: CartViewModel, favoriteViewModel: FavoriteViewModel,
                                 contentDescription = "crown_icon"
                             )
                             Spacer(modifier = Modifier.width(7.dp))
-                            Text(text = "10 % баллы")
+                            Text(
+                                text = "10 % баллы",
+                                style = AppTheme.typography.body1,
+                                color = AppTheme.textColors.primaryTextColor
+                            )
                         }
                         Spacer(modifier = Modifier.height(5.dp))
                         Text(
                             modifier = Modifier.fillMaxWidth(),
                             text = product.name,
                             maxLines = 2,
-                            overflow = TextOverflow.Clip)
+                            overflow = TextOverflow.Clip,
+                            style = AppTheme.typography.body1,
+                            color = AppTheme.textColors.primaryTextColor
+                        )
                     }
                 }
             }
@@ -100,7 +136,11 @@ fun CartCard(cartViewModel: CartViewModel, favoriteViewModel: FavoriteViewModel,
                             contentDescription = "favorite"
                         )
                         Spacer(modifier = Modifier.width(7.dp))
-                        Text(text = "В избранное")
+                        Text(
+                            text = "В избранное",
+                            style = AppTheme.typography.body1,
+                            color = AppTheme.textColors.primaryTextColor
+                        )
                     }
                 }
                 Spacer(modifier = Modifier.width(7.dp))
@@ -117,20 +157,34 @@ fun CartCard(cartViewModel: CartViewModel, favoriteViewModel: FavoriteViewModel,
                             contentDescription = "delete"
                         )
                         Spacer(modifier = Modifier.width(7.dp))
-                        Text(text = "Удалить")
+                        Text(
+                            text = "Удалить",
+                            style = AppTheme.typography.body1,
+                            color = AppTheme.textColors.primaryTextColor
+                        )
                     }
                 }
                 Spacer(modifier = Modifier.fillMaxWidth(0.45f))
-                Text(text = amount.toString(), fontSize = 14.sp)
+                Text(
+                    text = amount.toString(),
+                    style = AppTheme.typography.body1,
+                    color = AppTheme.textColors.primaryTextColor
+                )
                 Spacer(modifier = Modifier.width(5.dp))
-                IconButton(onClick = { amount++ },
-                    modifier = Modifier.width(30.dp)) {
+                IconButton(onClick = {
+                    amount++
+                },
+                    modifier = Modifier.width(30.dp)
+                ) {
                     Icon(imageVector = Icons.Outlined.KeyboardArrowUp,
                         contentDescription = "add")
                 }
                 Spacer(modifier = Modifier.width(3.dp))
-                IconButton(onClick = { amount-- },
-                    modifier = Modifier.width(30.dp)) {
+                IconButton(onClick = {
+                    amount--
+                },
+                    modifier = Modifier.width(30.dp)
+                ) {
                     Icon(imageVector = Icons.Outlined.KeyboardArrowUp,
                         contentDescription = "reduce")
                 }

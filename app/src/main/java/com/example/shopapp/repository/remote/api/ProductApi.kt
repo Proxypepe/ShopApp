@@ -11,7 +11,7 @@ interface ProductApi {
     @GET("./all")
     suspend fun getAllProducts(): Response<List<ProductDto>>
 
-    @GET("./detail/{id}")
+    @GET("detail/{id}")
     suspend fun getDetailById(@Path("id")id: Int): Response<ProductDto>
 
     @GET("./range")

@@ -1,12 +1,16 @@
 package com.example.shopapp.domain
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.example.shopapp.presentation.navigation.NavigationRouter
 import com.example.shopapp.repository.TypeConvertor
 import com.example.shopapp.repository.remote.models.ProductDto
+import com.example.shopapp.repository.remote.models.UserDto
 import com.example.shopapp.repository.remote.repository.ProductRepository
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.net.SocketTimeoutException
 
@@ -15,18 +19,6 @@ class MainViewModel(private val productRepository: ProductRepository): ViewModel
     var detailedInfo: MutableStateFlow<ProductDto> = MutableStateFlow(TypeConvertor.initialProductDto)
     var loading: MutableStateFlow<Boolean> = MutableStateFlow(false)
 
-
-    fun calculateRating(productDto: ProductDto): Float {
-        var sum = 0f
-        for (rate in productDto.rating) {
-            sum += rate.rating
-        }
-        val length = productDto.rating.size
-        return if (length != 0)
-            (sum / length)
-        else
-            0f
-    }
 
     fun getRecommendedProduct() = viewModelScope.launch {
         loading.value = true
@@ -39,13 +31,19 @@ class MainViewModel(private val productRepository: ProductRepository): ViewModel
             }
         } catch (error: SocketTimeoutException) {
             loading.value = false
+        } catch (error: java.io.EOFException) {
+            Log.d("java.io.EOFException", "${error.stackTrace}")
         }
     }
 
     fun getDetailById(id: Int) = viewModelScope.launch {
-        val product = productRepository.getDetailById(id)
-        if (product.isSuccessful && product.body() != null ) {
-            product.body()?.let { detailedInfo.value = it }
+        try {
+            val product = productRepository.getDetailById(id)
+            if (product.isSuccessful && product.body() != null ) {
+                product.body()?.let { detailedInfo.value = it }
+            }
+        } catch (error: SocketTimeoutException) {
+
         }
     }
 }

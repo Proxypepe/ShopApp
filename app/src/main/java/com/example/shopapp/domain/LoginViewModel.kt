@@ -8,9 +8,11 @@ import com.example.shopapp.domain.common.EventHandler
 import com.example.shopapp.domain.common.LoginEvent
 import com.example.shopapp.presentation.screen.login.LoginState
 import com.example.shopapp.repository.remote.models.UserBody
+import com.example.shopapp.repository.remote.models.UserDto
 import com.example.shopapp.repository.remote.repository.AuthRepository
 import com.example.shopapp.repository.remote.repository.RegisterRepository
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.net.SocketTimeoutException
@@ -22,6 +24,11 @@ class LoginViewModel(private val registerRepository: RegisterRepository,
     private val _loginState = MutableStateFlow(LoginState())
     val signInState = _loginState.asStateFlow()
 
+    private val _userData = MutableStateFlow(UserDto(email = "",
+        password = "",  role = ""))
+    val userData = _userData.asStateFlow()
+
+
     override fun obtainEvent(event: LoginEvent) {
         when (event) {
             LoginEvent.Authentication -> authorize()
@@ -29,7 +36,12 @@ class LoginViewModel(private val registerRepository: RegisterRepository,
             is LoginEvent.EmailChanged -> onChangeEmail(event.value)
             is LoginEvent.PasswordChanged -> onChangePassword(event.value)
             LoginEvent.Registration -> register()
+            is LoginEvent.RegisterUserUpdater -> updateUser(event.updater)
         }
+    }
+
+    private fun updateUser(updateUser: (StateFlow<UserDto>) -> Unit) {
+        updateUser(_userData)
     }
 
     private fun onChangePassword(newPassword: String) {
@@ -57,12 +69,12 @@ class LoginViewModel(private val registerRepository: RegisterRepository,
                 if (user.body() != null && user.isSuccessful)
                 {
                     Log.d("body", "${user.body()}")
+                    _userData.value = user.body()!!
                     clearFields()
                 }
             } catch (error: SocketTimeoutException) {
 
             }
-
         }
     }
 
@@ -78,6 +90,7 @@ class LoginViewModel(private val registerRepository: RegisterRepository,
                 )
                 if (response.body() != null && response.isSuccessful) {
                     Log.d("body", "${response.body()}")
+                    _userData.value = response.body()!!
                     clearFields()
                 } else {
                     Log.d("body", "Something went wrong")

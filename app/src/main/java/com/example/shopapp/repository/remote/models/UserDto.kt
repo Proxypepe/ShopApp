@@ -13,7 +13,5 @@ data class UserDto(
 
     val comments: List<CommentDto> = emptyList(),
 
-    val rating: List<RatingDto> = emptyList(),
-
     val favorites: List<FavoriteDto> = emptyList()
 ) : Parcelable

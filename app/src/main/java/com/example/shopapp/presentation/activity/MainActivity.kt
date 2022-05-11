@@ -8,6 +8,7 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.ui.ExperimentalComposeUiApi
 import com.example.shopapp.domain.*
+import com.example.shopapp.domain.common.LoginEvent
 import com.example.shopapp.presentation.navigation.AppNavigation
 import com.example.shopapp.repository.ShoppingAppApplication
 import com.example.shopapp.ui.theme.ShopAppTheme
@@ -45,11 +46,19 @@ class MainActivity : ComponentActivity() {
         )
     }
 
+    private val detailedViewModel: DetailedViewModel by viewModels {
+        DetailedViewModelFactory(
+            (application as ShoppingAppApplication).commentRepository,
+        )
+    }
 
     private fun initInfoLists() {
         mainViewModel.getRecommendedProduct()
         cartViewModel.getCart()
         favoriteViewModel.getFavorites()
+        loginViewModel.obtainEvent(LoginEvent.RegisterUserUpdater(
+            detailedViewModel::updateUserData
+        ))
     }
 
     override fun onStart() {
@@ -66,7 +75,8 @@ class MainActivity : ComponentActivity() {
                     favoriteViewModel = favoriteViewModel,
                     cartViewModel = cartViewModel,
                     searchViewModel = searchViewModel,
-                    loginViewModel = loginViewModel
+                    loginViewModel = loginViewModel,
+                    detailedViewModel = detailedViewModel
                 )
             }
         }

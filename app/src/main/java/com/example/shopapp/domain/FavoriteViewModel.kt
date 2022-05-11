@@ -1,8 +1,5 @@
 package com.example.shopapp.domain
 
-import android.util.Log
-import androidx.compose.runtime.MutableState
-import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -11,12 +8,9 @@ import com.example.shopapp.repository.local.FavoriteLocalRepository
 import com.example.shopapp.repository.local.entity.FavoriteEntity
 import com.example.shopapp.repository.local.entity.ProductEntity
 import com.example.shopapp.repository.remote.models.ProductDto
-import com.example.shopapp.repository.remote.models.UserDto
 import com.example.shopapp.repository.remote.repository.FavoriteRepository
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 
 
@@ -25,7 +19,7 @@ class FavoriteViewModel(private val favoriteRepository: FavoriteRepository,
 
     private var _favorites: MutableStateFlow<List<FavoriteEntity>> = MutableStateFlow(emptyList())
     var favorites = _favorites.asStateFlow()
-    var userDto: UserDto? = null
+
 
     fun getFavorites() = viewModelScope.launch {
        favoriteLocalRepository.getFavorites().collect {

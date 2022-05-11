@@ -7,5 +7,7 @@ data class TextColors(
     val secondaryTextColor: Color,
 
     val bodyText: Color,
-    val subtitle1Text: Color
+    val subtitle1Text: Color,
+
+    val primaryButtonText: Color = Color.White
 )

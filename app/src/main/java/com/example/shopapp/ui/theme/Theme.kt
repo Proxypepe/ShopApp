@@ -49,6 +49,10 @@ private val LightTextColorPalette by lazy {
     )
 }
 
+private val LightExtendedPalette by lazy {
+    ExtendedColors()
+}
+
 
 @Composable
 fun ShopAppTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
@@ -67,6 +71,7 @@ fun ShopAppTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composabl
     CompositionLocalProvider(
         LocalColorProvider provides colors,
         LocalTextColorsProvider provides textColors,
+        LocalExtendedColorsProvider provides LightExtendedPalette,
         LocalTypography provides Typography,
         LocalShapes provides Shapes,
         content = content
@@ -86,6 +91,11 @@ object AppTheme {
         @Composable
         @ReadOnlyComposable
         get() = LocalColorProvider.current
+
+    val extendedColors: ExtendedColors
+        @Composable
+        @ReadOnlyComposable
+        get() = LocalExtendedColorsProvider.current
 
     val textColors: TextColors
         @Composable
@@ -111,5 +121,10 @@ internal val LocalColorProvider = staticCompositionLocalOf<Colors> {
 internal val LocalTextColorsProvider = staticCompositionLocalOf<TextColors> {
     error("No text colors provided")
 }
+
+internal val LocalExtendedColorsProvider = staticCompositionLocalOf<ExtendedColors> {
+    error("No text colors provided")
+}
+
 internal val LocalShapes = staticCompositionLocalOf { Shapes() }
 internal val LocalTypography = staticCompositionLocalOf { Typography() }

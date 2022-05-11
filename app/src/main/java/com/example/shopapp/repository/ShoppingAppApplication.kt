@@ -32,7 +32,4 @@ class ShoppingAppApplication : Application(){
     private val productApi by lazy { RetrofitFactory().getInstance<ProductApi>("http://10.0.2.2:8000/products/")}
     val productRepository by lazy { ProductRepository(productApi) }
 
-    private val ratingApi by lazy { RetrofitFactory().getInstance<RatingApi>("http://10.0.2.2:8000/rating/")}
-    val ratingRepository by lazy { RatingRepository(ratingApi) }
-
 }

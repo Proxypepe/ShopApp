@@ -4,8 +4,10 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class CommentDto(
-    val id: Int = 0,
-    val comment: String,
-    val product: ProductDto,
-    val user: UserDto
+    val comment: String?,
+    val advantages: String?,
+    val disadvantages: String?,
+    val rating: Float,
+    val commentedProduct: ProductDto?,
+    val commentedByUser: UserDto?
 ) : Parcelable
