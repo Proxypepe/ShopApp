@@ -3,9 +3,11 @@ package com.example.shopapp.domain
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
+import androidx.datastore.core.DataStore
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.example.shopapp.domain.common.AppSettings
 import com.example.shopapp.domain.common.EventHandler
 import com.example.shopapp.domain.common.LoginEvent
 import com.example.shopapp.presentation.screen.login.LoginState
@@ -21,7 +23,8 @@ import java.net.SocketTimeoutException
 
 class LoginViewModel(
     private val registerRepository: RegisterRepository,
-    private val authRepository: AuthRepository
+    private val authRepository: AuthRepository,
+    private val dataStore: DataStore<AppSettings>
 ) : EventHandler<LoginEvent>, ViewModel() {
     private val _loginState = MutableStateFlow(LoginState())
     val signInState = _loginState.asStateFlow()
@@ -44,6 +47,7 @@ class LoginViewModel(
             is LoginEvent.EmailChanged -> onChangeEmail(event.value)
             is LoginEvent.PasswordChanged -> onChangePassword(event.value)
             is LoginEvent.LogOut -> logOut(event.context)
+            LoginEvent.InitUserData -> initUserData()
         }
     }
 
@@ -64,12 +68,13 @@ class LoginViewModel(
         _loginState.value.confirmPassword.value = newPassword
     }
 
-    private fun logOut(context: Context) {
+    private fun logOut(context: Context) = viewModelScope.launch {
         _userData.value = UserDto(
             email = "",
             password = "",
             role = ""
         )
+        forgotUserData()
         Toast.makeText(context, "Выход", Toast.LENGTH_LONG).show()
     }
 
@@ -89,6 +94,8 @@ class LoginViewModel(
                     makeToast(context, "Регистрация прошла успешно")
                     navigateUp()
                     navigateUp()
+                    if (_loginState.value.isRememberState.value)
+                        rememberUserData()
                 } else {
                     makeToast(context, "Ошибка регистрации")
                 }
@@ -114,12 +121,32 @@ class LoginViewModel(
                     clearFields()
                     makeToast(context, "Авторизация прошла успешно")
                     navigateUp()
+                    if (_loginState.value.isRememberState.value)
+                        rememberUserData()
                 } else {
                     makeToast(context, "Ошибка авторизации")
                 }
             } catch (error: SocketTimeoutException) {
                 makeToast(context, "Ошибка авторизации")
             }
+        }
+    }
+
+    private fun initUserData() = viewModelScope.launch {
+        try {
+            dataStore.data.collect {
+                val response = authRepository.checkAuth(
+                    UserBody(
+                        email = it.user_email,
+                        password = it.user_password
+                    )
+                )
+                if (response.body() != null && response.isSuccessful) {
+                    _userData.value = response.body()!!
+                }
+            }
+        } catch (error: SocketTimeoutException) {
+
         }
     }
 
@@ -134,16 +161,55 @@ class LoginViewModel(
         _loginState.value.password.value = ""
         _loginState.value.confirmPassword.value = ""
     }
+
+    private suspend fun setTheme(isDarkTheme: Boolean) {
+        dataStore.updateData {
+            it.copy(
+                isDark = isDarkTheme
+            )
+        }
+    }
+
+    private suspend fun forgotUserData() {
+        setUserData(
+            user_email = "",
+            user_password = "",
+            isRememberPasswords = false,
+        )
+    }
+
+    private suspend fun rememberUserData() {
+        setUserData(
+            user_email = userData.value.email,
+            user_password = userData.value.password!!,
+            isRememberPasswords = true,
+        )
+    }
+
+    private suspend fun setUserData(
+        user_email: String,
+        user_password: String,
+        isRememberPasswords: Boolean
+    ) {
+        dataStore.updateData {
+            it.copy(
+                user_email = user_email,
+                user_password = user_password,
+                isRememberPasswords = isRememberPasswords,
+            )
+        }
+    }
 }
 
 class LoginViewModelFactory(
     private val registerRepository: RegisterRepository,
-    private val authRepository: AuthRepository
+    private val authRepository: AuthRepository,
+    private val dataStore: DataStore<AppSettings>
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(LoginViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return LoginViewModel(registerRepository, authRepository) as T
+            return LoginViewModel(registerRepository, authRepository, dataStore) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

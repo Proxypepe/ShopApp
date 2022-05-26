@@ -10,6 +10,8 @@ sealed class LoginEvent {
     data class Authentication(val context: Context, val navigateUp: () -> Boolean): LoginEvent()
     data class LogOut(val context: Context): LoginEvent()
 
+    object InitUserData: LoginEvent()
+
     data class EmailChanged(val value: String): LoginEvent()
     data class PasswordChanged(val value: String): LoginEvent()
     data class ConfirmPasswordChanged(val value: String): LoginEvent()

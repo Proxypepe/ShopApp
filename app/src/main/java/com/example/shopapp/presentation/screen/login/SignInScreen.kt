@@ -1,6 +1,7 @@
 package com.example.shopapp.presentation.screen.login
 
 import android.annotation.SuppressLint
+import android.content.Context
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
@@ -26,7 +27,7 @@ import com.example.shopapp.ui.theme.FontSize
 @Composable
 fun SighInScreen(loginViewModel: LoginViewModel, navController: NavHostController) {
 
-    val context = LocalContext.current
+    val context: Context = LocalContext.current
 
     with(loginViewModel.signInState.value) {
         Box(

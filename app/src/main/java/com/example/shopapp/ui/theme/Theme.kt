@@ -55,14 +55,14 @@ private val LightExtendedPalette by lazy {
 
 
 @Composable
-fun ShopAppTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
-    val colors = if (darkTheme) {
+fun ShopAppTheme(isDarkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
+    val colors = if (isDarkTheme) {
         DarkColorPalette
     } else {
         LightColorPalette
     }
 
-    val textColors = if (darkTheme) {
+    val textColors = if (isDarkTheme) {
         LightTextColorPalette
     } else {
         DarkTextColorPalette
