@@ -4,13 +4,10 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.example.shopapp.presentation.navigation.NavigationRouter
 import com.example.shopapp.repository.TypeConvertor
 import com.example.shopapp.repository.remote.models.ProductDto
-import com.example.shopapp.repository.remote.models.UserDto
 import com.example.shopapp.repository.remote.repository.ProductRepository
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.net.SocketTimeoutException
 
@@ -47,7 +44,6 @@ class MainViewModel(private val productRepository: ProductRepository): ViewModel
         }
     }
 }
-
 
 
 class MainViewModelFactory(private val productRepository: ProductRepository) : ViewModelProvider.Factory {

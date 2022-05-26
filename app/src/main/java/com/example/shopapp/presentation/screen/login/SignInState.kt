@@ -7,4 +7,5 @@ data class LoginState (
     var email: MutableState<String>             = mutableStateOf(""),
     var password: MutableState<String>          = mutableStateOf(""),
     var confirmPassword: MutableState<String>   = mutableStateOf(""),
+    var isRememberState: MutableState<Boolean>  =  mutableStateOf(false)
 )

@@ -6,7 +6,6 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.example.shopapp.presentation.navigation.NavigationRouter
 import com.example.shopapp.presentation.screen.detailed.DetailedCommentState
 import com.example.shopapp.presentation.screen.detailed.DetailedState.*
 import com.example.shopapp.repository.remote.models.CommentDto
@@ -19,7 +18,6 @@ import kotlinx.coroutines.launch
 class DetailedViewModel(private val commentRepository: CommentRepository): ViewModel() {
 
     var currentProduct: ProductDto? = null
-    private var _userData: StateFlow<UserDto>? = null
 
     private var rating by mutableStateOf(0f)
 
@@ -60,7 +58,7 @@ class DetailedViewModel(private val commentRepository: CommentRepository): ViewM
         return ""
     }
 
-    fun sendComment() = viewModelScope.launch {
+    fun sendComment(userData: UserDto) = viewModelScope.launch {
         val comment = if (state.comment.value == "")
             null
         else
@@ -83,7 +81,7 @@ class DetailedViewModel(private val commentRepository: CommentRepository): ViewM
                 disadvantages = disadvantages,
                 rating = rating,
                 commentedProduct = currentProduct!!,
-                commentedByUser = _userData!!.value
+                commentedByUser = userData
             )
         )
     }
@@ -94,13 +92,6 @@ class DetailedViewModel(private val commentRepository: CommentRepository): ViewM
         state = DetailedCommentState()
     }
 
-    fun getCommentRoute(): String {
-        if (_userData?.value?.userId == 0L)
-            return NavigationRouter.SignIn.route
-        return ""
-    }
-
-    fun getUserData() = _userData
 
     fun rating() = rating
 
@@ -119,10 +110,6 @@ class DetailedViewModel(private val commentRepository: CommentRepository): ViewM
     fun updateRating(rating: Float) {
         this.rating = rating
         commentState = WriteComment
-    }
-
-    fun updateUserData(userDataState: StateFlow<UserDto>) {
-        _userData = userDataState
     }
 }
 

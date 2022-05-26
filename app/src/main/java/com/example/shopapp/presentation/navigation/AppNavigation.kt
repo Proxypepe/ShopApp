@@ -1,5 +1,7 @@
 package com.example.shopapp.presentation.navigation
 
+import android.annotation.SuppressLint
+import android.widget.Toast
 import androidx.compose.animation.*
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
@@ -14,6 +16,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.shopapp.domain.*
 import com.example.shopapp.presentation.navigation.components.BottomNavItem
@@ -35,26 +38,30 @@ import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.pager.ExperimentalPagerApi
 
 
+@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 @ExperimentalPagerApi
 @ExperimentalMaterialApi
 @ExperimentalComposeUiApi
 @ExperimentalAnimationApi
-fun AppNavigation(mainPageViewModel: MainViewModel, favoriteViewModel: FavoriteViewModel,
-                  cartViewModel: CartViewModel, searchViewModel: SearchViewModel,
-                  loginViewModel: LoginViewModel, detailedViewModel: DetailedViewModel
+fun AppNavigation(
+    mainPageViewModel: MainViewModel, favoriteViewModel: FavoriteViewModel,
+    cartViewModel: CartViewModel, searchViewModel: SearchViewModel,
+    loginViewModel: LoginViewModel, detailedViewModel: DetailedViewModel
 ) {
     val navController = rememberAnimatedNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
+    val context = LocalContext.current
 
     val badgeCount = cartViewModel.cart.collectAsState(initial = listOf()).value.size
 
     Scaffold(
         bottomBar = {
             if (currentRoute == NavigationRouter.SignIn.route ||
-                currentRoute == NavigationRouter.SignUp.route) {
+                currentRoute == NavigationRouter.SignUp.route
+            ) {
 
             } else {
                 BottomNavigationBar(
@@ -94,20 +101,23 @@ fun AppNavigation(mainPageViewModel: MainViewModel, favoriteViewModel: FavoriteV
             }
         } // bottomBar
     ) { innerPadding ->
-        AnimatedNavHost(navController = navController, startDestination = NavigationRouter.Home.route,
-            popEnterTransition = { slideInHorizontally(
-                initialOffsetX = {-300},
-                animationSpec = tween(
-                    durationMillis = 500,
-                    easing = FastOutSlowInEasing
+        AnimatedNavHost(navController = navController,
+            startDestination = NavigationRouter.Home.route,
+            popEnterTransition = {
+                slideInHorizontally(
+                    initialOffsetX = { -300 },
+                    animationSpec = tween(
+                        durationMillis = 500,
+                        easing = FastOutSlowInEasing
                     )
                 ) + fadeIn(animationSpec = tween(300))
             },
-            exitTransition = { slideOutHorizontally(
-                targetOffsetX = { -300},
-                animationSpec = tween(
-                    durationMillis = 500,
-                    easing = FastOutSlowInEasing
+            exitTransition = {
+                slideOutHorizontally(
+                    targetOffsetX = { -300 },
+                    animationSpec = tween(
+                        durationMillis = 500,
+                        easing = FastOutSlowInEasing
                     )
                 ) + fadeOut(animationSpec = tween(300))
             }) {
@@ -126,14 +136,16 @@ fun AppNavigation(mainPageViewModel: MainViewModel, favoriteViewModel: FavoriteV
             composable(NavigationRouter.Cart.route) {
                 Box(modifier = Modifier.padding(innerPadding))
                 {
-                    CartScreen(cartViewModel, mainPageViewModel, detailedViewModel,
-                        favoriteViewModel, navController)
+                    CartScreen(
+                        cartViewModel, mainPageViewModel, loginViewModel,
+                        favoriteViewModel, navController
+                    )
                 }
             }
             composable(NavigationRouter.Favorite.route) {
                 Box(modifier = Modifier.padding(innerPadding))
                 {
-                    FavoriteScreen(favoriteViewModel, navController)
+                    FavoriteScreen(cartViewModel, favoriteViewModel, navController)
                 }
             }
             composable(NavigationRouter.Profile.route) {
@@ -157,30 +169,42 @@ fun AppNavigation(mainPageViewModel: MainViewModel, favoriteViewModel: FavoriteV
             }
 
             composable(NavigationRouter.Detailed.route) {
-                navController.previousBackStackEntry?.arguments?.
-                getParcelable<ProductDto>("PRODUCT")?.let {
+                navController.previousBackStackEntry?.arguments?.getParcelable<ProductDto>("PRODUCT")
+                    ?.let {
 //                    mainPageViewModel.getDetailById(it.prod_id)
-                    detailedViewModel.currentProduct = it
-                    Box(modifier = Modifier.padding(innerPadding))
-                    {
-                        DetailedScreen(detailedViewModel, favoriteViewModel,
-                            cartViewModel, it, navController
-                        )
+                        detailedViewModel.currentProduct = it
+                        Box(modifier = Modifier.padding(innerPadding))
+                        {
+                            DetailedScreen(
+                                detailedViewModel, favoriteViewModel,
+                                cartViewModel, it, navController
+                            )
+                        }
                     }
-                }
             }
 
             composable(NavigationRouter.CommentRead.route) {
                 // use navController arg
                 detailedViewModel.currentProduct?.let {
-                    CommentSubScreen(detailedViewModel, navController)
+                    CommentSubScreen(
+                        detailedViewModel,
+                        loginViewModel.userData.value,
+                        navController
+                    )
                 }
             }
 
             composable(NavigationRouter.CommentWrite.route) {
-                detailedViewModel.currentProduct?.let {
-                    MakeComment(detailedViewModel, navController)
-                }
+                if (loginViewModel.userData.value.userId != 0L || loginViewModel.userData.value.email != "")
+                    detailedViewModel.currentProduct?.let {
+                        MakeComment(
+                            detailedViewModel,
+                            loginViewModel.userData.value,
+                            navController
+                        )
+                    }
+                else
+                    Toast.makeText(context, "Пожалуйста, авторизуйтесь", Toast.LENGTH_LONG).show()
             }
         }
     }

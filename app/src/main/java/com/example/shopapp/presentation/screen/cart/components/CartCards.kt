@@ -23,6 +23,7 @@ import androidx.navigation.NavHostController
 import com.example.shopapp.R
 import com.example.shopapp.domain.CartViewModel
 import com.example.shopapp.domain.FavoriteViewModel
+import com.example.shopapp.domain.LoginViewModel
 import com.example.shopapp.presentation.navigation.NavigationRouter
 import com.example.shopapp.repository.TypeConvertor
 import com.example.shopapp.repository.local.entity.ProductEntity
@@ -34,7 +35,7 @@ import kotlinx.coroutines.flow.StateFlow
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun EmptyCart(
-    userData: StateFlow<UserDto>?,
+    userData: StateFlow<UserDto>,
     navController: NavHostController,
 ) {
     Box(
@@ -57,7 +58,7 @@ fun EmptyCart(
                 color = AppTheme.textColors.primaryTextColor
             )
             Spacer(modifier = Modifier.height(15.dp))
-            if (userData?.value?.userId == 0L) {
+            if (userData.value.userId == 0L || userData.value.email == "") {
                 Button(onClick = {
                     navController.navigate(NavigationRouter.SignIn.route)
                 }) {

@@ -9,22 +9,29 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.example.shopapp.domain.CartViewModel
+import com.example.shopapp.domain.FavoriteViewModel
 import com.example.shopapp.repository.local.entity.ProductEntity
 
 
 @Composable
-fun FavoriteBlock(productLeft: ProductEntity?, productRight: ProductEntity?) {
+fun FavoriteBlock(
+    cartViewModel: CartViewModel,
+    favoriteViewModel: FavoriteViewModel,
+    productLeft: ProductEntity?,
+    productRight: ProductEntity?
+) {
     Row(
         modifier = Modifier.fillMaxWidth()
     ) {
         Box(modifier = Modifier.fillMaxWidth(0.5f)) {
             productRight?.let {
-                FavoriteCart(productRight)
+                FavoriteCart(cartViewModel, favoriteViewModel, productRight)
             }
         }
         Box(modifier = Modifier.fillMaxWidth()) {
             productLeft?.let {
-                FavoriteCart(productLeft)
+                FavoriteCart(cartViewModel, favoriteViewModel, productLeft)
             }
         }
     }
@@ -38,13 +45,17 @@ fun EmptyFavorites(navController: NavHostController) {
         contentAlignment = Alignment.Center
     ) {
         Column {
-            Text(text = "В Избранном пока ничего нет",
+            Text(
+                text = "В Избранном пока ничего нет",
                 modifier = Modifier.fillMaxWidth(),
-                textAlign = TextAlign.Center)
+                textAlign = TextAlign.Center
+            )
             Spacer(modifier = Modifier.height(5.dp))
-            Text(text = "Добавьте товар в избранное",
+            Text(
+                text = "Добавьте товар в избранное",
                 modifier = Modifier.fillMaxWidth(),
-                textAlign = TextAlign.Center)
+                textAlign = TextAlign.Center
+            )
             Spacer(modifier = Modifier.height(7.dp))
             Box(
                 modifier = Modifier.fillMaxWidth(),

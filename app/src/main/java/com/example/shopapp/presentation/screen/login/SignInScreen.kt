@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -16,6 +17,7 @@ import com.example.shopapp.domain.LoginViewModel
 import com.example.shopapp.domain.common.LoginEvent
 import com.example.shopapp.presentation.navigation.NavigationRouter
 import com.example.shopapp.presentation.screen.login.components.LoginTextField
+import com.example.shopapp.presentation.screen.search.components.CustomCheckBox
 import com.example.shopapp.ui.theme.AppTheme
 import com.example.shopapp.ui.theme.FontSize
 
@@ -24,11 +26,16 @@ import com.example.shopapp.ui.theme.FontSize
 @Composable
 fun SighInScreen(loginViewModel: LoginViewModel, navController: NavHostController) {
 
-    with (loginViewModel.signInState.value) {
-        Box( contentAlignment = Alignment.Center, modifier = Modifier
-            .padding(top = 100.dp, start = 50.dp,
-                end = 50.dp, bottom = 50.dp )
-        ){
+    val context = LocalContext.current
+
+    with(loginViewModel.signInState.value) {
+        Box(
+            contentAlignment = Alignment.Center, modifier = Modifier
+                .padding(
+                    top = 100.dp, start = 50.dp,
+                    end = 50.dp, bottom = 50.dp
+                )
+        ) {
             Column(
                 modifier = Modifier
                     .fillMaxSize(),
@@ -38,7 +45,9 @@ fun SighInScreen(loginViewModel: LoginViewModel, navController: NavHostControlle
                     modifier = Modifier.fillMaxWidth(),
                     style = AppTheme.typography.h1
                 )
+
                 Spacer(modifier = Modifier.padding(5.dp))
+
                 Text(
                     text = "Текст.",
                     modifier = Modifier.fillMaxWidth(),
@@ -70,29 +79,55 @@ fun SighInScreen(loginViewModel: LoginViewModel, navController: NavHostControlle
 
                 Spacer(modifier = Modifier.padding(15.dp))
 
-                Button( onClick = {
-                    loginViewModel.obtainEvent(LoginEvent.Authentication)
-                },
-                    modifier = Modifier
-                        .align(Alignment.End)
-                        .height(35.dp)
-                        .width(100.dp)
-                ){
-                    Text("Войти")
+                Row(
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    CustomCheckBox(
+                        name = "Запомнить ?",
+                        checked = isRememberState,
+                        onCheckedChange = {
+                            isRememberState.value = it
+                        },
+                        onTextClicked = {
+                            isRememberState.value = !isRememberState.value
+                        }
+                    )
+
+                    Spacer(modifier = Modifier.fillMaxWidth(0.4f))
+
+                    Button(
+                        onClick = {
+                            loginViewModel.obtainEvent(
+                                LoginEvent.Authentication(
+                                    context,
+                                    navController::navigateUp
+                                )
+                            )
+                        },
+                        modifier = Modifier
+                            .height(35.dp)
+                            .width(100.dp)
+                    ) {
+                        Text("Войти")
+                    }
                 }
 
                 Spacer(modifier = Modifier.fillMaxHeight(0.9f))
 
-                Row(modifier = Modifier.fillMaxWidth(),
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Center
-                ){
+                ) {
                     Text(
                         text = "У вас нет аккаунта?",
                         color = Color.Gray,
                         fontSize = FontSize.Middle.size
                     )
+
                     Spacer(modifier = Modifier.padding(5.dp))
+
                     Text(
                         text = "Зарегистрироваться",
                         color = Color.Blue,

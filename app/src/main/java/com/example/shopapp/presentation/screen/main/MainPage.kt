@@ -60,13 +60,15 @@ fun MainPage(mainPageViewModel: MainViewModel?, navController: NavHostController
         ) {
             LazyColumn {
                 item {
-                    Spacer(modifier = Modifier.padding(top = 20.dp, start = 25.dp))
+                    Spacer(modifier = Modifier.height(10.dp))
                     Row(
                         horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Text(
-                            text = "Your Feed", fontWeight = FontWeight.Bold,
+                            text = "Главная страница",
+                            style = AppTheme.typography.h5,
+                            color = AppTheme.textColors.primaryTextColor
                         )
                         Spacer(modifier = Modifier.fillMaxWidth(0.8f))
                         Box(
@@ -106,11 +108,13 @@ fun MainPage(mainPageViewModel: MainViewModel?, navController: NavHostController
                     val values: List<Int> = listOf(1, 2, 3, 4)
                     Text(
                         text = "Ваши рекомендации",
-                        fontWeight = FontWeight.Bold
+                        style = AppTheme.typography.h5,
+                        color = AppTheme.textColors.primaryTextColor
                     )
                     Text(
                         text = "Основано на вашем поиске",
-                        fontSize = 12.sp
+                        style = AppTheme.typography.h6,
+                        color = AppTheme.textColors.secondaryTextColor
                     )
 
                     Spacer(modifier = Modifier.padding(top = 10.dp))
@@ -132,7 +136,8 @@ fun MainPage(mainPageViewModel: MainViewModel?, navController: NavHostController
                     Spacer(modifier = Modifier.padding(top = 10.dp))
                     Text(
                         text = "Популярные бренды",
-                        fontWeight = FontWeight.Bold
+                        style = AppTheme.typography.h5,
+                        color = AppTheme.textColors.primaryTextColor
                     )
                     Spacer(modifier = Modifier.padding(top = 10.dp))
                     LazyRow(

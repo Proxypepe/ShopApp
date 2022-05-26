@@ -1,6 +1,8 @@
 package com.example.shopapp.domain
 
+import android.content.Context
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -12,36 +14,42 @@ import com.example.shopapp.repository.remote.models.UserDto
 import com.example.shopapp.repository.remote.repository.AuthRepository
 import com.example.shopapp.repository.remote.repository.RegisterRepository
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.net.SocketTimeoutException
 
 
-class LoginViewModel(private val registerRepository: RegisterRepository,
-                     private val authRepository: AuthRepository
-): EventHandler<LoginEvent>, ViewModel() {
+class LoginViewModel(
+    private val registerRepository: RegisterRepository,
+    private val authRepository: AuthRepository
+) : EventHandler<LoginEvent>, ViewModel() {
     private val _loginState = MutableStateFlow(LoginState())
     val signInState = _loginState.asStateFlow()
 
-    private val _userData = MutableStateFlow(UserDto(email = "",
-        password = "",  role = ""))
+    private val _userData = MutableStateFlow(
+        UserDto(
+            email = "",
+            password = "",
+            role = ""
+        )
+    )
     val userData = _userData.asStateFlow()
 
 
     override fun obtainEvent(event: LoginEvent) {
         when (event) {
-            LoginEvent.Authentication -> authorize()
+            is LoginEvent.Authentication -> authorize(event.context, event.navigateUp)
+            is LoginEvent.Registration -> register(event.context, event.navigateUp)
             is LoginEvent.ConfirmPasswordChanged -> onChangeConfirmPassword(event.value)
             is LoginEvent.EmailChanged -> onChangeEmail(event.value)
             is LoginEvent.PasswordChanged -> onChangePassword(event.value)
-            LoginEvent.Registration -> register()
-            is LoginEvent.RegisterUserUpdater -> updateUser(event.updater)
+            is LoginEvent.LogOut -> logOut(event.context)
         }
     }
 
-    private fun updateUser(updateUser: (StateFlow<UserDto>) -> Unit) {
-        updateUser(_userData)
+
+    private fun makeToast(context: Context, toastText: String) {
+        Toast.makeText(context, toastText, Toast.LENGTH_LONG).show()
     }
 
     private fun onChangePassword(newPassword: String) {
@@ -56,30 +64,42 @@ class LoginViewModel(private val registerRepository: RegisterRepository,
         _loginState.value.confirmPassword.value = newPassword
     }
 
-    private fun register() = viewModelScope.launch {
-        if (isEqualPasswords() && isNotEmptyFields()){
+    private fun logOut(context: Context) {
+        _userData.value = UserDto(
+            email = "",
+            password = "",
+            role = ""
+        )
+        Toast.makeText(context, "Выход", Toast.LENGTH_LONG).show()
+    }
+
+    private fun register(context: Context, navigateUp: () -> Boolean) = viewModelScope.launch {
+        if (isEqualPasswords() && isNotEmptyFields()) {
             try {
-                val user =  registerRepository.createUser(
+                val user = registerRepository.createUser(
                     UserBody(
                         email = _loginState.value.email.value,
                         password = _loginState.value.password.value
                     )
                 )
-
-                if (user.body() != null && user.isSuccessful)
-                {
+                if (user.body() != null && user.isSuccessful) {
                     Log.d("body", "${user.body()}")
                     _userData.value = user.body()!!
                     clearFields()
+                    makeToast(context, "Регистрация прошла успешно")
+                    navigateUp()
+                    navigateUp()
+                } else {
+                    makeToast(context, "Ошибка регистрации")
                 }
             } catch (error: SocketTimeoutException) {
-
+                makeToast(context, "Ошибка регистрации")
             }
         }
     }
 
 
-    private fun authorize() = viewModelScope.launch {
+    private fun authorize(context: Context, navigateUp: () -> Boolean) = viewModelScope.launch {
         if (isNotEmptyFields()) {
             try {
                 val response = authRepository.checkAuth(
@@ -92,12 +112,13 @@ class LoginViewModel(private val registerRepository: RegisterRepository,
                     Log.d("body", "${response.body()}")
                     _userData.value = response.body()!!
                     clearFields()
+                    makeToast(context, "Авторизация прошла успешно")
+                    navigateUp()
                 } else {
-                    Log.d("body", "Something went wrong")
+                    makeToast(context, "Ошибка авторизации")
                 }
             } catch (error: SocketTimeoutException) {
-
-
+                makeToast(context, "Ошибка авторизации")
             }
         }
     }
@@ -115,8 +136,9 @@ class LoginViewModel(private val registerRepository: RegisterRepository,
     }
 }
 
-class LoginViewModelFactory(private val registerRepository: RegisterRepository,
-                            private val authRepository: AuthRepository
+class LoginViewModelFactory(
+    private val registerRepository: RegisterRepository,
+    private val authRepository: AuthRepository
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(LoginViewModel::class.java)) {

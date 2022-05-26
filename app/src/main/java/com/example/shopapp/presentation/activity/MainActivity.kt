@@ -56,9 +56,6 @@ class MainActivity : ComponentActivity() {
         mainViewModel.getRecommendedProduct()
         cartViewModel.initCart()
         favoriteViewModel.getFavorites()
-        loginViewModel.obtainEvent(LoginEvent.RegisterUserUpdater(
-            detailedViewModel::updateUserData
-        ))
     }
 
     override fun onStart() {

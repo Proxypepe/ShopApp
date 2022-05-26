@@ -19,23 +19,26 @@ import androidx.navigation.NavHostController
 import com.example.shopapp.domain.DetailedViewModel
 import com.example.shopapp.presentation.screen.detailed.DetailedState
 import com.example.shopapp.presentation.screen.detailed.components.rataing.CustomRatingBar
+import com.example.shopapp.repository.remote.models.UserDto
 import com.example.shopapp.ui.theme.AppTheme
 
 
 @Composable
 fun MakeComment(
     detailedViewModel: DetailedViewModel,
+    userData: UserDto,
     navController: NavHostController
 ) {
     when(detailedViewModel.commentState) {
         DetailedState.RateProduct -> RateProduct(detailedViewModel, navController)
-        DetailedState.WriteComment -> FillExtraInfo(detailedViewModel, navController)
+        DetailedState.WriteComment -> FillExtraInfo(detailedViewModel, userData, navController)
     }
 }
 
 @Composable
 fun FillExtraInfo(
     detailedViewModel: DetailedViewModel,
+    userData: UserDto,
     navController: NavHostController
 ) {
     with(detailedViewModel.state) {
@@ -116,7 +119,7 @@ fun FillExtraInfo(
             Spacer(modifier = Modifier.height(10.dp))
             Button(
                 onClick = {
-                    detailedViewModel.sendComment()
+                    detailedViewModel.sendComment(userData)
                 },
                 modifier = Modifier.fillMaxWidth(0.9f)
             ) {

@@ -17,10 +17,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.shopapp.R
-import com.example.shopapp.domain.CartViewModel
-import com.example.shopapp.domain.DetailedViewModel
-import com.example.shopapp.domain.FavoriteViewModel
-import com.example.shopapp.domain.MainViewModel
+import com.example.shopapp.domain.*
 import com.example.shopapp.presentation.screen.cart.components.CartCard
 import com.example.shopapp.presentation.screen.cart.components.EmptyCart
 import com.example.shopapp.presentation.screen.cart.components.OfferBox
@@ -31,7 +28,7 @@ import com.example.shopapp.ui.theme.AppTheme
 @Composable
 fun CartScreen(
     cartViewModel: CartViewModel, mainPageViewModel: MainViewModel,
-    detailedViewModel: DetailedViewModel, favoriteViewModel: FavoriteViewModel,
+    loginViewModel: LoginViewModel, favoriteViewModel: FavoriteViewModel,
     navController: NavHostController
 ) {
     val products = cartViewModel.cart.collectAsState(initial = listOf())
@@ -59,7 +56,7 @@ fun CartScreen(
                         modifier = Modifier
                             .background(AppTheme.colors.background)
                     ) {
-                        EmptyCart(detailedViewModel.getUserData(), navController)
+                        EmptyCart(loginViewModel.userData, navController)
                     }
                 }
             } else {

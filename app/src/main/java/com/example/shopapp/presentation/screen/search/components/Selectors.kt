@@ -13,8 +13,10 @@ import com.example.shopapp.domain.filters.FilterCategory
 
 @Composable
 fun Selector(categories: List<FilterCategory>) {
-    LazyColumn(modifier = Modifier
-        .fillMaxWidth()) {
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxWidth()
+    ) {
         item {
             val pair = divideList(categories)
             val first = pair.first
@@ -45,15 +47,17 @@ fun SelectorBlock(leftCategory: FilterCategory?, rightCategory: FilterCategory?)
 
 @Composable
 fun SelectorCard(category: FilterCategory) {
-    Box ( modifier = Modifier.fillMaxWidth(),
+    Box(
+        modifier = Modifier.fillMaxWidth(),
         contentAlignment = Alignment.CenterStart
     ) {
         CustomCheckBox(
             name = category.name,
             checked = category.selected,
             onCheckedChange = {
-                category.selected.value = it },
-            onTextClicked = {category.selected.value = !category.selected.value }
+                category.selected.value = it
+            },
+            onTextClicked = { category.selected.value = !category.selected.value }
         )
     }
 }

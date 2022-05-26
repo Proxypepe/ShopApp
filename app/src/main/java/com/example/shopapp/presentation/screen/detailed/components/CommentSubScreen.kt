@@ -1,5 +1,6 @@
 package com.example.shopapp.presentation.screen.detailed.components
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -11,20 +12,22 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.core.os.bundleOf
 import androidx.navigation.NavHostController
 import com.example.shopapp.domain.DetailedViewModel
 import com.example.shopapp.presentation.navigation.NavigationRouter
-import com.example.shopapp.presentation.screen.components.navigate
 import com.example.shopapp.presentation.screen.detailed.components.rataing.CustomRatingBar
 import com.example.shopapp.repository.remote.models.CommentDto
+import com.example.shopapp.repository.remote.models.UserDto
 import com.example.shopapp.ui.theme.AppTheme
 
 
 @Composable
 fun CommentSubScreen(
-    detailedViewModel: DetailedViewModel, navController: NavHostController
+    detailedViewModel: DetailedViewModel,
+    userDto: UserDto,
+    navController: NavHostController
 ) {
     with(detailedViewModel.currentProduct!!) {
         Column {
@@ -65,6 +68,7 @@ fun CommentSubScreen(
                         commentsAmount = comments.size,
                         rating = detailedViewModel.calculateRating(detailedViewModel.currentProduct!!),
                         onClear = detailedViewModel::clear,
+                        currentUser = userDto,
                         navController = navController
                     )
                 }
@@ -82,8 +86,11 @@ fun LeaveComment(
     commentsAmount: Int,
     rating: Float,
     onClear: () -> Unit,
+    currentUser: UserDto,
     navController: NavHostController
 ) {
+    val context = LocalContext.current
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -94,7 +101,7 @@ fun LeaveComment(
                 .padding(5.dp)
                 .background(AppTheme.colors.background)
         ) {
-            Row (
+            Row(
                 modifier = Modifier
                     .fillMaxWidth(),
                 horizontalArrangement = Arrangement.Start,
@@ -117,11 +124,13 @@ fun LeaveComment(
             Spacer(modifier = Modifier.height(15.dp))
             Button(
                 onClick = {
-//                    val route = onCommentButtonClick()
-//                    if (route == NavigationRouter.SignIn.route)
-//                        navController.navigate(route)
-                    navController.navigate(NavigationRouter.CommentWrite.route)
-                    onClear()
+                    if (currentUser.userId != 0L || currentUser.email != "")
+                    {
+                        navController.navigate(NavigationRouter.CommentWrite.route)
+                        onClear()
+                    } else {
+                        Toast.makeText(context, "Пожалуйста, авторизуйтесь", Toast.LENGTH_LONG).show()
+                    }
                 },
                 modifier = Modifier
                     .fillMaxWidth()

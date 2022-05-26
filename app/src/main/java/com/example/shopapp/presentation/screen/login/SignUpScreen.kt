@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -24,13 +25,18 @@ import com.example.shopapp.ui.theme.FontSize
 @Composable
 fun SighUpScreen(loginViewModel: LoginViewModel, navController: NavHostController) {
 
-    with (loginViewModel.signInState.value) {
-        Box( contentAlignment = Alignment.Center,
+    val context = LocalContext.current
+
+    with(loginViewModel.signInState.value) {
+        Box(
+            contentAlignment = Alignment.Center,
             modifier = Modifier
-                .padding(top = 100.dp, start = 50.dp,
-                    end = 50.dp, bottom = 50.dp )
-        ){
-            Column (
+                .padding(
+                    top = 100.dp, start = 50.dp,
+                    end = 50.dp, bottom = 50.dp
+                )
+        ) {
+            Column(
                 modifier = Modifier
                     .fillMaxSize(),
             ) {
@@ -87,20 +93,27 @@ fun SighUpScreen(loginViewModel: LoginViewModel, navController: NavHostControlle
 
                 Spacer(modifier = Modifier.padding(15.dp))
 
-                Button( onClick = {
-                    loginViewModel.obtainEvent(LoginEvent.Registration)
-                },
+                Button(
+                    onClick = {
+                        loginViewModel.obtainEvent(
+                            LoginEvent.Registration(
+                                context,
+                                navController::navigateUp
+                            )
+                        )
+                    },
                     modifier = Modifier.align(Alignment.End)
-                ){
+                ) {
                     Text(text = "Зарегистрироваться")
                 }
 
                 Spacer(modifier = Modifier.fillMaxHeight(0.85f))
 
-                Row(modifier = Modifier.fillMaxWidth(),
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Center
-                ){
+                ) {
                     Text(
                         text = "У вас уже есть аккаунт?",
                         color = Color.Gray,

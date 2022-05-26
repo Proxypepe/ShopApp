@@ -49,15 +49,15 @@ fun DetailedTopBar(
         navigationIcon = {
             IconButton(onClick = {
                 navController.navigateUp()
-        }) {
-            Icon(
-                imageVector = Icons.Default.ArrowBack,
-                contentDescription = "Back"
-            )
-        }
+            }) {
+                Icon(
+                    imageVector = Icons.Default.ArrowBack,
+                    contentDescription = "Back"
+                )
+            }
         },
         actions = {
-            IconButton(onClick = {/*TODO*/}) {
+            IconButton(onClick = {/*TODO*/ }) {
                 Icon(
                     imageVector = Icons.Default.Share,
                     contentDescription = "Share",
