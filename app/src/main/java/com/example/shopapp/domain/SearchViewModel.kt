@@ -1,6 +1,5 @@
 package com.example.shopapp.domain
 
-import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -29,12 +28,9 @@ class SearchViewModel(
 
     fun newSearch(query: String) {
         if (query.isEmpty())
-        {
-            println(allProducts)
             filtered.value = allProducts
-        } else {
+        else
             filtered.value = querySearch(query)
-        }
     }
 
     fun filter() {
@@ -44,7 +40,6 @@ class SearchViewModel(
         products = products union filterByAttribute("brand")
         products = products union filterByAttribute("produced")
         products = products union filterByAttribute("neck_material")
-        Log.d("after ", "$products")
         if (products.isEmpty())
             filtered.value = allProducts
         else

@@ -1,106 +1,127 @@
 package com.example.shopapp.presentation.navigation
 
+import android.annotation.SuppressLint
+import android.widget.Toast
 import androidx.compose.animation.*
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.*
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.Scaffold
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment.Companion.CenterHorizontally
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.example.shopapp.domain.CartViewModel
-import com.example.shopapp.domain.FavoriteViewModel
-import com.example.shopapp.domain.MainViewModel
-import com.example.shopapp.domain.SearchViewModel
-import com.example.shopapp.presentation.screen.*
+import com.example.shopapp.domain.*
+import com.example.shopapp.presentation.navigation.components.BottomNavItem
+import com.example.shopapp.presentation.navigation.components.BottomNavigationBar
+import com.example.shopapp.presentation.screen.cart.CartScreen
+import com.example.shopapp.presentation.screen.detailed.DetailedScreen
+import com.example.shopapp.presentation.screen.detailed.components.CommentSubScreen
+import com.example.shopapp.presentation.screen.detailed.components.MakeComment
+import com.example.shopapp.presentation.screen.favorites.FavoriteScreen
+import com.example.shopapp.presentation.screen.login.SighInScreen
+import com.example.shopapp.presentation.screen.login.SighUpScreen
+import com.example.shopapp.presentation.screen.main.MainPage
+import com.example.shopapp.presentation.screen.profile.Profile
+import com.example.shopapp.presentation.screen.search.SearchScreen
 import com.example.shopapp.repository.remote.models.ProductDto
 import com.google.accompanist.navigation.animation.AnimatedNavHost
-import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.navigation.animation.composable
+import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.pager.ExperimentalPagerApi
 
 
+@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 @ExperimentalPagerApi
 @ExperimentalMaterialApi
 @ExperimentalComposeUiApi
 @ExperimentalAnimationApi
-fun AppNavigation(mainPageViewModel: MainViewModel, favoriteViewModel: FavoriteViewModel,
-                  cartViewModel: CartViewModel, searchViewModel: SearchViewModel
+fun AppNavigation(
+    mainPageViewModel: MainViewModel, favoriteViewModel: FavoriteViewModel,
+    cartViewModel: CartViewModel, searchViewModel: SearchViewModel,
+    loginViewModel: LoginViewModel, detailedViewModel: DetailedViewModel
 ) {
     val navController = rememberAnimatedNavController()
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
 
-    val badgeCount = cartViewModel.cart?.collectAsState(initial = listOf())?.value?.size
+    val context = LocalContext.current
+
+    val badgeCount = cartViewModel.cart.collectAsState(initial = listOf()).value.size
 
     Scaffold(
         bottomBar = {
-            BottomNavigationBar(
-                items = listOf(
-                    BottomNavItem(
-                        name = "Home",
-                        route = "home",
-                        icon = Icons.Default.Home
+            if (currentRoute == NavigationRouter.SignIn.route ||
+                currentRoute == NavigationRouter.SignUp.route
+            ) {
+
+            } else {
+                BottomNavigationBar(
+                    items = listOf(
+                        BottomNavItem(
+                            name = "Home",
+                            route = "home",
+                            icon = Icons.Default.Home
+                        ),
+                        BottomNavItem(
+                            name = "Search",
+                            route = "search",
+                            icon = Icons.Default.Search
+                        ),
+                        BottomNavItem(
+                            name = "Cart",
+                            route = "cart",
+                            icon = Icons.Default.ShoppingCart,
+                            badgeCount = badgeCount
+                        ),
+                        BottomNavItem(
+                            name = "Favorite",
+                            route = "favorite",
+                            icon = Icons.Default.Favorite
+                        ),
+                        BottomNavItem(
+                            name = "Profile",
+                            route = "profile",
+                            icon = Icons.Default.Person
+                        ),
                     ),
-                    BottomNavItem(
-                        name = "Search",
-                        route = "search",
-                        icon = Icons.Default.Search
-                    ),
-                    BottomNavItem(
-                        name = "Cart",
-                        route = "cart",
-                        icon = Icons.Default.ShoppingCart,
-                        badgeCount = badgeCount ?: 0
-                    ),
-                    BottomNavItem(
-                        name = "Favorite",
-                        route = "favorite",
-                        icon = Icons.Default.Favorite
-                    ),
-                    BottomNavItem(
-                        name = "Profile",
-                        route = "profile",
-                        icon = Icons.Default.Person
-                    ),
-                ),
-                navController = navController,
-                onItemClick = {
-                    navController.navigate(it.route)
-                }
-            )
+                    navController = navController,
+                    onItemClick = {
+                        navController.navigate(it.route)
+                    }
+                )
+            }
         } // bottomBar
     ) { innerPadding ->
-        AnimatedNavHost(navController = navController, startDestination = NavigationRouter.Home.route,
-            popEnterTransition = { slideInHorizontally(
-                initialOffsetX = {-300},
-                animationSpec = tween(
-                    durationMillis = 500,
-                    easing = FastOutSlowInEasing
+        AnimatedNavHost(navController = navController,
+            startDestination = NavigationRouter.Home.route,
+            popEnterTransition = {
+                slideInHorizontally(
+                    initialOffsetX = { -300 },
+                    animationSpec = tween(
+                        durationMillis = 500,
+                        easing = FastOutSlowInEasing
                     )
                 ) + fadeIn(animationSpec = tween(300))
             },
-            exitTransition = { slideOutHorizontally(
-                targetOffsetX = { -300},
-                animationSpec = tween(
-                    durationMillis = 500,
-                    easing = FastOutSlowInEasing
+            exitTransition = {
+                slideOutHorizontally(
+                    targetOffsetX = { -300 },
+                    animationSpec = tween(
+                        durationMillis = 500,
+                        easing = FastOutSlowInEasing
                     )
                 ) + fadeOut(animationSpec = tween(300))
             }) {
-            composable(NavigationRouter.Home.route,
-                )
-            {
+            composable(NavigationRouter.Home.route) {
                 Box(modifier = Modifier.padding(innerPadding))
                 {
                     MainPage(mainPageViewModel, navController)
@@ -115,80 +136,78 @@ fun AppNavigation(mainPageViewModel: MainViewModel, favoriteViewModel: FavoriteV
             composable(NavigationRouter.Cart.route) {
                 Box(modifier = Modifier.padding(innerPadding))
                 {
-                    CartScreen(cartViewModel, mainPageViewModel, favoriteViewModel, navController)
+                    CartScreen(
+                        cartViewModel, mainPageViewModel, loginViewModel,
+                        favoriteViewModel, navController
+                    )
                 }
             }
             composable(NavigationRouter.Favorite.route) {
                 Box(modifier = Modifier.padding(innerPadding))
                 {
-                    FavoriteScreen(favoriteViewModel, navController)
+                    FavoriteScreen(cartViewModel, favoriteViewModel, navController)
                 }
             }
             composable(NavigationRouter.Profile.route) {
                 Box(modifier = Modifier.padding(innerPadding))
                 {
-                    Profile()
+                    Profile(loginViewModel, navController)
                 }
             }
+            composable(NavigationRouter.SignIn.route) {
+                Box(modifier = Modifier.padding(innerPadding))
+                {
+                    SighInScreen(loginViewModel, navController)
+                }
+            }
+
+            composable(NavigationRouter.SignUp.route) {
+                Box(modifier = Modifier.padding(innerPadding))
+                {
+                    SighUpScreen(loginViewModel, navController)
+                }
+            }
+
             composable(NavigationRouter.Detailed.route) {
                 navController.previousBackStackEntry?.arguments?.getParcelable<ProductDto>("PRODUCT")
                     ?.let {
+//                    mainPageViewModel.getDetailById(it.prod_id)
+                        detailedViewModel.currentProduct = it
                         Box(modifier = Modifier.padding(innerPadding))
                         {
-                            DetailedScreen(mainPageViewModel, favoriteViewModel, it, navController)
+                            DetailedScreen(
+                                detailedViewModel, favoriteViewModel,
+                                cartViewModel, it, navController
+                            )
                         }
                     }
+            }
+
+            composable(NavigationRouter.CommentRead.route) {
+                // use navController arg
+                detailedViewModel.currentProduct?.let {
+                    CommentSubScreen(
+                        detailedViewModel,
+                        loginViewModel.userData.value,
+                        navController
+                    )
+                }
+            }
+
+            composable(NavigationRouter.CommentWrite.route) {
+                if (loginViewModel.userData.value.userId != 0L || loginViewModel.userData.value.email != "")
+                    detailedViewModel.currentProduct?.let {
+                        MakeComment(
+                            detailedViewModel,
+                            loginViewModel.userData.value,
+                            navController
+                        )
+                    }
+                else
+                    Toast.makeText(context, "Пожалуйста, авторизуйтесь", Toast.LENGTH_LONG).show()
             }
         }
     }
 }
 
 
-@ExperimentalMaterialApi
-@Composable
-fun BottomNavigationBar(
-    items: List<BottomNavItem>,
-    navController: NavHostController,
-    modifier: Modifier = Modifier,
-    onItemClick: (BottomNavItem) -> Unit
-) {
-    val backStackEntry = navController.currentBackStackEntryAsState()
-    BottomNavigation(
-        modifier = modifier,
-        elevation = 5.dp
-    ) {
-        items.forEach { item ->
-            val selected = item.route == backStackEntry.value?.destination?.route
-            BottomNavigationItem(
-                selected = selected,
-                selectedContentColor = Color.Green,
-                unselectedContentColor = Color.White,
-                onClick = { onItemClick(item) },
-                icon = {
-                    Column(horizontalAlignment = CenterHorizontally) {
-                        if (item.badgeCount > 0) {
-                            BadgedBox(
-                                badge = { Badge {
-                                    Text(text = item.badgeCount.toString())
-                                    }
-                                }
-                            ) {
-                                Icon(imageVector = item.icon,
-                                    contentDescription = item.name
-                                )
-                            }
-                        } else {
-                            Icon(imageVector = item.icon,
-                                contentDescription = item.name
-                            )
-                        }
-                        Text(text = item.name,
-                            textAlign = TextAlign.Center,
-                            fontSize = 10.sp
-                        )
-                    }
-                }
-            )
-        }
-    }
-}

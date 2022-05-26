@@ -1,5 +1,6 @@
 package com.example.shopapp.domain
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -10,10 +11,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import java.net.SocketTimeoutException
 
-class MainViewModel(private val productRepository: ProductRepository,
-                    private val cartViewModel: CartViewModel): ViewModel() {
+class MainViewModel(private val productRepository: ProductRepository): ViewModel() {
     var recommendedProducts: MutableStateFlow<List<ProductDto>> = MutableStateFlow(emptyList())
-    var detailedInfo: MutableStateFlow<ProductDto> = MutableStateFlow(TypeConvertor.initialProductDto) // MutableStateFlow
+    var detailedInfo: MutableStateFlow<ProductDto> = MutableStateFlow(TypeConvertor.initialProductDto)
     var loading: MutableStateFlow<Boolean> = MutableStateFlow(false)
 
 
@@ -28,33 +28,29 @@ class MainViewModel(private val productRepository: ProductRepository,
             }
         } catch (error: SocketTimeoutException) {
             loading.value = false
+        } catch (error: java.io.EOFException) {
+            Log.d("java.io.EOFException", "${error.stackTrace}")
         }
     }
 
     fun getDetailById(id: Int) = viewModelScope.launch {
-        val product = productRepository.getDetailById(id)
-        if (product.isSuccessful && product.body() != null ) {
-            product.body()?.let { detailedInfo.value = it }
+        try {
+            val product = productRepository.getDetailById(id)
+            if (product.isSuccessful && product.body() != null ) {
+                product.body()?.let { detailedInfo.value = it }
+            }
+        } catch (error: SocketTimeoutException) {
+
         }
-    }
-
-    fun addToCart(productDto: ProductDto) {
-        cartViewModel.addToCart(productDto)
-    }
-
-    fun deleteProductById(id: Int) {
-        cartViewModel.deleteProductById(id)
     }
 }
 
 
-
-class MainViewModelFactory(private val productRepository: ProductRepository,
-                           private val cartViewModel: CartViewModel) : ViewModelProvider.Factory {
+class MainViewModelFactory(private val productRepository: ProductRepository) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return MainViewModel(productRepository, cartViewModel) as T
+            return MainViewModel(productRepository) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

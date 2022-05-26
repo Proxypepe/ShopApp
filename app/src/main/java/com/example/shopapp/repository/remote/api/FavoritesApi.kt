@@ -6,12 +6,12 @@ import retrofit2.http.*
 
 interface FavoritesApi {
 
-    @GET("/all")
+    @GET("./all")
     suspend fun getFavorites(): Response<List<FavoriteDto>>
 
-    @POST("/add")
+    @POST("./add")
     suspend fun addFavorite(@Body favorite: FavoriteDto): Response<FavoriteDto>
 
-    @DELETE("/delete/{id}")
+    @DELETE("./delete/{id}")
     suspend fun deleteFavorite(@Path("id")id : Int)
 }

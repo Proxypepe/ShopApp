@@ -1,4 +1,4 @@
-package com.example.shopapp.presentation.screen.components
+package com.example.shopapp.presentation.screen.detailed.components
 
 
 import androidx.compose.foundation.layout.*
@@ -20,14 +20,14 @@ import kotlinx.coroutines.launch
 @Composable
 fun Description(text: String) {
     Text(text=text,
-    modifier = Modifier.padding(20.dp).fillMaxSize()
+    modifier = Modifier.fillMaxSize()
     )
 }
 
 @Composable
 fun CharacteristicList(product: ProductDto) {
     Box(
-        modifier = Modifier.padding(10.dp).fillMaxSize()
+        modifier = Modifier.fillMaxSize()
     ) {
         LazyColumn(modifier = Modifier.padding(5.dp).fillMaxSize()) {
             item {

@@ -7,6 +7,6 @@ import retrofit2.http.POST
 
 interface CartApi {
 
-    @POST("/add")
+    @POST("./add")
     suspend fun createCart(@Body cart: ShoppingBagDto): Response<ShoppingBagDto>
 }

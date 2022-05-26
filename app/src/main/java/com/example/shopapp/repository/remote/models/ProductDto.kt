@@ -35,6 +35,5 @@ data class ProductDto(
 
     val bags: List<ShoppingBagDto> = emptyList(),
     val comments: List<CommentDto> = emptyList(),
-    val rating: List<RatingDto> = emptyList(),
     val favoriteBy: List<FavoriteDto> = emptyList(),
 ) : Parcelable
