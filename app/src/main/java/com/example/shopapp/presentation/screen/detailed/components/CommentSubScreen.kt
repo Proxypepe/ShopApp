@@ -41,8 +41,8 @@ fun CommentSubScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     IconButton(onClick = {
-                        navController.navigate(NavigationRouter.Detailed.route,
-                            bundleOf("PRODUCT" to detailedViewModel.currentProduct!!))}) {
+                        navController.navigateUp()
+                    }) {
                         Icon(
                             imageVector = Icons.Default.ArrowBack,
                             contentDescription = "Back",
@@ -64,7 +64,6 @@ fun CommentSubScreen(
                     LeaveComment(
                         commentsAmount = comments.size,
                         rating = detailedViewModel.calculateRating(detailedViewModel.currentProduct!!),
-                        onCommentButtonClick = detailedViewModel::getCommentRoute,
                         onClear = detailedViewModel::clear,
                         navController = navController
                     )
@@ -82,7 +81,6 @@ fun CommentSubScreen(
 fun LeaveComment(
     commentsAmount: Int,
     rating: Float,
-    onCommentButtonClick: () -> String,
     onClear: () -> Unit,
     navController: NavHostController
 ) {

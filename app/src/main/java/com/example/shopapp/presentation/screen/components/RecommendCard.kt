@@ -34,8 +34,7 @@ fun RecommendCard(product: ProductDto, navController: NavHostController){
             .size(140.dp, 200.dp).padding(end=10.dp)
             .clickable {
                 navController.navigate(NavigationRouter.Detailed.route, bundleOf("PRODUCT" to product))
-            }
-        ,
+            },
         elevation = 5.dp,
     ){
         Column(

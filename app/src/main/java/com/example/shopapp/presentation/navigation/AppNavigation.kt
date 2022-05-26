@@ -49,7 +49,7 @@ fun AppNavigation(mainPageViewModel: MainViewModel, favoriteViewModel: FavoriteV
     val currentRoute = navBackStackEntry?.destination?.route
 
 
-    val badgeCount = cartViewModel.cart?.collectAsState(initial = listOf())?.value?.size
+    val badgeCount = cartViewModel.cart.collectAsState(initial = listOf()).value.size
 
     Scaffold(
         bottomBar = {
@@ -73,7 +73,7 @@ fun AppNavigation(mainPageViewModel: MainViewModel, favoriteViewModel: FavoriteV
                             name = "Cart",
                             route = "cart",
                             icon = Icons.Default.ShoppingCart,
-                            badgeCount = badgeCount ?: 0
+                            badgeCount = badgeCount
                         ),
                         BottomNavItem(
                             name = "Favorite",
@@ -139,7 +139,7 @@ fun AppNavigation(mainPageViewModel: MainViewModel, favoriteViewModel: FavoriteV
             composable(NavigationRouter.Profile.route) {
                 Box(modifier = Modifier.padding(innerPadding))
                 {
-                    Profile(navController)
+                    Profile(loginViewModel, navController)
                 }
             }
             composable(NavigationRouter.SignIn.route) {

@@ -85,7 +85,8 @@ fun SighInScreen(loginViewModel: LoginViewModel, navController: NavHostControlle
 
                 Row(modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center){
+                    horizontalArrangement = Arrangement.Center
+                ){
                     Text(
                         text = "У вас нет аккаунта?",
                         color = Color.Gray,

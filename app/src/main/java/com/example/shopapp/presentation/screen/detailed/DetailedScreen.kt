@@ -30,11 +30,12 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 
 @ExperimentalPagerApi
 @Composable
-fun DetailedScreen(detailedViewModel: DetailedViewModel, favoriteViewModel: FavoriteViewModel,
-                   cartViewModel: CartViewModel,
-                   product: ProductDto, navController: NavHostController
-){
-    val rating by remember { mutableStateOf(detailedViewModel.calculateRating(product))}
+fun DetailedScreen(
+    detailedViewModel: DetailedViewModel, favoriteViewModel: FavoriteViewModel,
+    cartViewModel: CartViewModel,
+    product: ProductDto, navController: NavHostController
+) {
+    val rating by remember { mutableStateOf(detailedViewModel.calculateRating(product)) }
 
     Scaffold(
         topBar = {
@@ -55,50 +56,52 @@ fun DetailedScreen(detailedViewModel: DetailedViewModel, favoriteViewModel: Favo
                     .fillMaxWidth()
                     .fillMaxHeight(0.90f)
             ) {
-                    Box(modifier = Modifier
+                Box(
+                    modifier = Modifier
                         .padding(start = 20.dp, end = 20.dp)
                         .fillMaxWidth(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Column {
-                            Image(
-                                painter = painterResource(R.drawable.ic_android_black_24dp),
-                                contentDescription = "",
-                                modifier = Modifier.fillMaxWidth()
-                            )
-                            Spacer(modifier = Modifier.height(10.dp))
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically
-                            ){
-                                Column{
-                                    Text(text = "Рейтинг: $rating" )
+                    contentAlignment = Alignment.Center
+                ) {
+                    Column {
+                        Image(
+                            painter = painterResource(R.drawable.ic_android_black_24dp),
+                            contentDescription = "",
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                        Spacer(modifier = Modifier.height(10.dp))
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Column {
+                                Text(text = "Рейтинг: $rating")
 
-                                    CustomRatingBar(
-                                        value = rating,
-                                        onValueChange = {},
-                                        onRatingChanged = {}
-                                    )
-                                }
-                                Spacer(modifier = Modifier.fillMaxWidth(0.4f))
-                                OutlinedButton(onClick = {
-                                    detailedViewModel.currentProduct = product
-                                    navController.navigate(NavigationRouter.CommentRead.route)
-                                }) {
-                                    Text(text = "Отзывы - ${product.comments.size}")
-                                }
+                                CustomRatingBar(
+                                    value = rating,
+                                    onValueChange = {},
+                                    onRatingChanged = {}
+                                )
+                            }
+                            Spacer(modifier = Modifier.fillMaxWidth(0.4f))
+                            OutlinedButton(onClick = {
+                                detailedViewModel.currentProduct = product
+                                navController.navigate(NavigationRouter.CommentRead.route)
+                            }) {
+                                Text(text = "Отзывы - ${product.comments.size}")
                             }
                         }
                     }
-                    Spacer(modifier = Modifier.padding(10.dp))
-                    TabScreen(product)
+                }
+                Spacer(modifier = Modifier.padding(10.dp))
+                TabScreen(product)
             }
-            Button(onClick = {
-                cartViewModel.addToCart(product)
-            },
-            modifier = Modifier
-                .fillMaxWidth(0.9f)
-                .height(45.dp)
-            ){
+            Button(
+                onClick = {
+                    cartViewModel.addToCart(product)
+                },
+                modifier = Modifier
+                    .fillMaxWidth(0.9f)
+                    .height(45.dp)
+            ) {
                 Column(
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally

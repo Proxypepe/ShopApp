@@ -1,5 +1,6 @@
 package com.example.shopapp.domain
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -63,6 +64,13 @@ class FavoriteViewModel(private val favoriteRepository: FavoriteRepository,
             deleteFavorite(product)
     }
 
+    fun onFavoritesChange(product: ProductEntity) {
+        if (!contains(product))
+            addFavorite(product)
+        else
+            deleteFavorite(product)
+    }
+
     fun addFavorite(product: ProductEntity) {
         val favoriteEntity = FavoriteEntity(product_id = product.prod_id, product = product)
         _insertFavorite(favoriteEntity)
@@ -86,6 +94,11 @@ class FavoriteViewModel(private val favoriteRepository: FavoriteRepository,
     fun contains(product: ProductDto): Boolean {
         val entity = TypeConvertor.toFavoriteEntityFromProductDto(product)
         return favorites.value.contains(entity)
+    }
+
+    fun contains(product: ProductEntity): Boolean {
+        val entity = TypeConvertor.toFavoriteEntityFromProductEntity(product)
+       return favorites.value.contains(entity)
     }
 
     private fun _insertFavorite(favoriteEntity: FavoriteEntity) = viewModelScope.launch {

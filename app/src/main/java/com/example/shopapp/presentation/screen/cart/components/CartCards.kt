@@ -1,12 +1,16 @@
 package com.example.shopapp.presentation.screen.cart.components
 
 import android.annotation.SuppressLint
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.outlined.KeyboardArrowDown
 import androidx.compose.material.icons.outlined.KeyboardArrowUp
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -20,6 +24,7 @@ import com.example.shopapp.R
 import com.example.shopapp.domain.CartViewModel
 import com.example.shopapp.domain.FavoriteViewModel
 import com.example.shopapp.presentation.navigation.NavigationRouter
+import com.example.shopapp.repository.TypeConvertor
 import com.example.shopapp.repository.local.entity.ProductEntity
 import com.example.shopapp.repository.remote.models.UserDto
 import com.example.shopapp.ui.theme.AppTheme
@@ -31,7 +36,7 @@ import kotlinx.coroutines.flow.StateFlow
 fun EmptyCart(
     userData: StateFlow<UserDto>?,
     navController: NavHostController,
-){
+) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -52,8 +57,7 @@ fun EmptyCart(
                 color = AppTheme.textColors.primaryTextColor
             )
             Spacer(modifier = Modifier.height(15.dp))
-            if (userData?.value?.userId == 0L )
-            {
+            if (userData?.value?.userId == 0L) {
                 Button(onClick = {
                     navController.navigate(NavigationRouter.SignIn.route)
                 }) {
@@ -69,13 +73,28 @@ fun EmptyCart(
 }
 
 @Composable
-fun CartCard(cartViewModel: CartViewModel, favoriteViewModel: FavoriteViewModel, product: ProductEntity) {
+fun CartCard(
+    cartViewModel: CartViewModel,
+    favoriteViewModel: FavoriteViewModel,
+    product: ProductEntity
+) {
     var amount by remember { mutableStateOf(1) }
+    var isRed by remember { mutableStateOf(value = favoriteViewModel.contains(product)) }
+    val animatedColor by animateColorAsState(
+        targetValue = if (isRed) Color.Red else Color.Black,
+        animationSpec = tween(
+            durationMillis = 100,
+            delayMillis = 100,
+            easing = LinearEasing
+        )
+    )
+
     Card(modifier = Modifier.fillMaxWidth()) {
         Column {
             Box(modifier = Modifier.padding(top = 10.dp, start = 15.dp)) {
                 Row {
-                    Image(painter = painterResource(id = R.drawable.ic_android_black_24dp),
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_android_black_24dp),
                         contentDescription = ""
                     )
                     Spacer(modifier = Modifier.width(10.dp))
@@ -87,9 +106,9 @@ fun CartCard(cartViewModel: CartViewModel, favoriteViewModel: FavoriteViewModel,
                         )
                         Spacer(modifier = Modifier.height(5.dp))
                         Row(
-                            horizontalArrangement= Arrangement.Center,
+                            horizontalArrangement = Arrangement.Center,
                             verticalAlignment = Alignment.CenterVertically,
-                            ) {
+                        ) {
                             Icon(
                                 modifier = Modifier.size(30.dp, 30.dp),
                                 painter = painterResource(id = R.drawable.crown_filled),
@@ -125,15 +144,19 @@ fun CartCard(cartViewModel: CartViewModel, favoriteViewModel: FavoriteViewModel,
             ) {
                 IconButton(
                     onClick = {
-                        favoriteViewModel.addFavorite(product)
+                        favoriteViewModel.onFavoritesChange(product)
+                        isRed = !isRed
                     },
-                    modifier = Modifier.width(130.dp)) {
+                    modifier = Modifier.width(130.dp),
+                ) {
                     Row(
                         horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically,
-                    ){
-                        Icon(imageVector = Icons.Default.Favorite,
-                            contentDescription = "favorite"
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Favorite,
+                            contentDescription = "favorite",
+                            tint = animatedColor
                         )
                         Spacer(modifier = Modifier.width(7.dp))
                         Text(
@@ -148,12 +171,14 @@ fun CartCard(cartViewModel: CartViewModel, favoriteViewModel: FavoriteViewModel,
                     onClick = {
                         cartViewModel.deleteProductById(product.prod_id)
                     },
-                    modifier = Modifier.width(100.dp)) {
+                    modifier = Modifier.width(100.dp)
+                ) {
                     Row(
                         horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically,
-                    ){
-                        Icon(imageVector = Icons.Default.Delete,
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Delete,
                             contentDescription = "delete"
                         )
                         Spacer(modifier = Modifier.width(7.dp))
@@ -171,22 +196,30 @@ fun CartCard(cartViewModel: CartViewModel, favoriteViewModel: FavoriteViewModel,
                     color = AppTheme.textColors.primaryTextColor
                 )
                 Spacer(modifier = Modifier.width(5.dp))
-                IconButton(onClick = {
-                    amount++
-                },
+                IconButton(
+                    onClick = {
+                        amount++
+                    },
                     modifier = Modifier.width(30.dp)
                 ) {
-                    Icon(imageVector = Icons.Outlined.KeyboardArrowUp,
-                        contentDescription = "add")
+                    Icon(
+                        imageVector = Icons.Outlined.KeyboardArrowUp,
+                        contentDescription = "increase"
+                    )
                 }
                 Spacer(modifier = Modifier.width(3.dp))
-                IconButton(onClick = {
-                    amount--
-                },
+                IconButton(
+                    onClick = {
+                        amount--
+                        if (amount == 0)
+                            cartViewModel.deleteProductById(product.prod_id)
+                    },
                     modifier = Modifier.width(30.dp)
                 ) {
-                    Icon(imageVector = Icons.Outlined.KeyboardArrowUp,
-                        contentDescription = "reduce")
+                    Icon(
+                        imageVector = Icons.Outlined.KeyboardArrowDown,
+                        contentDescription = "reduce"
+                    )
                 }
             }
         }

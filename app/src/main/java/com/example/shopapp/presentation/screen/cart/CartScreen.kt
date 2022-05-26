@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -30,18 +29,21 @@ import com.example.shopapp.ui.theme.AppTheme
 
 
 @Composable
-fun CartScreen(cartViewModel: CartViewModel, mainPageViewModel: MainViewModel,
-               detailedViewModel: DetailedViewModel, favoriteViewModel: FavoriteViewModel,
-               navController: NavHostController
+fun CartScreen(
+    cartViewModel: CartViewModel, mainPageViewModel: MainViewModel,
+    detailedViewModel: DetailedViewModel, favoriteViewModel: FavoriteViewModel,
+    navController: NavHostController
 ) {
-    val products = cartViewModel.cart?.collectAsState(initial = listOf())
-    val recommendedProducts = mainPageViewModel.recommendedProducts.collectAsState(initial = emptyList()).value
+    val products = cartViewModel.cart.collectAsState(initial = listOf())
+    val recommendedProducts =
+        mainPageViewModel.recommendedProducts.collectAsState(initial = emptyList()).value
 
     Column {
-        Box( modifier = Modifier
-            .fillMaxWidth()
-            .background(AppTheme.colors.primary)
-            .height(60.dp),
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(AppTheme.colors.primary)
+                .height(60.dp),
             contentAlignment = Alignment.Center,
         ) {
             Text(
@@ -51,10 +53,11 @@ fun CartScreen(cartViewModel: CartViewModel, mainPageViewModel: MainViewModel,
             )
         }
         LazyColumn {
-            if (products == null || products.value.isEmpty()) {
+            if (products.value.isEmpty()) {
                 item {
-                    Surface( modifier = Modifier
-                        .background(AppTheme.colors.background)
+                    Surface(
+                        modifier = Modifier
+                            .background(AppTheme.colors.background)
                     ) {
                         EmptyCart(detailedViewModel.getUserData(), navController)
                     }
@@ -64,15 +67,14 @@ fun CartScreen(cartViewModel: CartViewModel, mainPageViewModel: MainViewModel,
                     CartCard(cartViewModel, favoriteViewModel, product)
                 }
                 item {
-                    OfferBox()
+                    OfferBox(cartViewModel)
                 }
             }
-
 
             item {
                 Spacer(modifier = Modifier.height(10.dp))
                 Text(
-                    modifier = Modifier.padding(start = 5.dp),
+                    modifier = Modifier.padding(start = 15.dp),
                     text = "Рекомендуем",
                     style = AppTheme.typography.body1,
                     color = AppTheme.textColors.primaryTextColor
@@ -81,7 +83,7 @@ fun CartScreen(cartViewModel: CartViewModel, mainPageViewModel: MainViewModel,
             }
             recommendedProducts.let {
                 item {
-                    LazyRow {
+                    LazyRow(modifier = Modifier.padding(start = 15.dp)) {
                         items(it) { product ->
                             RecommendCard(product, navController)
                         }

@@ -54,7 +54,7 @@ class MainActivity : ComponentActivity() {
 
     private fun initInfoLists() {
         mainViewModel.getRecommendedProduct()
-        cartViewModel.getCart()
+        cartViewModel.initCart()
         favoriteViewModel.getFavorites()
         loginViewModel.obtainEvent(LoginEvent.RegisterUserUpdater(
             detailedViewModel::updateUserData

@@ -51,41 +51,40 @@ fun SearchScreen(searchViewModel: SearchViewModel, navController: NavHostControl
                     .clip(RoundedCornerShape(5.dp)),
 
                 ) {
-                    TextField(
-                        shape = RoundedCornerShape(10.dp),
-                        value = query,
-                        onValueChange = {
-                            searchViewModel.onQueryChanged(it)
-                        },
-                        label = {
-                            Text(text = "Search")
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(8.dp)
-                            .background(MaterialTheme.colors.surface),
-                        leadingIcon = {
-                            Icon(
-                                Icons.Filled.Search,
-                                contentDescription = "Search"
-                            )
-                        },
-                        textStyle = TextStyle(
-                            color = MaterialTheme.colors.onSurface,
-                            fontSize = 15.sp
-                        ),
-                        keyboardActions = KeyboardActions(
-                            onDone = {
-                                searchViewModel.newSearch(query)
-                                keyboardController?.hide()
-                                focusManager.clearFocus()
-                            }),
-                        keyboardOptions = KeyboardOptions(
-                            keyboardType = KeyboardType.Text,
-                            imeAction = ImeAction.Done,
-                        ),
-
-                    )
+                TextField(
+                    shape = RoundedCornerShape(10.dp),
+                    value = query,
+                    onValueChange = {
+                        searchViewModel.onQueryChanged(it)
+                    },
+                    label = {
+                        Text(text = "Search")
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp)
+                        .background(MaterialTheme.colors.surface),
+                    leadingIcon = {
+                        Icon(
+                            Icons.Filled.Search,
+                            contentDescription = "Search"
+                        )
+                    },
+                    textStyle = TextStyle(
+                        color = MaterialTheme.colors.onSurface,
+                        fontSize = 15.sp
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onDone = {
+                            searchViewModel.newSearch(query)
+                            keyboardController?.hide()
+                            focusManager.clearFocus()
+                        }),
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Text,
+                        imeAction = ImeAction.Done,
+                    ),
+                )
             }
         }
 

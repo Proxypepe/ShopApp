@@ -48,8 +48,7 @@ fun DetailedTopBar(
         },
         navigationIcon = {
             IconButton(onClick = {
-            //FIXME prev route adapt for search
-            navController.popBackStack(NavigationRouter.Home.route, inclusive = true)
+                navController.navigateUp()
         }) {
             Icon(
                 imageVector = Icons.Default.ArrowBack,
