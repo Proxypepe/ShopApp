@@ -9,9 +9,6 @@ data class UserDto(
     val password: String?,
     val role: String,
 
-    val bags: List<ShoppingBagDto> = emptyList(),
+    val comments: MutableList<CommentDto> = mutableListOf(),
 
-    val comments: List<CommentDto> = emptyList(),
-
-    val favorites: List<FavoriteDto> = emptyList()
 ) : Parcelable

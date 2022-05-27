@@ -12,7 +12,6 @@ import com.example.shopapp.repository.remote.models.CommentDto
 import com.example.shopapp.repository.remote.models.ProductDto
 import com.example.shopapp.repository.remote.models.UserDto
 import com.example.shopapp.repository.remote.repository.CommentRepository
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class DetailedViewModel(private val commentRepository: CommentRepository): ViewModel() {
@@ -80,8 +79,8 @@ class DetailedViewModel(private val commentRepository: CommentRepository): ViewM
                 advantages = advantages,
                 disadvantages = disadvantages,
                 rating = rating,
-                commentedProduct = currentProduct!!,
-                commentedByUser = userData
+                prod_id = currentProduct!!.prod_id,
+                user_id = userData.userId
             )
         )
     }

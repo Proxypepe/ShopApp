@@ -3,6 +3,7 @@ package com.example.shopapp.domain
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.runtime.mutableStateOf
 import androidx.datastore.core.DataStore
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -24,7 +25,7 @@ import java.net.SocketTimeoutException
 class LoginViewModel(
     private val registerRepository: RegisterRepository,
     private val authRepository: AuthRepository,
-    private val dataStore: DataStore<AppSettings>
+    private val dataStore: DataStore<AppSettings>,
 ) : EventHandler<LoginEvent>, ViewModel() {
     private val _loginState = MutableStateFlow(LoginState())
     val signInState = _loginState.asStateFlow()
@@ -47,6 +48,8 @@ class LoginViewModel(
             is LoginEvent.EmailChanged -> onChangeEmail(event.value)
             is LoginEvent.PasswordChanged -> onChangePassword(event.value)
             is LoginEvent.LogOut -> logOut(event.context)
+            is LoginEvent.SetTheme -> setAttrTheme(event.isDarkTheme)
+            LoginEvent.ThemeChanged -> onChangeTheme()
             LoginEvent.InitUserData -> initUserData()
         }
     }
@@ -54,6 +57,15 @@ class LoginViewModel(
 
     private fun makeToast(context: Context, toastText: String) {
         Toast.makeText(context, toastText, Toast.LENGTH_LONG).show()
+    }
+
+    private fun setAttrTheme(isDarkTheme: Boolean) {
+        _loginState.value = _loginState.value.copy(isDarkTheme = mutableStateOf(isDarkTheme))
+    }
+
+    private fun onChangeTheme() = viewModelScope.launch {
+        _loginState.value.isDarkTheme.value = !_loginState.value.isDarkTheme.value
+        setTheme(_loginState.value.isDarkTheme.value)
     }
 
     private fun onChangePassword(newPassword: String) {

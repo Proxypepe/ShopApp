@@ -2,10 +2,9 @@ package com.example.shopapp.presentation.screen.detailed.components
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.shopapp.domain.DetailedViewModel
@@ -30,7 +29,7 @@ fun RateProduct(
             CustomRatingBar(
                 modifier = Modifier,
                 value = detailedViewModel.rating(),
-                config = RatingBarConfig().apply{
+                config = RatingBarConfig().apply {
                     size = 50.dp
                 },
                 onValueChange = detailedViewModel::updateRating,

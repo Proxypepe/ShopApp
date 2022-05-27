@@ -12,11 +12,11 @@ import androidx.compose.material.icons.filled.Info
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.shopapp.domain.DetailedViewModel
+import com.example.shopapp.presentation.navigation.NavigationRouter
 import com.example.shopapp.presentation.screen.detailed.DetailedState
 import com.example.shopapp.presentation.screen.detailed.components.rataing.CustomRatingBar
 import com.example.shopapp.repository.remote.models.UserDto
@@ -88,12 +88,12 @@ fun FillExtraInfo(
                 }
             }
 
-            Spacer(modifier = Modifier.fillMaxHeight(0.4f))
+            Spacer(modifier = Modifier.fillMaxHeight(0.36f))
 
             WriterTextField(
                 modifier = Modifier
                     .fillMaxWidth(0.9f)
-                    .height(47.dp),
+                    .height(50.dp),
                 value = advantages.value,
                 onValueChange = detailedViewModel::updateAdvantages,
                 placeholder = "Достоинства"
@@ -102,7 +102,7 @@ fun FillExtraInfo(
             WriterTextField(
                 modifier = Modifier
                     .fillMaxWidth(0.9f)
-                    .height(47.dp),
+                    .height(50.dp),
                 value = disadvantages.value,
                 onValueChange = detailedViewModel::updateDisadvantages,
                 placeholder = "Недостатки"
@@ -111,7 +111,7 @@ fun FillExtraInfo(
             WriterTextField(
                 modifier = Modifier
                     .fillMaxWidth(0.9f)
-                    .height(47.dp),
+                    .height(50.dp),
                 value = comment.value,
                 onValueChange = detailedViewModel::updateComment,
                 placeholder = "Комментарии"
@@ -120,6 +120,8 @@ fun FillExtraInfo(
             Button(
                 onClick = {
                     detailedViewModel.sendComment(userData)
+                    // TODO: update lists
+                    navController.navigate(NavigationRouter.Detailed.route)
                 },
                 modifier = Modifier.fillMaxWidth(0.9f)
             ) {

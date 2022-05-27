@@ -8,6 +8,6 @@ data class CommentDto(
     val advantages: String?,
     val disadvantages: String?,
     val rating: Float,
-    val commentedProduct: ProductDto?,
-    val commentedByUser: UserDto?
+    val user_id: Long,
+    val prod_id: Int
 ) : Parcelable

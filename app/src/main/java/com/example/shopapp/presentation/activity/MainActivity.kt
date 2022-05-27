@@ -37,7 +37,6 @@ class MainActivity : ComponentActivity() {
 
     private val favoriteViewModel: FavoriteViewModel by viewModels {
         FavoriteViewModelFactory(
-            (application as ShoppingAppApplication).favoriteRepository,
             (application as ShoppingAppApplication).favoriteLocalRepository,
         )
     }
@@ -82,6 +81,10 @@ class MainActivity : ComponentActivity() {
                 loginViewModel.obtainEvent(
                     LoginEvent.InitUserData
                 )
+
+            loginViewModel.obtainEvent(
+                LoginEvent.SetTheme(appSettings.isDark)
+            )
 
             ShopAppTheme(isDarkTheme = appSettings.isDark){
                 AppNavigation(

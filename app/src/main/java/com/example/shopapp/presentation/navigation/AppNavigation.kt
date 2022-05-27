@@ -67,29 +67,29 @@ fun AppNavigation(
                 BottomNavigationBar(
                     items = listOf(
                         BottomNavItem(
-                            name = "Home",
-                            route = "home",
+                            name = "Главная",
+                            route = NavigationRouter.Home.route,
                             icon = Icons.Default.Home
                         ),
                         BottomNavItem(
-                            name = "Search",
-                            route = "search",
+                            name = "Поиск",
+                            route = NavigationRouter.Search.route,
                             icon = Icons.Default.Search
                         ),
                         BottomNavItem(
-                            name = "Cart",
-                            route = "cart",
+                            name = "Корзина",
+                            route = NavigationRouter.Cart.route,
                             icon = Icons.Default.ShoppingCart,
                             badgeCount = badgeCount
                         ),
                         BottomNavItem(
-                            name = "Favorite",
-                            route = "favorite",
+                            name = "Избранное",
+                            route = NavigationRouter.Favorite.route,
                             icon = Icons.Default.Favorite
                         ),
                         BottomNavItem(
-                            name = "Profile",
-                            route = "profile",
+                            name = "Профиль",
+                            route = NavigationRouter.Profile.route,
                             icon = Icons.Default.Person
                         ),
                     ),
