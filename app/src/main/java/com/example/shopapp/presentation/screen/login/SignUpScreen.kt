@@ -17,6 +17,7 @@ import com.example.shopapp.domain.LoginViewModel
 import com.example.shopapp.domain.common.LoginEvent
 import com.example.shopapp.presentation.navigation.NavigationRouter
 import com.example.shopapp.presentation.screen.login.components.LoginTextField
+import com.example.shopapp.presentation.screen.search.components.CustomCheckBox
 import com.example.shopapp.ui.theme.AppTheme
 import com.example.shopapp.ui.theme.FontSize
 
@@ -106,6 +107,17 @@ fun SighUpScreen(loginViewModel: LoginViewModel, navController: NavHostControlle
                 ) {
                     Text(text = "Зарегистрироваться")
                 }
+
+                CustomCheckBox(
+                    name = "Запомнить ?",
+                    checked = isRememberState,
+                    onCheckedChange = {
+                        isRememberState.value = it
+                    },
+                    onTextClicked = {
+                        isRememberState.value = !isRememberState.value
+                    }
+                )
 
                 Spacer(modifier = Modifier.fillMaxHeight(0.85f))
 

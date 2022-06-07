@@ -5,6 +5,7 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -15,11 +16,14 @@ import androidx.compose.material.icons.outlined.KeyboardArrowUp
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import coil.compose.AsyncImage
+import coil.compose.SubcomposeAsyncImage
 import com.example.shopapp.R
 import com.example.shopapp.domain.CartViewModel
 import com.example.shopapp.domain.FavoriteViewModel
@@ -41,7 +45,8 @@ fun EmptyCart(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(220.dp),
+            .height(220.dp)
+            .background(AppTheme.extendedColors.cardBackgroundColor),
         contentAlignment = Alignment.Center,
     ) {
         Spacer(modifier = Modifier.height(15.dp))
@@ -82,7 +87,7 @@ fun CartCard(
     var amount by remember { mutableStateOf(1) }
     var isRed by remember { mutableStateOf(value = favoriteViewModel.contains(product)) }
     val animatedColor by animateColorAsState(
-        targetValue = if (isRed) Color.Red else Color.Black,
+        targetValue = if (isRed) Color.Red else AppTheme.extendedColors.iconColor,
         animationSpec = tween(
             durationMillis = 100,
             delayMillis = 100,
@@ -90,15 +95,23 @@ fun CartCard(
         )
     )
 
-    Card(modifier = Modifier.fillMaxWidth()) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth(),
+        backgroundColor = AppTheme.extendedColors.cardBackgroundColor,
+    ) {
         Column {
             Box(modifier = Modifier.padding(top = 10.dp, start = 15.dp)) {
                 Row {
-                    Image(
-                        painter = painterResource(id = R.drawable.ic_android_black_24dp),
+                    SubcomposeAsyncImage(
+                        model = product.link,
+                        loading = {
+                            CircularProgressIndicator()
+                        },
+                        modifier = Modifier.scale(3f).padding(start = 15.dp, top = 15.dp),
                         contentDescription = ""
                     )
-                    Spacer(modifier = Modifier.width(10.dp))
+                    Spacer(modifier = Modifier.width(60.dp))
                     Column {
                         Text(
                             text = product.price,
@@ -113,7 +126,8 @@ fun CartCard(
                             Icon(
                                 modifier = Modifier.size(30.dp, 30.dp),
                                 painter = painterResource(id = R.drawable.crown_filled),
-                                contentDescription = "crown_icon"
+                                contentDescription = "crown_icon",
+                                tint = AppTheme.extendedColors.iconColor
                             )
                             Spacer(modifier = Modifier.width(7.dp))
                             Text(
@@ -134,6 +148,7 @@ fun CartCard(
                     }
                 }
             }
+            Spacer(modifier = Modifier.height(15.dp))
             Divider(color = Color.Gray, thickness = 1.dp)
             Spacer(modifier = Modifier.height(5.dp))
             Row(
@@ -180,7 +195,8 @@ fun CartCard(
                     ) {
                         Icon(
                             imageVector = Icons.Default.Delete,
-                            contentDescription = "delete"
+                            contentDescription = "delete",
+                            tint = AppTheme.extendedColors.iconColor
                         )
                         Spacer(modifier = Modifier.width(7.dp))
                         Text(
@@ -194,7 +210,7 @@ fun CartCard(
                 Text(
                     text = amount.toString(),
                     style = AppTheme.typography.body1,
-                    color = AppTheme.textColors.primaryTextColor
+                    color = AppTheme.extendedColors.iconColor
                 )
                 Spacer(modifier = Modifier.width(5.dp))
                 IconButton(
@@ -205,7 +221,8 @@ fun CartCard(
                 ) {
                     Icon(
                         imageVector = Icons.Outlined.KeyboardArrowUp,
-                        contentDescription = "increase"
+                        contentDescription = "increase",
+                        tint = AppTheme.textColors.primaryButtonText
                     )
                 }
                 Spacer(modifier = Modifier.width(3.dp))
@@ -219,7 +236,8 @@ fun CartCard(
                 ) {
                     Icon(
                         imageVector = Icons.Outlined.KeyboardArrowDown,
-                        contentDescription = "reduce"
+                        contentDescription = "reduce",
+                        tint = AppTheme.textColors.primaryButtonText
                     )
                 }
             }

@@ -25,7 +25,9 @@ fun FavoriteScreen(
     navController: NavHostController
 ) {
     val favorites = favoriteViewModel.favorites.value
-    Column {
+    Column(
+        modifier = Modifier.background(AppTheme.colors.background)
+    ) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -36,7 +38,7 @@ fun FavoriteScreen(
             Text(
                 text = "Избранные",
                 style = AppTheme.typography.h1,
-                color = Color.White
+                color = AppTheme.textColors.headerTextColor
             )
         }
 
@@ -44,7 +46,9 @@ fun FavoriteScreen(
             Spacer(modifier = Modifier.fillMaxHeight(0.5f))
             EmptyFavorites(navController)
         } else {
-            LazyColumn {
+            LazyColumn(
+                modifier = Modifier.fillMaxSize().background(AppTheme.colors.background)
+            ) {
                 item {
                     val pair = favoriteViewModel.divideFavorites()
                     val first = pair.first

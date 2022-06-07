@@ -22,7 +22,7 @@ fun Selector(categories: List<FilterCategory>) {
             val first = pair.first
             val second = pair.second
             for (i in 0 until first.size)
-                SelectorBlock(first[i], second[i])
+                SelectorBlock(second[i], first[i])
         }
     }
 }

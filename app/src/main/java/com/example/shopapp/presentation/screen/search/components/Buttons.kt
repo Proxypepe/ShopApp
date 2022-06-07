@@ -2,10 +2,12 @@ package com.example.shopapp.presentation.screen.search.components
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
@@ -15,12 +17,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.shopapp.domain.SearchViewModel
 import com.example.shopapp.domain.filters.CategoryButtonState
+import com.example.shopapp.ui.theme.AppTheme
 
 @Composable
 fun FilterButtons(searchViewModel: SearchViewModel) {
     var expanded by remember { mutableStateOf(false) }
     var categoryRoute by remember { mutableStateOf("") }
-    var smallSize by rememberSaveable{ mutableStateOf(false) }
+    var smallSize by rememberSaveable { mutableStateOf(false) }
     val animatedSizeDp by animateDpAsState(targetValue = if (smallSize) 100.dp else 200.dp)
     val boxSize by animateDpAsState(targetValue = if (smallSize) 150.dp else 250.dp)
 
@@ -86,7 +89,7 @@ fun FilterButtons(searchViewModel: SearchViewModel) {
                                 .height(animatedSizeDp)
                         ) {
                             when (categoryRoute) {
-                                CategoryButtonState.Category.route ->  {
+                                CategoryButtonState.Category.route -> {
                                     Selector(searchViewModel.searchBarState.categories)
                                     smallSize = true
                                 }
@@ -138,6 +141,10 @@ fun CategoryButton(
         },
         modifier = Modifier
             .size(buttonState.width, buttonState.height),
+        colors = ButtonDefaults.buttonColors(
+            backgroundColor = AppTheme.extendedColors.buttonColor,
+            contentColor = AppTheme.textColors.primaryButtonText
+        ),
         shape = CircleShape,
     ) {
         Text(text = buttonState.name)

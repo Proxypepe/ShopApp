@@ -30,7 +30,9 @@ fun CommentSubScreen(
     navController: NavHostController
 ) {
     with(detailedViewModel.currentProduct!!) {
-        Column {
+        Column(
+            modifier = Modifier.fillMaxSize().background(AppTheme.colors.background)
+        ) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -73,7 +75,14 @@ fun CommentSubScreen(
                     )
                 }
                 items(comments) { comment ->
-                    CommentCard(comment)
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(5.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CommentCard(comment)
+                    }
                 }
             }
         }
@@ -124,12 +133,12 @@ fun LeaveComment(
             Spacer(modifier = Modifier.height(15.dp))
             Button(
                 onClick = {
-                    if (currentUser.userId != 0L || currentUser.email != "")
-                    {
+                    if (currentUser.userId != 0L || currentUser.email != "") {
                         navController.navigate(NavigationRouter.CommentWrite.route)
                         onClear()
                     } else {
-                        Toast.makeText(context, "Пожалуйста, авторизуйтесь", Toast.LENGTH_LONG).show()
+                        Toast.makeText(context, "Пожалуйста, авторизуйтесь", Toast.LENGTH_LONG)
+                            .show()
                     }
                 },
                 modifier = Modifier
@@ -144,7 +153,7 @@ fun LeaveComment(
             Spacer(modifier = Modifier.height(5.dp))
 
             Text(
-                text = "Рейтинг: $rating",
+                text = "Общий рейтинг: $rating",
                 style = AppTheme.typography.body1,
                 color = AppTheme.textColors.primaryTextColor
             )
@@ -154,6 +163,7 @@ fun LeaveComment(
                 onValueChange = {},
                 onRatingChanged = {}
             )
+            Divider(color = Color.Gray, thickness = 1.dp)
         }
     }
 }
@@ -165,26 +175,45 @@ fun CommentCard(
     with(comment) {
         Card(
             modifier = Modifier
-                .fillMaxWidth()
+                .fillMaxWidth(0.9f),
+            backgroundColor = AppTheme.extendedColors.cardBackgroundColor,
+            elevation = AppTheme.extendedColors.elevation
         ) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .padding(10.dp)
             ) {
                 comment.comment?.let {
                     Text(
-                        text = it,
+                        text = "Комментарий: $it",
                         style = AppTheme.typography.body1,
                         color = AppTheme.textColors.primaryTextColor
                     )
                 }
-
+                Spacer(modifier = Modifier.height(5.dp))
+                comment.advantages?.let {
+                    Text(
+                        text = "Достоинтства: $it",
+                        style = AppTheme.typography.body1,
+                        color = AppTheme.textColors.primaryTextColor
+                    )
+                }
+                Spacer(modifier = Modifier.height(5.dp))
+                comment.disadvantages?.let {
+                    Text(
+                        text = "Недостатки: $it",
+                        style = AppTheme.typography.body1,
+                        color = AppTheme.textColors.primaryTextColor
+                    )
+                }
+                Spacer(modifier = Modifier.height(5.dp))
                 Text(
                     text = "Рейтинг: $rating",
                     style = AppTheme.typography.body1,
                     color = AppTheme.textColors.primaryTextColor
                 )
-
+                Spacer(modifier = Modifier.height(3.dp))
                 CustomRatingBar(
                     value = rating,
                     onValueChange = {},

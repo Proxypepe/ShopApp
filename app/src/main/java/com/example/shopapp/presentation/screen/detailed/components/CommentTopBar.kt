@@ -40,7 +40,7 @@ fun CommentTopBar(
                 Text(
                     text = "Новый отзыв",
                     style = AppTheme.typography.h4,
-                    color = Color.White,
+                    color = AppTheme.textColors.headerTextColor,
                 )
 
                 Spacer(modifier = Modifier.fillMaxWidth(0.65f))

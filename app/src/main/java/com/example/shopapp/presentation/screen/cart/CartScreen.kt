@@ -35,7 +35,9 @@ fun CartScreen(
     val recommendedProducts =
         mainPageViewModel.recommendedProducts.collectAsState(initial = emptyList()).value
 
-    Column {
+    Column(
+        modifier = Modifier.fillMaxSize().background(AppTheme.colors.background)
+    ) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -46,7 +48,7 @@ fun CartScreen(
             Text(
                 text = "Корзина",
                 style = AppTheme.typography.h1,
-                color = Color.White
+                color = AppTheme.textColors.headerTextColor
             )
         }
         LazyColumn {

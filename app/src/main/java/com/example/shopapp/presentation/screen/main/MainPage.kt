@@ -1,6 +1,5 @@
 package com.example.shopapp.presentation.screen.main
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -20,28 +19,25 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.shopapp.R
 import com.example.shopapp.domain.MainViewModel
-import com.example.shopapp.presentation.screen.components.LoadProgress
 import com.example.shopapp.presentation.screen.components.RecommendCard
 import com.example.shopapp.presentation.screen.main.components.BrandCard
 import com.example.shopapp.ui.theme.AppTheme
 
 
 @Composable
-fun MainPage(mainPageViewModel: MainViewModel?, navController: NavHostController) {
+fun MainPage(mainPageViewModel: MainViewModel, navController: NavHostController) {
 
     val products =
-        mainPageViewModel?.recommendedProducts?.collectAsState(initial = emptyList())?.value
+        mainPageViewModel.recommendedProducts.collectAsState(initial = emptyList()).value
 
-    val loading = mainPageViewModel?.loading?.collectAsState(false)?.value
-    Column {
+    Column(
+        modifier = Modifier.background(AppTheme.colors.background)
+    ) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -52,7 +48,7 @@ fun MainPage(mainPageViewModel: MainViewModel?, navController: NavHostController
             Text(
                 text = "Главное",
                 style = AppTheme.typography.h1,
-                color = Color.White
+                color = AppTheme.textColors.headerTextColor
             )
         }
         Box(
@@ -105,12 +101,13 @@ fun MainPage(mainPageViewModel: MainViewModel?, navController: NavHostController
                         )
                     }
                     Spacer(modifier = Modifier.padding(top = 10.dp))
-                    val values: List<Int> = listOf(1, 2, 3, 4)
+
                     Text(
                         text = "Ваши рекомендации",
                         style = AppTheme.typography.h5,
                         color = AppTheme.textColors.primaryTextColor
                     )
+
                     Text(
                         text = "Основано на вашем поиске",
                         style = AppTheme.typography.h6,
@@ -122,15 +119,8 @@ fun MainPage(mainPageViewModel: MainViewModel?, navController: NavHostController
                         modifier = Modifier.fillMaxWidth(),
                         contentPadding = PaddingValues(10.dp)
                     ) {
-                        if (products != null)
-                            items(products) { value ->
-                                RecommendCard(value, navController)
-                            } else {
-                            item {
-                                if (loading != null) {
-                                    LoadProgress(loading)
-                                }
-                            }
+                        items(products) { value ->
+                            RecommendCard(value, navController)
                         }
                     }
                     Spacer(modifier = Modifier.padding(top = 10.dp))
@@ -144,8 +134,8 @@ fun MainPage(mainPageViewModel: MainViewModel?, navController: NavHostController
                         modifier = Modifier.fillMaxWidth(),
                         contentPadding = PaddingValues(10.dp)
                     ) {
-                        items(values) {
-                            BrandCard()
+                        items(mainPageViewModel.getBrands()) { brand ->
+                            BrandCard(brand)
                         }
                     }
                 }

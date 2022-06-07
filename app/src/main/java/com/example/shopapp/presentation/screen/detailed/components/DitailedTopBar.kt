@@ -29,7 +29,7 @@ fun DetailedTopBar(
 ) {
     var isRed by remember { mutableStateOf(value = isContains(product)) }
     val animatedColor by animateColorAsState(
-        if (isRed) Color.Red else Color.White,
+        if (isRed) Color.Red else AppTheme.extendedColors.iconColor,
         animationSpec = tween(
             durationMillis = 100,
             delayMillis = 100,
@@ -38,12 +38,13 @@ fun DetailedTopBar(
     )
 
     TopAppBar(
-        title = {
+        backgroundColor = AppTheme.colors.primary,
+                title = {
             Text(
                 text = product.name,
                 style = AppTheme.typography.h4,
                 maxLines = 2,
-                overflow = TextOverflow.Clip
+                overflow = TextOverflow.Clip, color = AppTheme.textColors.headerTextColor
             )
         },
         navigationIcon = {
@@ -52,7 +53,8 @@ fun DetailedTopBar(
             }) {
                 Icon(
                     imageVector = Icons.Default.ArrowBack,
-                    contentDescription = "Back"
+                    contentDescription = "Back",
+                    tint = AppTheme.extendedColors.iconColor
                 )
             }
         },
@@ -61,7 +63,7 @@ fun DetailedTopBar(
                 Icon(
                     imageVector = Icons.Default.Share,
                     contentDescription = "Share",
-                    tint = Color.White
+                    tint = AppTheme.extendedColors.iconColor
                 )
             }
             IconButton(onClick = {
@@ -80,7 +82,7 @@ fun DetailedTopBar(
                 Icon(
                     imageVector = Icons.Default.ShoppingCart,
                     contentDescription = "ShoppingCart",
-                    tint = Color.White
+                    tint = AppTheme.extendedColors.iconColor
                 )
             }
         }

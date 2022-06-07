@@ -5,6 +5,7 @@ import android.widget.Toast
 import androidx.compose.animation.*
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.ExperimentalMaterialApi
@@ -32,6 +33,7 @@ import com.example.shopapp.presentation.screen.main.MainPage
 import com.example.shopapp.presentation.screen.profile.Profile
 import com.example.shopapp.presentation.screen.search.SearchScreen
 import com.example.shopapp.repository.remote.models.ProductDto
+import com.example.shopapp.ui.theme.AppTheme
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
@@ -58,6 +60,7 @@ fun AppNavigation(
     val badgeCount = cartViewModel.cart.collectAsState(initial = listOf()).value.size
 
     Scaffold(
+        drawerBackgroundColor = AppTheme.colors.primary,
         bottomBar = {
             if (currentRoute == NavigationRouter.SignIn.route ||
                 currentRoute == NavigationRouter.SignUp.route
@@ -65,31 +68,32 @@ fun AppNavigation(
 
             } else {
                 BottomNavigationBar(
+
                     items = listOf(
                         BottomNavItem(
-                            name = "Home",
-                            route = "home",
+                            name = "Главная",
+                            route = NavigationRouter.Home.route,
                             icon = Icons.Default.Home
                         ),
                         BottomNavItem(
-                            name = "Search",
-                            route = "search",
+                            name = "Поиск",
+                            route = NavigationRouter.Search.route,
                             icon = Icons.Default.Search
                         ),
                         BottomNavItem(
-                            name = "Cart",
-                            route = "cart",
+                            name = "Корзина",
+                            route = NavigationRouter.Cart.route,
                             icon = Icons.Default.ShoppingCart,
                             badgeCount = badgeCount
                         ),
                         BottomNavItem(
-                            name = "Favorite",
-                            route = "favorite",
+                            name = "Избранное",
+                            route = NavigationRouter.Favorite.route,
                             icon = Icons.Default.Favorite
                         ),
                         BottomNavItem(
-                            name = "Profile",
-                            route = "profile",
+                            name = "Профиль",
+                            route = NavigationRouter.Profile.route,
                             icon = Icons.Default.Person
                         ),
                     ),

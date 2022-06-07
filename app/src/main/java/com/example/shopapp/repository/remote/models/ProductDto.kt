@@ -33,7 +33,6 @@ data class ProductDto(
     val lads: String?,
     val link: String?,
 
-    val bags: List<ShoppingBagDto> = emptyList(),
-    val comments: List<CommentDto> = emptyList(),
-    val favoriteBy: List<FavoriteDto> = emptyList(),
+    val comments: MutableList<CommentDto> = mutableListOf(),
+
 ) : Parcelable

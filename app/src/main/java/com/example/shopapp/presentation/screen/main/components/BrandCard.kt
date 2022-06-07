@@ -1,6 +1,7 @@
 package com.example.shopapp.presentation.screen.main.components
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Card
 import androidx.compose.material.Text
@@ -10,25 +11,34 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.shopapp.R
+import com.example.shopapp.ui.theme.AppTheme
 
 @Composable
-fun BrandCard(){
+fun BrandCard(brandInfo: BrandInfo) {
     Card(
         modifier = Modifier
-            .size(140.dp, 200.dp)
+            .size(200.dp, 100.dp)
             .padding(end = 10.dp),
+                backgroundColor = AppTheme.extendedColors.cardBackgroundColor,
         elevation = 5.dp
     ) {
         Column(
+            modifier = Modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.fillMaxSize()
-        ){
+        ) {
             Image(
-                painter = painterResource(R.drawable.ic_android_black_24dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(70.dp),
+                painter = painterResource(brandInfo.pic_id),
                 contentDescription = "",
             )
-            Text(text="Brand",
-                modifier = Modifier.fillMaxWidth())
+            Text(
+                text = brandInfo.brand_name,
+                style = AppTheme.typography.h5,
+                color = AppTheme.textColors.primaryTextColor
+            )
         }
     }
 }

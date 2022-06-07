@@ -4,14 +4,13 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Button
-import androidx.compose.material.Divider
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.semantics.Role.Companion.Switch
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.shopapp.domain.LoginViewModel
@@ -25,7 +24,11 @@ fun Profile(
     loginViewModel: LoginViewModel,
     navController: NavHostController
 ) {
-    Column {
+    Column(
+        modifier = Modifier
+            .background(AppTheme.colors.background)
+            .fillMaxSize()
+    ) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -36,7 +39,7 @@ fun Profile(
             Text(
                 text = "Профиль",
                 style = AppTheme.typography.h1,
-                color = Color.White
+                color = AppTheme.textColors.headerTextColor
             )
         }
 
@@ -47,7 +50,7 @@ fun Profile(
 
         Spacer(modifier = Modifier.height(70.dp))
 
-        StaticMenu()
+        StaticMenu(loginViewModel)
     }
 }
 
@@ -60,15 +63,23 @@ fun LogInSection(navController: NavHostController) {
             .fillMaxWidth()
     ) {
         Column {
-            Text(text = "Войдите или зарегистрируйтесь")
+            Text(
+                text = "Войдите или зарегистрируйтесь",
+                color = AppTheme.textColors.primaryTextColor
+            )
             Spacer(modifier = Modifier.height(10.dp))
-            Text(text = "Чтобы получить ...")
+            Text(text = "Чтобы получить ...", color = AppTheme.textColors.primaryTextColor)
             Spacer(modifier = Modifier.height(40.dp))
             Button(
                 onClick = {
                     navController.navigate(NavigationRouter.SignIn.route)
                 },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth(),
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = AppTheme.extendedColors.buttonColor,
+                    contentColor = AppTheme.textColors.primaryButtonText
+                ),
             ) {
                 Text(text = "Войти или зарегистрироваться")
             }
@@ -77,36 +88,50 @@ fun LogInSection(navController: NavHostController) {
     }
 }
 
+@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
-fun StaticMenu() {
+fun StaticMenu(loginViewModel: LoginViewModel) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
     ) {
         Column {
-            Text(text = "Приложение", modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 5.dp)
-                .clickable {
-
-                }
-            )
             Divider(color = Color.Gray, thickness = 1.dp)
-            Text(text = "Цвет приложения", modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 5.dp)
-                .clickable {
 
-                }
-            )
+            Row(
+                modifier = Modifier.height(50.dp),
+                horizontalArrangement = Arrangement.Start,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Цвет приложения", modifier = Modifier
+                        .padding(start = 10.dp),
+                    color = AppTheme.textColors.primaryTextColor
+                )
+                Spacer(modifier = Modifier.fillMaxWidth(0.7f))
+                Switch(
+                    checked = loginViewModel.signInState.value.isDarkTheme.value,
+                    onCheckedChange = {
+                        loginViewModel.obtainEvent(
+                            LoginEvent.ThemeChanged
+                        )
+                    }
+                )
+            }
+
             Divider(color = Color.Gray, thickness = 1.dp)
-            Text(text = "О приложении", modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 5.dp)
-                .clickable {
 
-                }
+            Text(
+                text = "О приложении", modifier = Modifier
+                    .fillMaxWidth()
+                    .height(50.dp)
+                    .padding(start = 10.dp, top = 15.dp)
+                    .clickable {
+
+                    },
+                color = AppTheme.textColors.primaryTextColor
             )
+
             Divider(color = Color.Gray, thickness = 1.dp)
         }
     }
@@ -122,24 +147,30 @@ fun ProfileSection(loginViewModel: LoginViewModel) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(200.dp),
+            .height(150.dp),
         contentAlignment = Alignment.Center
     ) {
         Column {
-            Text(
-                text = "Email:",
-                style = AppTheme.typography.h3,
-                color = AppTheme.textColors.primaryTextColor
-            )
-            Spacer(modifier = Modifier.height(5.dp))
-            Text(
-                text = loginViewModel.userData.value.email,
-                style = AppTheme.typography.h3,
-                color = AppTheme.textColors.primaryTextColor
-            )
+            Row {
+                Text(
+                    text = "Email: ",
+                    style = AppTheme.typography.h3,
+                    color = AppTheme.textColors.primaryTextColor
+                )
+                Spacer(modifier = Modifier.height(5.dp))
+                Text(
+                    text = loginViewModel.userData.value.email,
+                    style = AppTheme.typography.h3,
+                    color = AppTheme.textColors.primaryTextColor
+                )
+            }
             Spacer(modifier = Modifier.height(5.dp))
             Button(
                 modifier = Modifier.width(100.dp),
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = AppTheme.extendedColors.buttonColor,
+                    contentColor = AppTheme.textColors.primaryButtonText
+                ),
                 onClick = {
                     loginViewModel.obtainEvent(
                         LoginEvent.LogOut(context)
@@ -147,8 +178,7 @@ fun ProfileSection(loginViewModel: LoginViewModel) {
                 }
             ) {
                 Text(
-                    text = "Выйти",
-                    color = AppTheme.textColors.primaryButtonText
+                    text = "Выйти"
                 )
             }
         }
