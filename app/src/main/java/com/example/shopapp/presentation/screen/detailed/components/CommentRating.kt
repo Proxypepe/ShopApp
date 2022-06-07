@@ -1,5 +1,6 @@
 package com.example.shopapp.presentation.screen.detailed.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -18,14 +19,21 @@ fun RateProduct(
     detailedViewModel: DetailedViewModel, navController: NavHostController,
 ) {
     Column(
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+        modifier = Modifier
+            .background(AppTheme.colors.background)
+            .fillMaxSize(),
+//        verticalArrangement = Arrangement.Center,
+//        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         CommentTopBar(detailedViewModel, navController)
 
         Spacer(modifier = Modifier.fillMaxHeight(0.4f))
 
-        Column {
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
             CustomRatingBar(
                 modifier = Modifier,
                 value = detailedViewModel.rating(),

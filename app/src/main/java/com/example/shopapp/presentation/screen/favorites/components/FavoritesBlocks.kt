@@ -2,6 +2,7 @@ package com.example.shopapp.presentation.screen.favorites.components
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -12,6 +13,7 @@ import androidx.navigation.NavHostController
 import com.example.shopapp.domain.CartViewModel
 import com.example.shopapp.domain.FavoriteViewModel
 import com.example.shopapp.repository.local.entity.ProductEntity
+import com.example.shopapp.ui.theme.AppTheme
 
 
 @Composable
@@ -61,9 +63,14 @@ fun EmptyFavorites(navController: NavHostController) {
                 modifier = Modifier.fillMaxWidth(),
                 contentAlignment = Alignment.Center
             ) {
-                Button(onClick = {
-                    navController.navigate("home")
-                }) {
+                Button(
+                    onClick = {
+                        navController.navigate("home")
+                    }, colors = ButtonDefaults.buttonColors(
+                        backgroundColor = AppTheme.extendedColors.buttonColor,
+                        contentColor = AppTheme.textColors.primaryButtonText
+                    )
+                ) {
                     Text(text = "На главную")
                 }
             }

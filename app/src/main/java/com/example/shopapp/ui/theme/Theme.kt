@@ -7,14 +7,16 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
-
+import androidx.compose.ui.unit.dp
 
 
 private val DarkColorPalette = darkColors(
-    primary = Purple200,
+    primary = Color(0xFF101319),
     primaryVariant = Purple700,
     secondary = Teal200,
 
+    background = Color(0xFF1E232A),
+    surface = Color(0xFF1E232A),
 )
 
 private val LightColorPalette = lightColors(
@@ -33,9 +35,9 @@ private val LightColorPalette = lightColors(
 
 private val DarkTextColorPalette by lazy {
     TextColors(
-        primaryTextColor = Color.Black,
+        primaryTextColor = White,
         secondaryTextColor = Color.Gray,
-        bodyText = Color.Black,
+        bodyText = White,
         subtitle1Text = Color.Gray
     )
 }
@@ -53,6 +55,17 @@ private val LightExtendedPalette by lazy {
     ExtendedColors()
 }
 
+private val DarkExtendedPalette by lazy {
+    ExtendedColors(
+        buttonColor = Color(0XFF448AFE),
+        outlineColor = White,
+        cardBackgroundColor = Color(0xFF101319),
+        subButtonColor = Color(0XFF448AFE),
+        elevation = 0.dp,
+        background = Color(0xFF1E232A),
+        iconColor = White
+    )
+}
 
 @Composable
 fun ShopAppTheme(isDarkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
@@ -63,15 +76,21 @@ fun ShopAppTheme(isDarkTheme: Boolean = isSystemInDarkTheme(), content: @Composa
     }
 
     val textColors = if (isDarkTheme) {
-        LightTextColorPalette
-    } else {
         DarkTextColorPalette
+    } else {
+        LightTextColorPalette
+    }
+
+    val extendedColors = if (isDarkTheme) {
+        DarkExtendedPalette
+    } else {
+        LightExtendedPalette
     }
 
     CompositionLocalProvider(
         LocalColorProvider provides colors,
         LocalTextColorsProvider provides textColors,
-        LocalExtendedColorsProvider provides LightExtendedPalette,
+        LocalExtendedColorsProvider provides extendedColors,
         LocalTypography provides Typography,
         LocalShapes provides Shapes,
         content = content
@@ -84,6 +103,7 @@ fun ShopAppTheme(isDarkTheme: Boolean = isSystemInDarkTheme(), content: @Composa
 //        content = content
 //    )
 }
+
 
 object AppTheme {
 

@@ -1,6 +1,7 @@
 package com.example.shopapp.presentation.screen.main.components
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Card
 import androidx.compose.material.Text
@@ -18,6 +19,7 @@ fun BrandCard(brandInfo: BrandInfo) {
         modifier = Modifier
             .size(200.dp, 100.dp)
             .padding(end = 10.dp),
+                backgroundColor = AppTheme.extendedColors.cardBackgroundColor,
         elevation = 5.dp
     ) {
         Column(
@@ -26,7 +28,9 @@ fun BrandCard(brandInfo: BrandInfo) {
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Image(
-                modifier = Modifier.fillMaxWidth().height(70.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(70.dp),
                 painter = painterResource(brandInfo.pic_id),
                 contentDescription = "",
             )

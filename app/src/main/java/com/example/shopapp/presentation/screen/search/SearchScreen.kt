@@ -9,11 +9,13 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.TextStyle
@@ -25,6 +27,7 @@ import androidx.navigation.NavHostController
 import com.example.shopapp.domain.SearchViewModel
 import com.example.shopapp.presentation.screen.search.components.FilterButtons
 import com.example.shopapp.presentation.screen.search.components.SearchCard
+import com.example.shopapp.ui.theme.AppTheme
 
 
 @ExperimentalComposeUiApi
@@ -37,17 +40,17 @@ fun SearchScreen(searchViewModel: SearchViewModel, navController: NavHostControl
     val focusManager = LocalFocusManager.current
 
     Column(
-        modifier = Modifier.background(MaterialTheme.colors.background)
+        modifier = Modifier.background(AppTheme.colors.background)
     ) {
         Surface(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(MaterialTheme.colors.primary),
+                .background(AppTheme.colors.primary),
         ) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(MaterialTheme.colors.primary)
+                    .background(AppTheme.colors.primary)
                     .clip(RoundedCornerShape(5.dp)),
 
                 ) {
@@ -57,21 +60,34 @@ fun SearchScreen(searchViewModel: SearchViewModel, navController: NavHostControl
                     onValueChange = {
                         searchViewModel.onQueryChanged(it)
                     },
-                    label = {
-                        Text(text = "Search")
+                    placeholder = {
+                        Text(text = "Search", color = AppTheme.textColors.primaryTextColor)
                     },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(8.dp)
-                        .background(MaterialTheme.colors.surface),
+                        .background(Color.Gray),
                     leadingIcon = {
                         Icon(
                             Icons.Filled.Search,
-                            contentDescription = "Search"
+                            contentDescription = "Search",
+                            tint = AppTheme.extendedColors.iconColor
                         )
                     },
+                    trailingIcon = {
+                        IconButton(onClick = {
+                            keyboardController?.hide()
+                            focusManager.clearFocus()
+                        }) {
+                            Icon(
+                                Icons.Filled.Close,
+                                contentDescription = "Close",
+                                tint = AppTheme.extendedColors.iconColor
+                            )
+                        }
+                    },
                     textStyle = TextStyle(
-                        color = MaterialTheme.colors.onSurface,
+                        color = AppTheme.textColors.primaryTextColor,
                         fontSize = 15.sp
                     ),
                     keyboardActions = KeyboardActions(

@@ -30,7 +30,9 @@ fun CommentSubScreen(
     navController: NavHostController
 ) {
     with(detailedViewModel.currentProduct!!) {
-        Column {
+        Column(
+            modifier = Modifier.fillMaxSize().background(AppTheme.colors.background)
+        ) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -174,7 +176,8 @@ fun CommentCard(
         Card(
             modifier = Modifier
                 .fillMaxWidth(0.9f),
-            elevation = 5.dp
+            backgroundColor = AppTheme.extendedColors.cardBackgroundColor,
+            elevation = AppTheme.extendedColors.elevation
         ) {
             Column(
                 modifier = Modifier

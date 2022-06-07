@@ -35,9 +35,9 @@ fun MainPage(mainPageViewModel: MainViewModel, navController: NavHostController)
     val products =
         mainPageViewModel.recommendedProducts.collectAsState(initial = emptyList()).value
 
-    val loading = mainPageViewModel.loading.collectAsState(false).value
-
-    Column {
+    Column(
+        modifier = Modifier.background(AppTheme.colors.background)
+    ) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -48,7 +48,7 @@ fun MainPage(mainPageViewModel: MainViewModel, navController: NavHostController)
             Text(
                 text = "Главное",
                 style = AppTheme.typography.h1,
-                color = Color.White
+                color = AppTheme.textColors.headerTextColor
             )
         }
         Box(

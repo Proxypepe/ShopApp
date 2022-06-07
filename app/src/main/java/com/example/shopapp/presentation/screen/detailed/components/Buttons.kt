@@ -25,7 +25,8 @@ fun WriterTextField(
         placeholder = {
             Text(
                 text = placeholder,
-                style = AppTheme.typography.subtitle2
+                style = AppTheme.typography.subtitle2,
+                color = AppTheme.textColors.secondaryTextColor
             )
         },
         shape = RoundedCornerShape(8.dp)

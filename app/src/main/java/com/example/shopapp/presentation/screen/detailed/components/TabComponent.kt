@@ -1,6 +1,7 @@
 package com.example.shopapp.presentation.screen.detailed.components
 
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Tab
@@ -13,14 +14,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.shopapp.repository.remote.models.ProductDto
+import com.example.shopapp.ui.theme.AppTheme
 import com.google.accompanist.pager.*
 import kotlinx.coroutines.launch
 
 
 @Composable
 fun Description(text: String) {
-    Text(text=text,
-    modifier = Modifier.fillMaxSize()
+    Text(
+        text = text,
+        modifier = Modifier.fillMaxSize(),
+        color = AppTheme.textColors.primaryTextColor
     )
 }
 
@@ -29,7 +33,9 @@ fun CharacteristicList(product: ProductDto) {
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
-        LazyColumn(modifier = Modifier.padding(5.dp).fillMaxSize()) {
+        LazyColumn(modifier = Modifier
+            .padding(5.dp)
+            .fillMaxSize()) {
             item {
                 Characteristic("Бранд:", product.brand)
                 Characteristic("Тип корпуса:", product.shell_type)
@@ -60,12 +66,17 @@ fun CharacteristicList(product: ProductDto) {
 fun Characteristic(name: String, value: String?) {
     if (value != null)
         Row {
-            Text(text = name,
+            Text(
+                text = name,
                 modifier = Modifier
-                    .fillMaxWidth(0.5f))
-            Spacer(modifier = Modifier
-                .fillMaxWidth(0.3f))
-            Text(text = value)
+                    .fillMaxWidth(0.5f),
+                color = AppTheme.textColors.primaryTextColor
+            )
+            Spacer(
+                modifier = Modifier
+                    .fillMaxWidth(0.3f)
+            )
+            Text(text = value, color = AppTheme.textColors.primaryTextColor)
         }
 }
 
@@ -74,7 +85,9 @@ fun Characteristic(name: String, value: String?) {
 @Composable
 fun TabScreen(productDto: ProductDto) {
     val pagerState = rememberPagerState(pageCount = 2)
-    Column {
+    Column(
+        modifier = Modifier.fillMaxSize().background(AppTheme.colors.background)
+    ) {
         Tabs(pagerState = pagerState)
         TabsContent(pagerState = pagerState, productDto)
     }
@@ -87,6 +100,7 @@ fun Tabs(pagerState: PagerState) {
     val scope = rememberCoroutineScope()
 
     TabRow(
+        backgroundColor = AppTheme.colors.primary,
         selectedTabIndex = pagerState.currentPage,
         divider = {
             TabRowDefaults.Divider(
@@ -98,16 +112,18 @@ fun Tabs(pagerState: PagerState) {
             TabRowDefaults.Indicator(
                 Modifier.pagerTabIndicatorOffset(pagerState, tabPositions),
                 height = 2.dp,
-                color = Color.Green
+                color = AppTheme.extendedColors.selectedColor
             )
         }
     ) {
-        list.forEachIndexed { index, _->
+        list.forEachIndexed { index, _ ->
             Tab(
                 text = {
                     Text(
                         list[index],
-                        color = if (pagerState.currentPage == index) Color.White else Color.LightGray
+                        color = if (pagerState.currentPage == index) AppTheme.textColors.primaryTextColor else AppTheme.textColors.primaryTextColor.copy(
+                            alpha = 0.7f
+                        )
                     )
                 },
                 selected = pagerState.currentPage == index,
@@ -125,8 +141,14 @@ fun Tabs(pagerState: PagerState) {
 @ExperimentalPagerApi
 @Composable
 fun TabsContent(pagerState: PagerState, product: ProductDto) {
-    HorizontalPager(state = pagerState, modifier = Modifier.padding(20.dp).fillMaxWidth().height(290.dp)) { page ->
-        when(page) {
+    HorizontalPager(
+        state = pagerState,
+        modifier = Modifier
+            .padding(20.dp)
+            .fillMaxWidth()
+            .height(290.dp)
+    ) { page ->
+        when (page) {
             0 -> Description("Hello")
             1 -> CharacteristicList(product)
         }

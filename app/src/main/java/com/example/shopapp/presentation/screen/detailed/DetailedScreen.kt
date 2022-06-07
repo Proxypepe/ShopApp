@@ -1,20 +1,20 @@
 package com.example.shopapp.presentation.screen.detailed
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Button
-import androidx.compose.material.OutlinedButton
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import coil.compose.SubcomposeAsyncImage
 import com.example.shopapp.R
 import com.example.shopapp.domain.CartViewModel
 import com.example.shopapp.domain.DetailedViewModel
@@ -48,6 +48,9 @@ fun DetailedScreen(
         }
     ) {
         Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(AppTheme.colors.background),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -63,17 +66,23 @@ fun DetailedScreen(
                     contentAlignment = Alignment.Center
                 ) {
                     Column {
-                        Image(
-                            painter = painterResource(R.drawable.ic_android_black_24dp),
-                            contentDescription = "",
-                            modifier = Modifier.fillMaxWidth()
+                        SubcomposeAsyncImage(
+                            model = product.link,
+                            loading = {
+                                CircularProgressIndicator()
+                            },
+                            modifier = Modifier.scale(4f).padding(start = 65.dp, top = 25.dp),
+                            contentDescription = ""
                         )
-                        Spacer(modifier = Modifier.height(10.dp))
+                        Spacer(modifier = Modifier.height(100.dp))
                         Row(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Column {
-                                Text(text = "Рейтинг: $rating")
+                                Text(
+                                    text = "Рейтинг: $rating",
+                                    color = AppTheme.textColors.primaryTextColor
+                                )
 
                                 CustomRatingBar(
                                     value = rating,
@@ -82,11 +91,19 @@ fun DetailedScreen(
                                 )
                             }
                             Spacer(modifier = Modifier.fillMaxWidth(0.4f))
-                            OutlinedButton(onClick = {
-                                detailedViewModel.currentProduct = product
-                                navController.navigate(NavigationRouter.CommentRead.route)
-                            }) {
-                                Text(text = "Отзывы - ${product.comments.size}")
+                            OutlinedButton(
+                                onClick = {
+                                    detailedViewModel.currentProduct = product
+                                    navController.navigate(NavigationRouter.CommentRead.route)
+                                },
+                                colors = ButtonDefaults.buttonColors(
+                                    backgroundColor = AppTheme.extendedColors.buttonColor,
+                                    contentColor = AppTheme.textColors.primaryButtonText
+                                )
+                            ) {
+                                Text(
+                                    text = "Отзывы - ${product.comments.size}"
+                                )
                             }
                         }
                     }
@@ -100,7 +117,11 @@ fun DetailedScreen(
                 },
                 modifier = Modifier
                     .fillMaxWidth(0.9f)
-                    .height(45.dp)
+                    .height(45.dp),
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = AppTheme.extendedColors.buttonColor,
+                    contentColor = AppTheme.textColors.primaryButtonText
+                )
             ) {
                 Column(
                     verticalArrangement = Arrangement.Center,
@@ -108,13 +129,11 @@ fun DetailedScreen(
                 ) {
                     Text(
                         text = "В корзину",
-                        style = AppTheme.typography.body2,
-                        color = AppTheme.textColors.primaryButtonText
+                        style = AppTheme.typography.body2
                     )
                     Text(
                         text = product.price,
-                        style = AppTheme.typography.body2,
-                        color = AppTheme.textColors.primaryButtonText
+                        style = AppTheme.typography.body2
                     )
                 }
             }
