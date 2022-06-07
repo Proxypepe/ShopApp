@@ -12,6 +12,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.example.shopapp.ui.theme.AppTheme
 
 @Composable
 fun CustomCheckBox(
@@ -34,7 +35,7 @@ fun CustomCheckBox(
             text = name,
             modifier = Modifier.clickable {
                 onTextClicked()
-            }
+            }, color = AppTheme.textColors.primaryTextColor
         )
     }
 }
